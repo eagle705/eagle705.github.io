@@ -1,11 +1,11 @@
 title: Adullam Academy
 description: My Personal Blog
 author: eagle705
-logo: /hcz-jekyll-blog/static/img/avatar.png
+logo: /static/img/avatar.png
 github: https://github.com/eagle705
 about: Freelance developer
 
-baseurl: ""
+
 #baseurl: "http://aboutashu.com/hcz-jekyll-blog"
 #url: "http://aboutashu.com/hcz-jekyll-blog"
 
