@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: page_timeline
 title: About
 permalink: /about/
 ---

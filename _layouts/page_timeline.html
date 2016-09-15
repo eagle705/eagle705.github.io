@@ -1,0 +1,137 @@
+---
+layout: default
+---
+<style>
+#timeline {
+  font-size: 20px;
+  font-weight: 300;
+}
+@media (min-width: 768px) {
+  .timelineitem:nth-child(odd) {
+    margin-left: 50%;
+    border-left: 5px solid #333;
+    text-align: left;
+  }
+  .timelineitem:nth-child(even) {
+    margin-right: 50%;
+    margin-left: 5px;
+    border-right: 5px solid #333;
+    text-align: right;
+  }
+  .timelineitem {
+    width: 50%;
+    position: relative;
+    padding: 0px 10px 0px 10px;
+  }
+  .timelineitem:nth-child(odd):before {
+   left: -8px;
+  }
+  .timelineitem:nth-child(even):before {
+    right: -8px;
+  }
+}
+.timelineitem:before {
+  width: 11px;
+  height: 11px;
+  background: #333;
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  border-radius: 5px;
+}
+@media (max-width: 767px) {
+  .timelineitem {
+    border-left: 5px solid #333;
+    text-align: left;
+    margin-left: 10px;
+    padding: 5px;
+    position: relative;
+  }
+  .timelineitem:before {
+    left: -8px;
+  }
+}
+.tdate {
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: -5px;
+  color: rgb(132,0,0);
+}
+.ttitle {
+  font-size: 20px;
+  font-weight: 400;
+}
+.tdesc {
+  font-size: 18px;
+  font-weight: 300;
+}
+@media (max-width: 768px) {
+  .tdate {
+    font-size: 16px;
+  }
+  .ttitle {
+    font-size: 16px;
+  }
+  .tdesc {
+    font-size: 16px;
+  }
+}
+.thigh {
+  color: #070;
+}
+</style>
+<div class="well">
+  <!--Timeline Start  -->
+          <div id="timeline">
+            <div class="timelineitem">
+              <div class="tdate">2016 - </div>
+              <div class="ttitle">Korea University Graduate Student</div>
+              <div class="tdesc">Major in Deep Learning, Computer Vision, Natural Language Processing.</div>
+            </div>
+            <div class="timelineitem">
+              <div class="tdate">Winter 2012</div>
+              <div class="ttitle">Korea University Student</div>
+              <div class="tdesc">Major in Software Technology and Enterprise Program(STEP)</div>
+            </div>
+            <div class="timelineitem">
+              <div class="tdate">Winter 2010</div>
+              <div class="ttitle">Korea University Student</div>
+              <div class="tdesc">Major in Industrial Engineering</div>
+            </div>
+            <div class="timelineitem">
+              <div class="tdate">2007 </div>
+              <div class="ttitle">High school Student <a href="" target="_blank"></a></div>
+              <div class="tdesc">Ansan Dongsan High school</div>
+            </div>
+
+
+
+
+            <!--
+            <div class="timelineitem">
+              <div class="tdate">Summer 2011</div>
+              <div class="ttitle">Google Research Internship</div>
+              <div class="tdesc">Large-Scale Unsupervised Deep Learning for Videos.</div>
+            </div>
+            <div class="timelineitem">
+             <div class="tdate">2009-2011</div>
+              <div class="ttitle">University of British Columbia: Master's Degree</div>
+              <div class="tdesc">I worked with <a href="https://www.cs.ubc.ca/~van/">Michiel van de Panne</a> on learning Compositional Controllers for Physically-simulated Articulate Figures.</div>
+            </div>
+            <div class="timelineitem">
+              <div class="tdate">2005-2009
+              </div>
+              <div class="ttitle">University of Toronto: Bachelor's Degree</div>
+              <div class="tdesc">Double major in Computer Science and Physics.</div>
+            </div> -->
+
+            <br><br><br>
+<!--Timeline End  -->
+    {% if page.subtitle %}
+    <h4 class="home-subtitle">{{ page.subtitle }}</h4>
+    {% endif %}
+    <div>
+    	{{ content }}
+    </div>
+</div>
