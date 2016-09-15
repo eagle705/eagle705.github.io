@@ -1,0 +1,27 @@
+title: Adullam Academy
+description: My Personal Blog
+author: eagle705
+logo: /static/img/avatar.png
+github: https://github.com/eagle705
+about: Freelance developer
+
+
+#baseurl: "http://aboutashu.com/hcz-jekyll-blog"
+#url: "http://aboutashu.com/hcz-jekyll-blog"
+
+disqus_shortname: eagle705
+#google_analytics: UA-72862926-1
+
+share:
+  twitter_username: eagle705
+  #fb_appid: 000000000000
+
+
+enableTags: true
+tagarray: []
+
+paginate: 20
+per_page: 20
+paginate_path: "/page:num/"
+markdown: kramdown
+gems: [jekyll-paginate, jekyll-gist]
