@@ -1,13 +1,12 @@
 ---
 layout: post
 title: Numpy Manual Page
-date:   2015-09-23 23:47:39
+date:   2016-09-23 23:47:39
 categories: others
 ---
 Hi, This is `Numpy Manual Directory`. I made this due to maintaining my Numpy Skills and preparing for creating Deep Learning Source Code.
 
-
-#Python
+###Python
 
 This is code snippets:
 
