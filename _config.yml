@@ -13,12 +13,12 @@ url:                 https://eagle705.github.io
 baseurl:             ""
 
 # A very short description of your page
-tagline:             Speaking the truth in love
+tagline:             일상 속에서 맡겨진 것들을 돌이켜보는 놀이터
 
 # A short description of the page, used in the sidebar and as fallback for the meta description tag.
 # Markdown enabled, but don't use more than one paragraph (enforced by `>`)
 description:         >
-  어제보다, 오늘보다 더 온전한 삶을 향한 여정
+  어제보다, 오늘보다 더 온전한 삶을 향한 여정을 담아
 
 # This should be the same author as first entry in `_data/authors.yml`
 author:
