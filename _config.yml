@@ -18,7 +18,7 @@ tagline:             어제보다, 오늘보다 더 온전한 삶을 향해
 # A short description of the page, used in the sidebar and as fallback for the meta description tag.
 # Markdown enabled, but don't use more than one paragraph (enforced by `>`)
 description:         >
-  어제보다, 오늘보다 더 온전한 삶을 향해
+  Speaking the truth in love
 
 # This should be the same author as first entry in `_data/authors.yml`
 author:
@@ -26,7 +26,7 @@ author:
   email:             xelloss705@naver.com
 
 # Fallback image and color
-image:               /assets/img/sidebar_img.png
+image:               /assets/img/sidebar_img.jpg
 color:               '#4f86aa'
 
 # The font used for headings. Expects a string that is a valid CSS font-family value.
