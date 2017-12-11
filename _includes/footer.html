@@ -1,12 +1,9 @@
 <footer>
-  © 2016 Joosung Yoon <a href="https://eagle705.github.io/">His Developer</a> - Powered by Jekyll.
+  <hr/>
+  {% if site.copyright.size > 0 %}
+    {{ site.copyright | markdownify }}
+  {% endif %}
+  <p>
+    <code>Powered by <a href="https://eagle705.github.io/">aiden</a></code>
+  </p>
 </footer>
-<div align="center">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-  <ins class="adsbygoogle"
-    style="display:block"
-    data-ad-client="ca-pub-0000000000000000"
-    data-ad-slot="0000000000"
-    data-ad-format="auto"></ins>
-  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-</div>

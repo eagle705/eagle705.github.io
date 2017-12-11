@@ -1,11 +1,12 @@
 ---
-layout: default
+layout: base
 ---
-<div class="well">
-    {% if page.subtitle %}
-    <h4 class="home-subtitle">{{ page.subtitle }}</h4>
-    {% endif %}
-    <div>
-    	{{ content }}
-    </div>
-</div>
+
+<article class="page" role="article">
+  <header style="margin-bottom:2rem">
+    <h1 class="page-title">{{ page.title }}</h1>
+    {% include message.html text=page.description %}
+  </header>
+
+  {{ content }}
+</article>

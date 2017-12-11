@@ -1,11 +1,27 @@
 ---
-layout: page_timeline
+layout: about
 title: About
-permalink: /about/
+menu: true
+order: 10
 ---
 
-안녕하세요, His Developer 윤주성의 블로그입니다.
+## 소개
 
-저에 대한 정보는 [여기](https://www.facebook.com/hisdevelopers)를 참고하시면 아실 수 있습니다.
+안녕하세요, 윤주성
 
-앞으로 내용을 많이 추가할 예정이니 많은 관심 부탁드립니다:)
+반갑습니다.
+
+## 약력
+
+- (2016 - Now) Korea Univ Computer Science Master's student   
+(Major in Deep Learning, Computer Vision, Natural Language Processing)
+
+- (2017.7 - 2017.8) Research Intern in NAVER corporation
+
+- (2012-2015) Korea Univ   
+(Major in Software Technology and Enterprise Program(STEP) )
+
+- (2010-2015) Korea Univ
+(Major in Industrial Engineering)
+
+- (2007-2009) Ansan Dongsan Christian High school
