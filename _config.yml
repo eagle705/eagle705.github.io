@@ -26,7 +26,7 @@ author:
   email:             xelloss705@naver.com
 
 # Fallback image and color
-image:               /assets/img/nap.jpg
+image:               /assets/img/sidebar_img.png
 color:               '#4f86aa'
 
 # The font used for headings. Expects a string that is a valid CSS font-family value.
