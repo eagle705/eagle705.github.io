@@ -1,7 +1,7 @@
 ---
 layout: tag-blog
-title: Boilerplate
-slug: boilerplate
+title: Adullam
+slug: adullam
 category: doc
 menu: false
 order: 1

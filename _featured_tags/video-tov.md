@@ -1,7 +1,7 @@
 ---
 layout: tag-blog
-title: React
-slug: react
+title: Tov
+slug: tov
 category: video
 menu: false
 order: 1
