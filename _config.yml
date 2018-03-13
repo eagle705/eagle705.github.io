@@ -18,7 +18,7 @@ tagline:             오늘 하루를 사는 것이 행복이다
 # A short description of the page, used in the sidebar and as fallback for the meta description tag.
 # Markdown enabled, but don't use more than one paragraph (enforced by `>`)
 description:         >
-  오늘 하루만 사는 사람
+  오늘!!만 사는 사람
 
 # This should be the same author as first entry in `_data/authors.yml`
 author:
