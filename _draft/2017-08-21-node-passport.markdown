@@ -2,7 +2,7 @@
 layout: post
 title:  "[node]passport 사용자 인증 원리"
 subtitle:   "passport 사용자 인증 원리"
-categories: devlog
+categories: cslog
 tags: nodejs
 comments: true
 ---

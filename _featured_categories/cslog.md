@@ -1,7 +1,7 @@
 ---
 layout: list
-title: Devlog
-slug: devlog
+title: ComputerScience
+slug: cslog
 menu: true
 submenu: true
 order: 8
