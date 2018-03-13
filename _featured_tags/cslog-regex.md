@@ -1,9 +1,9 @@
 ---
 layout: tag-blog
-title: Git
-slug: git
+title: Regex
+slug: regex
 category: cslog
 menu: false
 order: 2
-header-img: "/img/git-logo.png"
+header-img: "/img/web-logo.png"
 ---
