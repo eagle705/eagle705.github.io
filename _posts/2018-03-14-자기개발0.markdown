@@ -8,6 +8,8 @@ comments: true
 ---
 
 ### Practical Unix
+프로젝트를 하다보니 얼추 쓸수는 있게 되었는데 뭔가 디테일이 부족하다고 느끼던 차, 스탠포드에서 강의가 있는걸 알게되서 한번 빠르게 정주행해야곘다 생각했다. 아래에 간단하게 정리해둔다.
+
 command set: https://www.tjhsst.edu/~dhyatt/superap/unixcmd.html
 
 video:
@@ -36,7 +38,7 @@ https://practicalunix.org/content/week-2-intro
 - '>' 연산자를 파일명 앞에 지정하여 사용함
 - '>' 연산자로 출력방향을 지정할 때 목적 파일은 항상 처음부터 다시 작성됨(파일 덮어씀)
 - '>>' 연산자를 사용하면, 존재하지 않는 파일이면 '>'과 마찬가지로 파일이 생성되고, 파일이 있는 경우에는 이어서 작성 됨
--
+
 
 ##### 표준 오류 재지정(Error Redirection)
 - 리다이렉션 연산자가 필요없음 (이부분은 아직 잘 모르겠음)
@@ -46,6 +48,7 @@ https://practicalunix.org/content/week-2-intro
 - 즉, 명령어의 표준출력을 또 다른 명령어의 표준 입력과 연결 시킬 수 있음
 - 명령어와 명령어의 연결은 '|' 기호를 사용함
 - '|' 기호 앞의 명령 결과가 '|' 기호 뒤의 명령에 입력 데이터로 사용됨
+
 ```bash
 ls /bin  /usr/bin | sort | uniq | grep zip
 ```
