@@ -1,7 +1,7 @@
 ---
 layout: tag-blog
 title: MachineLearning
-slug: MachineLearning
+slug: machinelearning
 category: cslog
 menu: false
 order: 1
