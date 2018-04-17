@@ -1,0 +1,24 @@
+---
+layout: post
+title:  "Docker 입문"
+subtitle:   "이젠 쓸수밖에 없는 도커"
+categories: cslog
+tags: linux
+comments: true
+---
+
+### Docker 입문 (쓸수밖에 없는 도커)
+Docker를 처음 입문한건 텐서플로우를 윈도우에 설치하면서부터였다. 뭔가 바로 로컬에서 소스를 수정할 수 있는게 아니라서 뭔가 여간 불편해서 그 이후로 잘 안썼었는데.. 이 도커가 사람들은 정말 편리한지 이제 시장에서 배포환경이 거의다 도커가 되어버렸다(~~배포는 사실 진짜 편하긴하지..~~). 최근 회사에서도 도커를 쓸일이 생겨버려서.. 이젠 좀 체계적으로 정리를 해야겠다 싶다.
+
+(dockerhub는 github같은 오픈된 도커 이미지 저장소다)
+
+```docker ps -a``` : 실행중인 도커 컨테이너 리스트를 확인
+```docker images``` : 도커 이미지 목록
+```docker login``` : docker hub계정으로 로그인 가능
+```docker restart <도커id>``` : 도커 컨테이너 재실행
+```docker attach <도커id>``` : 도커 컨테이너에 접속
+
+```docker run -d -p 8888:8888 -p 6006:6006 dockerhub계정/이미지이름```: 도커 이미지 다운받고 포트포워딩 후 실행(아마 -d가 다운.. -p가 포트포워딩인듯?)
+
+```docker commit -m "<메세지>" <도커id> dockerhub계정/이미지이름:태그```: docker 이미지 커밋
+```docker push dockerhub계정/이미지이름:태그```: dockerhub에 이미지 업로드
