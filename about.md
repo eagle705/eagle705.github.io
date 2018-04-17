@@ -18,7 +18,7 @@ order: 10
 
 ## 약력
 
-- (2018 - Now) AI Research Engineer (Chatbot)
+- (2018 - Now) AI Research Engineer (Chatbot & Game AI)
 
 - (2016 - 2017) Korea Univ Computer Science Master's student
 (Major in Deep Learning, Natural Language Processing)
