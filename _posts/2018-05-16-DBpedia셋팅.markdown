@@ -7,6 +7,7 @@ tags: deeplearning
 comments: true
 ---
 
+본 문서는 챗봇과 Knowlede base를 연동하기 위해 DBpedia를 설치하고 사용하는 내용을 다룬 문서이다.
 
 ### A. 소개
 
@@ -46,7 +47,7 @@ brew install xz
 http://localhost:8890/conductor  에 접속해서 테스트!   
 
 종료할 땐, 
-``
+```
 ìsql
 shutdonw();
 ```
