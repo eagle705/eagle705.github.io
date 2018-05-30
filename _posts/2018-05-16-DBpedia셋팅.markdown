@@ -99,13 +99,13 @@ cd ..
 
 mkdir ko.dbpedia.org
 cd ko.dbpedia.org
-ln -s ../../core-i18n/ko/article-categories_de.nt.gz ./
+ln -s ../../core-i18n/ko/article-categories_ko.nt.gz ./
 
 cd ..
 
 mkdir pagelinks.ko.dbpedia.org
 cd pagelinks.ko.dbpedia.org
-ln -s ../../core-i18n/ko/page-links_de.nt.gz ./
+ln -s ../../core-i18n/ko/page-links_ko.nt.gz ./
 cd ..
 ```
 
@@ -121,12 +121,18 @@ ld_dir_all('/Users/eagle/datasets/dbpedia/2016-10/importedGraphs/pagelinks.dbped
 ld_dir_all('/Users/eagle/datasets/dbpedia/2016-10/importedGraphs/pagelinks.ko.dbpedia.org', '*.*', 'http://pagelinks.ko.dbpedia.org');
 ld_dir_all('/Users/eagle/datasets/dbpedia/2016-10/importedGraphs/topicalconcepts.dbpedia.org', '*.*', 'http://topicalconcepts.dbpedia.org');
 
-또는 아래 명령어로 얻어진 쿼리 이용
+또는 아래 명령어로 얻어진 쿼리 이용(이때 현재 디렉토리 위치는 /Users/eagle/datasets/dbpedia/2016-10)   
 
-for g in * ; do echo "ld_dir_all('$(pwd)/$g', '*.*', 'http://$g');" ; done
+for g in * ; do echo "ld_dir_all('$(pwd)/$g', '*.*', 'http://$g');" ; done   
+
+명령어 결과   
+ld_dir_all('/Users/eagle/datasets/dbpedia/2016-10/core', '*.*', 'http://core');
+ld_dir_all('/Users/eagle/datasets/dbpedia/2016-10/core-i18n', '*.*', 'http://core-i18n');
+ld_dir_all('/Users/eagle/datasets/dbpedia/2016-10/dbpedia_2016-10.owl', '*.*', 'http://dbpedia_2016-10.owl');
+ld_dir_all('/Users/eagle/datasets/dbpedia/2016-10/robots.txt', '*.*', 'http://robots.txt');
 ```
 
-저장하기
+저장하기 (위의 쿼리가 실질적으로 실행되는 부분, 시간 꽤 걸림!)
 ```
 rdf_loader_run();
 ```
