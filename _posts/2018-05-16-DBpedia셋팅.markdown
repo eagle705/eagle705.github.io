@@ -12,7 +12,12 @@ comments: true
 ### A. 소개
 
 - 오픈소스 명: DBpedia
-- Reference: https://joernhees.de/blog/2015/11/23/setting-up-a-linked-data-mirror-from-rdf-dumps-dbpedia-2015-04-freebase-wikidata-linkedgeodata-with-virtuoso-7-2-1-and-docker-optional/
+- 기본적인 OWL, RDF, RDFS, LINED DATA에 대한 설명:   
+http://operatingsystems.tistory.com/entry/Basic-of-Semantic-Web?category=578406   
+http://operatingsystems.tistory.com/entry/Linked-Data-and-RDF?category=578406   
+http://operatingsystems.tistory.com/entry/RDFS?category=578406   
+http://operatingsystems.tistory.com/entry/OWL-Web-Ontology-Language   
+- Reference:    https://joernhees.de/blog/2015/11/23/setting-up-a-linked-data-mirror-from-rdf-dumps-dbpedia-2015-04-freebase-wikidata-linkedgeodata-with-virtuoso-7-2-1-and-docker-optional/
 - Reference2: http://pacifico.cc/programming/virtuoso-dbpedia-setup
 - Virtuoso vs Neo4j: https://db-engines.com/en/system/Neo4j%3BVirtuoso
 - Docker 기반 DBpedia_virtuoso 설치: https://github.com/harsh9t/Dockerised-DBpedia-Virtuoso-Endpoint-Setup-Guide
@@ -219,4 +224,6 @@ rdfs:	http://www.w3.org/2000/01/rdf-schema#
 xsd:	http://www.w3.org/2001/XMLSchema#
 fn:	http://www.w3.org/2005/xpath-functions#
 ```
+
+
 
