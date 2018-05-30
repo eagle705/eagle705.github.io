@@ -103,9 +103,9 @@ ln -s ../../core-i18n/ko/article-categories_de.nt.gz ./
 
 cd ..
 
-mkdir pagelinks.de.dbpedia.org
-cd pagelinks.de.dbpedia.org
-ln -s ../../core-i18n/de/page-links_de.nt.gz ./
+mkdir pagelinks.ko.dbpedia.org
+cd pagelinks.ko.dbpedia.org
+ln -s ../../core-i18n/ko/page-links_de.nt.gz ./
 cd ..
 ```
 
@@ -115,10 +115,10 @@ cd ..
 isql
 ld_add('/Users/eagle/datasets/dbpedia/2016-10/dbpedia_2016-10.owl', 'http://dbpedia.org/resource/classes#');
 ld_dir_all('/Users/eagle/datasets/dbpedia/2016-10/importedGraphs/dbpedia.org', '*.*', 'http://dbpedia.org');
-ld_dir_all('/Users/eagle/datasets/dbpedia/2016-10/importedGraphs/de.dbpedia.org', '*.*', 'http://de.dbpedia.org');
+ld_dir_all('/Users/eagle/datasets/dbpedia/2016-10/importedGraphs/ko.dbpedia.org', '*.*', 'http://ko.dbpedia.org');
 ld_dir_all('/Users/eagle/datasets/dbpedia/2016-10/importedGraphs/ext.dbpedia.org', '*.*', 'http://ext.dbpedia.org');
 ld_dir_all('/Users/eagle/datasets/dbpedia/2016-10/importedGraphs/pagelinks.dbpedia.org', '*.*', 'http://pagelinks.dbpedia.org');
-ld_dir_all('/Users/eagle/datasets/dbpedia/2016-10/importedGraphs/pagelinks.de.dbpedia.org', '*.*', 'http://pagelinks.de.dbpedia.org');
+ld_dir_all('/Users/eagle/datasets/dbpedia/2016-10/importedGraphs/pagelinks.ko.dbpedia.org', '*.*', 'http://pagelinks.ko.dbpedia.org');
 ld_dir_all('/Users/eagle/datasets/dbpedia/2016-10/importedGraphs/topicalconcepts.dbpedia.org', '*.*', 'http://topicalconcepts.dbpedia.org');
 
 또는 아래 명령어로 얻어진 쿼리 이용
@@ -142,7 +142,7 @@ select * where {
  } LIMIT 100
  
  
- default Grahp IRI: http://core-i18n  (첨 만들때 넣어줬던게 Graph IRN인듯 )
+ default Grahp IRI: http://core-i18n  (첨 만들때 넣어줬던게 Graph IRI인듯, 나중에 Jena와 연동시 ```FROM``` 부분에 들어갈 부분! )
  SELECT * WHERE {?s ?p ?q} LIMIT 1000
  
  SELECT * WHERE {?s a <http://dbpedia.org/ontology/SoccerClub> } LIMIT 1000 (a가 예약어임)
