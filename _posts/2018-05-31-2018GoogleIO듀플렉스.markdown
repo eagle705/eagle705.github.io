@@ -38,7 +38,7 @@ Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 - Custom & Scheduled Routines 기능 제공 (ex. Hey Google, 저녁식사 시간이야 -> 음악재생, TV끄기 등등)
 - 동화 재생기능 (지난 2달간 130,000시간의 동화 재생)
 - Pretty Please 기능, 아이들이 공손하게 요청하는 법을 배우도록 유도
-- 핸드폰에 탑재된 Assistant 기능을 시간, 장소, 최근 로그 등을 기반으로 redesign함
+- 핸드폰에 탑재된 Assistant 기능을 시간, 장소, 최신 로그 등을 기반으로 최근에 redesign함
 - 네비게이션, 음식 배달, 예약 (Google Duplex) 기능 등도 제공할 예정
 - 올해 안에 한국에도 Google Home & Google Home mini 출시 예정   
 ![googlehome](https://eagle705.github.io/assets/img/googlehome.png)
