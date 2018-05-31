@@ -12,7 +12,8 @@ Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 
 ![googleIO](https://eagle705.github.io/assets/img/2018google.png)
 
-### Google I/O란?
+### 2018 Google I/O란?
+- 설명: 매년 열리는 행사로써, Google 제품의 전반적인 업데이트 소식을 공유하는 행사
 - 날짜: 2018.5.8 – 5.10
 - 장소: 미국 캘리포니아 주 마운틴뷰 쇼라인 앰피씨어터
 - 주제 (총 12개): 
@@ -29,11 +30,7 @@ Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 - Google Play & developer update
 - Ads
 
-
-### Google Duplex
-이번 Google I/O의 단언컨데, 하이라이트 부분이라고 할 수 있다.
-자세한 안내는 [이곳](https://ai.googleblog.com/2018/05/duplex-ai-system-for-natural-conversation.html)에서 확인해볼 수 있다.
-### 추가기능
+### Google Assistant의 추가기능
 - 6개의 새로운 목소리를 선택할 수 있음
 - John Legend의 목소리를 연말에 추가할 예정
 - WaveNet 기술을 통해 음성합성 (pitch, pace, um pauses) 품질 향상
@@ -46,6 +43,10 @@ Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 - 올해 안에 한국에도 Google Home & Google Home mini 출시 예정   
 ![googlehome](https://eagle705.github.io/assets/img/googlehome.png)
 
+### Google Duplex
+단언컨데, 이번 Google I/O의 하이라이트는 Google Duplex다. 최신 딥러닝 기술을 ~~갈아넣었다~~ 잘 적용시켰다.
+자세한 안내는 [이곳](https://ai.googleblog.com/2018/05/duplex-ai-system-for-natural-conversation.html)에서 확인해볼 수 있다.
+
 ### Google Duplex란?
 - An AI System for Accomplishing Real-World Tasks Over the Phone
 - 전화로 예약을 잡아주는 시스템
@@ -54,7 +55,6 @@ Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 ![googleconversation](https://eagle705.github.io/assets/img/googleconversation.png)   
 
 ![googleduplex](https://eagle705.github.io/assets/img/googleduplex.png)
-
 
 
 ### Google Duplex에 적용된 기술
@@ -67,9 +67,9 @@ Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 
 ![Duplex](https://eagle705.github.io/assets/img/duplex.png)
 
-전체적인 구조는 음성인식 -> 챗봇 -> 음성합성 의 메커니즘
+전체적인 메커니즘은 음성인식 -> 챗봇 -> 음성합성 구조라고 할 수 있다
 
-### 딥러닝
+### 딥러닝 (Deep Learning) 
 - 왜 딥러닝으로 하면 잘 될까?   
 ->  Neural Network은 “어떤” 함수도 근사가 가능!   
 ![universalApprox](https://eagle705.github.io/assets/img/universalApprox.png)   
@@ -77,13 +77,13 @@ Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 ![MLP_playground](https://eagle705.github.io/assets/img/MLP_playground.gif)
 
 
-### 왜 어려운가?
+### 전화 예약서비스, 왜 어려운가?
 - 음성인식의 어려움:    
 SOTA기술을 써도 아직 간단한 말도 인식이 안될 때도 많음 (에러가 다음 레이어에 전파됨)   
 -> Data! Data! Data!
 - 새로운 도메인:   
 학습시킨 데이터 도메인에서는 잘되지만 새로운 도메인에는 모델이 잘 동작하지 않을 수 있음   
--> Real-time supervised learning으로 해결   
+-> Real-time supervised learning으로 해결 ~~잘 모르는 내용ㅠㅠ~~   
 -> 모니터링하면서 관리자가 수정 후 일정 시간 학습이 되면 자동으로 할 수 있게 함
 - Context 고려:   
 챗봇이 Context를 기억하는 건 의외로 쉽지 않은 일임
@@ -98,6 +98,7 @@ Parametric model만으론 정보성 서비스를 할 수 없음, KB를 사용해
 
 
 ### 느낀 점
+- ```Google 최고```
 - Hmm, uh 같은 추임새나 latency등 디테일을 고려하는 접근이 인상적
 - 그동안의 연구 기술을 짧은 시간 안에 상용제품까지 접목시키는 역량이 놀라움! ~~Oh Google..!!~~
 
