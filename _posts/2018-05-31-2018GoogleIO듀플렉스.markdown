@@ -37,14 +37,14 @@ Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 - 좀 더 복잡한 질문 (다중 작업)을 처리할 수 있게 준비하고 있음(ex. 뉴욕과 오스틴의 날씨가 어때?)
 - Custom & Scheduled Routines 기능 제공 (ex. Hey Google, 저녁식사 시간이야 -> 음악재생, TV끄기 등등)
 - 동화 재생기능(지난 2달간 130,000시간의 동화 재생)
--Pretty Please : 아이들이 공손하게 요청하는 법을 배우도록 유도
-핸드폰에 탑재된 Assistant 기능을 시간, 장소, 최근 로그 등을 기반으로 redesign함
+- Pretty Please : 아이들이 공손하게 요청하는 법을 배우도록 유도
+- 핸드폰에 탑재된 Assistant 기능을 시간, 장소, 최근 로그 등을 기반으로 redesign함
 - 네비게이션, 음식 배달, 예약(Google Duplex) 기능 등도 제공할 예정
 - 올해 안에 한국에도 Google Home & Google Home mini 출시 예정   
 ![googlehome](https://eagle705.github.io/assets/img/googlehome.png)
 
 ### Google Duplex
-단언컨데, 이번 Google I/O의 하이라이트는 Google Duplex다. 최신 딥러닝 기술을 ~~갈아넣었다~~ 잘 적용시켰다.
+단언컨데, 이번 Google I/O의 하이라이트는 Google Duplex다. 최신 딥러닝 기술을 ~~(갈아넣었다)~~ 잘 적용시켰다.
 자세한 안내는 [이곳](https://ai.googleblog.com/2018/05/duplex-ai-system-for-natural-conversation.html)에서 확인해볼 수 있다.
 
 ### Google Duplex란?
@@ -80,26 +80,26 @@ Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 ### 전화 예약서비스, 왜 어려운가?
 - 음성인식의 어려움:    
 SOTA기술을 써도 아직 간단한 말도 인식이 안될 때도 많음 (에러가 다음 레이어에 전파됨)   
--> Data! Data! Data!
+-> ```Data! Data! Data!```
 - 새로운 도메인:   
 학습시킨 데이터 도메인에서는 잘되지만 새로운 도메인에는 모델이 잘 동작하지 않을 수 있음   
--> Real-time supervised learning으로 해결 ~~잘 모르는 내용ㅠㅠ~~   
+-> ```Real-time supervised learning```으로 해결 ~~(잘 모르는 내용)ㅠㅠ~~   
 -> 모니터링하면서 관리자가 수정 후 일정 시간 학습이 되면 자동으로 할 수 있게 함
 - Context 고려:   
 챗봇이 Context를 기억하는 건 의외로 쉽지 않은 일임
--> Context vector를 지속적으로 넣어줘야함. 하지만 context가 보장된다는 보장은 없을 수도..!
+-> ```Context vector를 지속적```으로 넣어줘야함. 여기는 아키텍쳐 설계 영역으로 ```Art```의 영역이기도함. 그러므로 context가 꼭 고려된다는 보장은 없을 수도 있음   
 - KB 연동의 어려움:   
-Parametric model만으론 정보성 서비스를 할 수 없음, KB를 사용해야하는데 이 부분이 진짜 “기술”임   
--> Enitity Extraction!! Query Generation!! SPARQL!! DBpedia!! Freebase(구글이 인수)!! ~~요즘 하고 있는데 힘들다~~
+Parametric model만으론 정보성 서비스를 할 수 없음, KB를 사용해야하는데 이 부분이 진짜 ```기술```임   
+-> Enitity Extraction!! Query Generation!! SPARQL!! DBpedia!! ```Freebase(구글이 인수)```!! ~~(요즘 하고 있는데 힘들다)~~
 - 도메인 선정:   
-기본적으로 챗봇에서 Open domain인 Hardest한 문제임..!   
--> 도메인을 적절하게 좁히는게 서비스 수준의 퀄리티를 만드는 관건!!
+기본적으로 챗봇에서 Open domain은 Hardest한 문제임..!   
+-> ```도메인을 적절하게 좁히는게``` 서비스 수준의 퀄리티를 만드는 관건!!
 ![chatbotframework](https://eagle705.github.io/assets/img/chatbotframework.png)
 
 
 ### 느낀 점
-- ```Google 최고```
-- Hmm, uh 같은 추임새나 latency등 디테일을 고려하는 접근이 인상적
-- 그동안의 연구 기술을 짧은 시간 안에 상용제품까지 접목시키는 역량이 놀라움! ~~Oh Google..!!~~
+- ```Google``` 최고
+- Hmm, uh 같은 추임새나 Latency 등 디테일을 고려하는 접근이 인상적
+- 그동안의 연구 기술을 짧은 시간 안에 상용 제품까지 녹여내는 구글의 역량이란..! 크! ~~Oh Google..!!~~
 
 
