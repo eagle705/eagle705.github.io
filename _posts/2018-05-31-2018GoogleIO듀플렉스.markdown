@@ -1,16 +1,16 @@
 ---
 layout: post
-title:  "2018 Google I/O Duplex"
+title:  "2018 Google I/O Google Duplex"
 subtitle:   "전화거는 AI"
 categories: cslog
 tags: deeplearning
 comments: true
 ---
 
-본 문서는 2018 Google I/O에서 소갸된 Google Home, Duplex 등에 대해서 소개한다.   
+본 문서는 2018 Google I/O에서 소개된 Google Home, Duplex 등에 대해서 소개한다.   
 Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 
-![googleIO](../assets/img/2018google.png)
+![googleIO](img/2018google.png)
 
 ### Google I/O란?
 - 날짜: 2018.5.8 – 5.10
