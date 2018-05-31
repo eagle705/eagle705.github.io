@@ -83,7 +83,7 @@ SOTA기술을 써도 아직 간단한 말도 인식이 안될 때도 많음 (에
 -> ```Data! Data! Data!```
 - 새로운 도메인:   
 학습시킨 데이터 도메인에서는 잘되지만 새로운 도메인에는 모델이 잘 동작하지 않을 수 있음   
--> ```Real-time supervised learning```으로 해결 ~~(잘 모르는 내용)ㅠㅠ~~   
+-> ```Real-time supervised learning```으로 해결 ~~(잘 모르는 내용ㅠㅠ)~~   
 -> 모니터링하면서 관리자가 수정 후 일정 시간 학습이 되면 자동으로 할 수 있게 함
 - Context 고려:   
 챗봇이 Context를 기억하는 건 의외로 쉽지 않은 일임
@@ -93,13 +93,13 @@ Parametric model만으론 정보성 서비스를 할 수 없음, KB를 사용해
 -> Enitity Extraction!! Query Generation!! SPARQL!! DBpedia!! ```Freebase(구글이 인수)```!! ~~(요즘 하고 있는데 힘들다)~~
 - 도메인 선정:   
 기본적으로 챗봇에서 Open domain은 Hardest한 문제임..!   
--> ```도메인을 적절하게 좁히는게``` 서비스 수준의 퀄리티를 만드는 관건!!
+-> ```도메인을 적절하게 좁히는게``` 높은 수준의 서비스 만드는 관건!!
 ![chatbotframework](https://eagle705.github.io/assets/img/chatbotframework.png)
 
 
 ### 느낀 점
 - ```Google``` 최고
 - Hmm, uh 같은 추임새나 Latency 등 디테일을 고려하는 접근이 인상적
-- 그동안의 연구 기술을 짧은 시간 안에 상용 제품까지 녹여내는 구글의 역량이란..! 크! ~~Oh Google..!!~~
+- 그동안의 연구 기술을 짧은 시간 안에 상용 제품까지 녹여내는 구글의 역량이란..!  ~~크! Google!!~~
 
 
