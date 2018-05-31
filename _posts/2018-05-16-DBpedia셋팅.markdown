@@ -17,6 +17,8 @@ http://operatingsystems.tistory.com/entry/Basic-of-Semantic-Web?category=578406
 http://operatingsystems.tistory.com/entry/Linked-Data-and-RDF?category=578406   
 http://operatingsystems.tistory.com/entry/RDFS?category=578406   
 http://operatingsystems.tistory.com/entry/OWL-Web-Ontology-Language   
+- 공식 OWL 관련 문서:   
+http://www.w3c.or.kr/Translation/REC-owl-features-20040210/   
 - Reference:    https://joernhees.de/blog/2015/11/23/setting-up-a-linked-data-mirror-from-rdf-dumps-dbpedia-2015-04-freebase-wikidata-linkedgeodata-with-virtuoso-7-2-1-and-docker-optional/
 - Reference2: http://pacifico.cc/programming/virtuoso-dbpedia-setup
 - Virtuoso vs Neo4j: https://db-engines.com/en/system/Neo4j%3BVirtuoso
