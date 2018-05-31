@@ -7,13 +7,13 @@ tags: deeplearning
 comments: true
 ---
 
-본 문서는 2018 Google I/O에서 소개된 Google Home, Duplex 등에 대해서 소개한다.   
+본 문서는 2018 Google I/O에서 소개된 Google Home, Duplex 등에 대해서 소개하는 문서다.   
 Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 
 ![googleIO](https://eagle705.github.io/assets/img/2018google.png)
 
 ### 2018 Google I/O란?
-- 설명: 매년 열리는 행사로써, Google 제품의 전반적인 업데이트 소식을 공유하는 행사
+- 정의: 구글 I/O는 구글이 미국 캘리포니아 주 샌프란시스코에서 한 해에 한 번 개최하는 개발자 지향 콘퍼런스
 - 날짜: 2018.5.8 – 5.10
 - 장소: 미국 캘리포니아 주 마운틴뷰 쇼라인 앰피씨어터
 - 주제 (총 12개): 
@@ -36,10 +36,10 @@ Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 - WaveNet 기술을 통해 음성합성 (pitch, pace, um pauses) 품질 향상
 - 좀 더 복잡한 질문 (다중 작업)을 처리할 수 있게 준비하고 있음(ex. 뉴욕과 오스틴의 날씨가 어때?)
 - Custom & Scheduled Routines 기능 제공 (ex. Hey Google, 저녁식사 시간이야 -> 음악재생, TV끄기 등등)
-- 동화 재생기능(지난 2달간 130,000시간의 동화 재생)
-- Pretty Please : 아이들이 공손하게 요청하는 법을 배우도록 유도
+- 동화 재생기능 (지난 2달간 130,000시간의 동화 재생)
+- Pretty Please 기능, 아이들이 공손하게 요청하는 법을 배우도록 유도
 - 핸드폰에 탑재된 Assistant 기능을 시간, 장소, 최근 로그 등을 기반으로 redesign함
-- 네비게이션, 음식 배달, 예약(Google Duplex) 기능 등도 제공할 예정
+- 네비게이션, 음식 배달, 예약 (Google Duplex) 기능 등도 제공할 예정
 - 올해 안에 한국에도 Google Home & Google Home mini 출시 예정   
 ![googlehome](https://eagle705.github.io/assets/img/googlehome.png)
 
@@ -62,7 +62,7 @@ Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 - Program: TensorFlow Extended (TFX) 로 구현
 - Data: 익명 처리된 전화 통화 데이터
 - Input: (Audio -> ASR -> Text) + Audio feature + Context 
-- Model: RNN 
+- Model: RNN 기반 모델 (RNN, CNN, Attention, ..., 많을듯) 
 - Output: Text -> TTS -> Audio   
 
 ![Duplex](https://eagle705.github.io/assets/img/duplex.png)
