@@ -1,0 +1,25 @@
+---
+layout: post
+title:  "RDF 개념 및 구문 정리"
+subtitle:   "Knowledge base(KB) 사용을 위해"
+categories: cslog
+tags: deeplearning
+comments: true
+---
+
+본 Knowlede base를 구축하기 위해 RDF에 관한 문법 및 사용법에 대해 다룬 문서이다.
+
+### A. 소개
+- RDF란?
+- 기본적인 OWL, RDF, RDFS, LINED DATA에 대한 설명:   
+http://operatingsystems.tistory.com/entry/Basic-of-Semantic-Web?category=578406   
+http://operatingsystems.tistory.com/entry/Linked-Data-and-RDF?category=578406   
+http://operatingsystems.tistory.com/entry/RDFS?category=578406   
+http://operatingsystems.tistory.com/entry/OWL-Web-Ontology-Language   
+- 공식 OWL 관련 문서:   
+http://www.w3c.or.kr/Translation/REC-owl-features-20040210/   
+
+
+
+
+

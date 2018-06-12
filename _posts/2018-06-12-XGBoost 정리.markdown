@@ -1,0 +1,116 @@
+---
+layout: post
+title:  "XGBoost 정리"
+subtitle:   "요즘 Kaggle에서 가장 핫하다는"
+categories: cslog
+tags: deeplearning
+comments: true
+---
+
+본 문서는 XGBoost에 대한 기본적인 설명과 설치 가이드에 대해서 다룬 문서다.
+
+### A. 소개
+
+- 오픈소스 명: XGBoost
+- Github URL: https://github.com/dmlc/xgboost
+- Ref: Tianqi Chen and Carlos Guestrin. XGBoost: A Scalable Tree Boosting System. In 22nd SIGKDD Conference on Knowledge Discovery and Data Mining, 2016
+- 
+
+
+### B. 설치
+XGBoost는 CPU전용 설치와 GPU전용 설치 두개로 나뉜다.   
+CPU 전용으로 설치한다면,   
+```pip install xgboost``` 를 해버리면 끝이나
+실제로 사용하려고 하면, Decision Tree보다 느린 속도를 체감하게 되므로 자연스럽게 GPU를 쓰게 된다.   
+GPU 전용으로 설치하려면, 소스로부터 직접 컴파일 해야한다.
+XGBoost에서는 install guide를 제공해주고 있는데, 현재까지 나온 install guide에는 약간의 문제가 있는데 바로 multi-gpu 관련 문제다. multi-gpu를 사용하기 위해선 GPU간의 communication을 담당해주는 **NCLL**(pronounced "Nickel") 이라는걸 셋팅해줘야하는데 기본 가이드에선 본 셋팅이 빠져있기 때문이다.   
+설치 가이드: http://xgboost.readthedocs.io/en/latest/build.html#building-with-gpu-support   
+교정된 내용 출처: https://github.com/dmlc/xgboost/issues/2915   
+
+Ubuntu기준 전체적인 설치 프로세스는 다음과 같다.
+```
+git clone --recursive https://github.com/dmlc/xgboost
+git submodule init
+git submodule update
+
+git clone --recursive https://github.com/dmlc/xgboost
+cd xgboost; make -j4
+
+mkdir build
+cd build
+
+# 여기서 셋팅이 중요! (공식가이드에선 -DUSE_NCCL=ON가 빠져있음)
+cmake .. -DUSE_CUDA=ON -DUSE_NCCL=ON
+make -j
+```
+
+파이썬 패키지 설치
+```
+cd ..
+cd python-package; sudo python setup.py install
+sudo apt-get install python-setuptools
+export PYTHONPATH=~/xgboost/python-package
+cd python-package; python setup.py develop --user
+```
+그러나 여기서 설치된게 conda env에 저장되는건 아니다.   
+xgboost 폴더에서 conda 환경폴더로 복사해주면 끝!
+```
+사용자계정:~/xgboost$ cp -R * ~/anaconda3/envs/dl/lib/python3.6/site-packages/xgboost/
+```
+
+만약 Jupyter notebook에서 conda env의 커널이 안나온다면 다음 명령어로 해결하자.
+```
+source activate myenv
+python -m ipykernel install --user --name myenv --display-name "Python (myenv)"
+```
+
+## 사용법
+간단하다. 파라미터 몇개만 추가해주면 된다.
+```python3
+import xgboost as xgb 
+dtrain = xgb.DMatrix(x_train, label=y_train)
+dtest = xgb.DMatrix(x_test, label=y_test)
+param = {
+    'max_depth': 4,  # the maximum depth of each tree
+    'eta': 0.3,  # the training step for each iteration
+    'silent': 1, # logging mode - quiet
+    'objective': 'multi:softprob',  # error evaluation for multiclass training
+    'num_class': 2, # the number of classes that exist in this datset
+#   'gpu_id': 0, # 특정 GPU를 지정하고 싶을때 쓰는 id 
+    'n_gpus' : 2, # 2개 사용하자
+    'max_bin': 16, # GPU 
+    'tree_method': 'gpu_hist', # GPU method (자세한 설명은 문서로!)
+    'predictor':'gpu_predictor' # train뿐만아니라 predict할때도 gpu쓸건지 결정
+}   
+
+num_round = 35 # the number of training iterations
+model = xgb.train(param, dtrain, num_round)
+```
+
+### CPU vs GPU in XGBoost
+```
+# 실험 데이터 45,000 건에 대한 결과
+# Before GPU
+# CPU times: user 11min 57s, sys: 6min 2s, total: 17min 59s
+# Wall time: 8min 10s
+
+# After GPU
+# CPU times: user 1min 35s, sys: 8.03 s, total: 1min 43s
+# Wall time: 10.1 s
+
+GPU 2대가 잘 돌아간다~
+# +-----------------------------------------------------------------------------+
+# | NVIDIA-SMI 390.67                 Driver Version: 390.67                    |
+# |-------------------------------+----------------------+----------------------+
+# | GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+# | Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+# |===============================+======================+======================|
+# |   0  GeForce GTX 108...  Off  | 00000000:02:00.0  On |                  N/A |
+# | 37%   54C    P2   205W / 250W |   6352MiB / 11177MiB |     75%      Default |
+# +-------------------------------+----------------------+----------------------+
+# |   1  GeForce GTX 108...  Off  | 00000000:03:00.0 Off |                  N/A |
+# | 32%   45C    P2   172W / 250W |    811MiB / 11178MiB |     45%      Default |
+# +-------------------------------+----------------------+----------------------+
+```
+
+
