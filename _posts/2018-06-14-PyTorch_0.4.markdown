@@ -33,7 +33,7 @@ comments: true
 
 ##### ```Tensor```의 ```type()``` 함수가 변경됨
 예전엔 ```type()```함수가 데이터의 타입을 리턴했습니다만, 지금은 ```torch.Tensor```를 리턴합니다.(Variable도 그렇겠죠??) 에전처럼 데이터타입을 보고싶으면, ```type()``` 대신 ```x.type()``` 또는 ```isinstance()``` 를 사용해야합니다.   
-```python
+```py
 >>> x = torch.DoubleTensor([1, 1, 1])
 >>> print(type(x))  # was torch.DoubleTensor
 "<class 'torch.Tensor'>"
@@ -45,7 +45,7 @@ True
 
 ##### ```autograd```가 tracking history를 하는 시점?
 ```autograd```는 Tensor의 gradient를 계산하기 위해 computational graph를 고려하기 위해 고안되었었습니다. ```autograd```의 핵심 flag인 ```requires_grad```는 이제 ```Tensors```의 attribute가 되었습니다. 그렇다면 이제 ```Tensors```는 과연 언제부터 computational graph를 고려하게 될까요? 아래 예제를 통해 보시면 직접 ```requires_grad``` flag를 ```True```로 지정해줘야함을 알 수 있습니다.   
-```python
+```py
 >>> x = torch.ones(1)  # create a tensor with requires_grad=False (default)
 >>> x.requires_grad
 False
@@ -79,7 +79,7 @@ True
 
 ###### ```requires_grad``` flag 조작하기
 default 값은 ```False```로 되어있습니다. 아래와 같이 변경할 수 있습니다. 함수 뒤에가 ```_``` 이면 ```in-place```(새로 대입할 필요가 없는, 그 자리에서 교체되는)로 보시면 됩니다
-```python
+```py
 >>> existing_tensor.requires_grad_()
 >>> existing_tensor.requires_grad
 True
@@ -93,7 +93,7 @@ True
 그러므로 **추천**하기로는 ```x.detach()```사용을 권합니다. 얘는 ```.data```와 비슷한 역할(```share data```, ```require_grad=False```)을 하지만 값이 바뀌면 ```autograd```가 바뀐걸 알 수 있습니다. 기억할건, 왠만하면 ```.detach()```를 사용하면 된다는 것입니다. 아래 예제를 보시죠.   
 
 ```Tensor.detach()``` 사용할 때 (**권장**),
-```python
+```py
 >>> a = torch.tensor([1,2,3.], requires_grad = True)
 >>> out = a.sigmoid()
 >>> c = out.detach()
@@ -108,7 +108,7 @@ RuntimeError: one of the variables needed for gradient computation has been modi
 ```
 
 ```Tensor.data``` 사용할 때 (비추),
-```python
+```py
 >>> a = torch.tensor([1,2,3.], requires_grad = True)
 >>> out = a.sigmoid()
 >>> c = out.data
@@ -125,7 +125,7 @@ tensor([ 0.,  0.,  0.])
 
 ##### ```Scalar Tensors```지원 (0-dimensional Tensors)
 이전 버전에서는 ```Tensor``` vector에서 인덱싱하면 ```Python number```를 줬지만 ```Variable``` vector에서는 ```Tensor``` vector와는 다르게(inconsistently!) vector of size ```(1,)```을 리턴했습니다. sum함수도 마찬가지였습니다. 이제는 numpy.array 스타일처럼 Scalar Tensor를 지원합니다. (```.item()``` 을 주목해서보자. 나중에 사용할 수도)   
-```python
+```py
 >>> torch.tensor(3.1416)         # create a scalar directly
 tensor(3.1416)
 >>> torch.tensor(3.1416).size()  # scalar is 0-dimensional
@@ -156,7 +156,7 @@ torch.Size([])
 
 ##### Deprecation of ```volatile``` flag
 ```volatile```는 이전 버전에서는 주로 inference할때 많이 사용되었었습니다. ```volatile``` flag는 이제 deprecated 되었고, 효과가 없습니다. 전에는 ```Variable```에서 ```volatile=True``` 조건이면 ```autograd```가 추적하지 않았지만 이젠 ```torch.no_grad()```, ```torch.set_grad_enabled(grad_mode)``` 외에 다른 것들로 대체 되었습니다.   
-```python
+```py
 >>> x = torch.zeros(1, requires_grad=True)
 >>> with torch.no_grad():
 ...     y = x * 2
