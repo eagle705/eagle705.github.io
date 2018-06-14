@@ -7,7 +7,7 @@ tags: deeplearning
 comments: true
 ---
 
-본 문서는 챗봇과 Knowlede base를 연동하기 위해 DBpedia를 설치하고 사용하는 내용을 다룬 문서이다.
+본 문서는 챗봇과 Knowlede base를 연동하기 위해 DBpedia를 설치하고 사용하는 내용을 다룬 문서입니다.
 
 ### A. 소개
 

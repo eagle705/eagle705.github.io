@@ -7,14 +7,14 @@ tags: deeplearning
 comments: true
 ---
 
-본 문서는 XGBoost에 대한 기본적인 설명과 설치 가이드에 대해서 다룬 문서다.
+본 문서는 XGBoost에 대한 기본적인 설명과 설치 가이드에 대해서 다룬 문서입니다.
 
 ### A. 소개
 
 - 오픈소스 명: XGBoost
 - Github URL: https://github.com/dmlc/xgboost
 - Ref: Tianqi Chen and Carlos Guestrin. XGBoost: A Scalable Tree Boosting System. In 22nd SIGKDD Conference on Knowledge Discovery and Data Mining, 2016
-- 
+
 
 
 ### B. 설치
@@ -33,7 +33,6 @@ git clone --recursive https://github.com/dmlc/xgboost
 git submodule init
 git submodule update
 
-git clone --recursive https://github.com/dmlc/xgboost
 cd xgboost; make -j4
 
 mkdir build
@@ -66,10 +65,12 @@ python -m ipykernel install --user --name myenv --display-name "Python (myenv)"
 
 ## 사용법
 간단하다. 파라미터 몇개만 추가해주면 된다.
+(parameter 설명: http://xgboost.readthedocs.io/en/latest/parameter.html)
 ```python3
 import xgboost as xgb 
 dtrain = xgb.DMatrix(x_train, label=y_train)
 dtest = xgb.DMatrix(x_test, label=y_test)
+
 param = {
     'max_depth': 4,  # the maximum depth of each tree
     'eta': 0.3,  # the training step for each iteration

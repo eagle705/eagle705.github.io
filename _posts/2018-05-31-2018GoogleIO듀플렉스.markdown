@@ -7,7 +7,7 @@ tags: deeplearning
 comments: true
 ---
 
-본 문서는 2018 Google I/O에서 소개된 Google Home, Duplex 등에 대해서 소개하는 문서다.   
+본 문서는 2018 Google I/O에서 소개된 Google Home, Duplex 등에 대해서 소개하는 문서입니다.   
 Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 
 ![googleIO](https://eagle705.github.io/assets/img/2018google.png)
