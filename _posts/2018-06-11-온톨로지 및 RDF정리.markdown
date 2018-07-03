@@ -32,7 +32,13 @@ http://www.w3c.or.kr/Translation/REC-owl-features-20040210/
 - 설치방법: 접속 후 OS에 맞는 버전 다운로드: http://protege.stanford.edu/
 - 튜토리얼: http://wiblee.tistory.com/entry/Protege-%ED%8A%9C%ED%86%A0%EB%A6%AC%EC%96%BC-01-%ED%94%84%EB%A1%9C%ED%85%8C%EC%A0%9C-%EA%B0%9C%EC%9A%94-%EC%84%A4%EC%B9%98
 - 그밖: ```protege 사용법``` 검색 in Google
-
+- refs   
+- How To build a RDF dataset: https://www.youtube.com/watch?v=leO7__ZonbQ
+- How To Create Classes And Properties: https://www.youtube.com/watch?v=MbauHV2-XYw
+- visualization: https://www.youtube.com/watch?v=bpjMYBc98bk
+- DataType Prop vs ObjectType Prop : https://stackoverflow.com/questions/17724983/how-can-i-recognize-object-properties-vs-datatype-properties
+- Running Simple SPARQL Queries: https://www.youtube.com/watch?v=0zUos1zWB5k
+- importing data plugin: https://protege.stanford.edu/conference/2009/slides/ImportingDataProtegeConference2009.pdf
 
 
 ### C. RDF 구축 툴
