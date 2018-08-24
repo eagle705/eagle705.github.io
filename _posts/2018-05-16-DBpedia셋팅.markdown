@@ -56,7 +56,7 @@ http://localhost:8890/conductor  에 접속해서 테스트!
 종료할 땐, 
 ```
 ìsql
-shutdonw();
+shutdown();
 ```
 
 기본적인 계정 정보 (id:dba / pw:dba)
