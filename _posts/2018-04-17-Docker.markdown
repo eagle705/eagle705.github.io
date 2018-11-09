@@ -14,23 +14,83 @@ Docker를 처음 입문한건 텐서플로우를 윈도우에 설치하면서부
 - dockerhub는 github같은 오픈된 도커 이미지 저장소다
 - docker id는 앞부분의 일부만 입력해도 실행이 된다
 
+### Docker 상태체크
 ```docker ps -a``` : 실행중인 도커 컨테이너 리스트를 확인   
 ```docker images``` : 도커 이미지 목록   
 ```docker login``` : docker hub계정으로 로그인 가능   
 ```docker restart <도커id>``` : 도커 컨테이너 재실행   
 ```docker attach <도커id>``` : (실행중인)도커 컨테이너에 접속 (웹서버 같이 백그라운드에서 실행되는 컨테이너에 attach로 접속하면 커맨드를 입력할 수 없고 로그인만 볼 수 있음)   
+```docker inspect <도커id>``` : 도커 컨테이너의 공유폴더나 기타 옵션들을 다 볼수있음!   
+
+### Docker 컨테이너 & 이미지 삭제
+```docker rm <도커id>``` : 도커 컨테이너를 삭제함
+```docker rmi <도커id>``` : 도커 이미지를 삭제함   
+이미지까지 삭제해줘야 나중에 docker image를 업로드할때 같은 이름일경우 오류가 안남
+
+
+### Docker 컨테이너 안에 접속
 ```docker exec <도커id>``` : 컨테이너에 새로운 프로세스를 실행시킬 때 사용함(예를들면 쉘이나.. / 컨테이너가 재시작될때 같이 재시작되진 않는다고 함_체크필요!!)   
 ```docker exec -it  <도커id> /bin/bash```: 컨테이너에 접속해서 bash 쉘 실행! (-it 라고 덧붙여 주어야 한다. 이는 STDIN 표준 입출력을 열고 가상 tty (pseudo-TTY) 를 통해 접속하겠다는 의미)
+### Docker 컨테이너 안에 파일 복사
+```docker cp /path/foo.txt <도커id>:/path/foo.txt```: 호스트에서 컨테이너로 파일 전송하는 방법   
+```docker cp <도커id>:/path/foo.txt /path/foo.txt```:컨테이너에서 호스트로 파일 전송하는 방법   
 
+
+### Docker 실행
 ```docker run -d -p 8888:8888 -p 6006:6006 dockerhub계정/이미지이름```: 도커 이미지 다운받고 포트포워딩 후 실행(아마 -d가 다운.. -p가 포트포워딩인듯?)   
+```docker run -p 443:1443 -p 8080:8000  -itd -v <호스트의 로컬디렉토리>:<컨테이너의 디렉토리> --name <생성할컨테이너이름> <이미지이름>```: -v 옵션으로 공유폴더 마운트를 해줄 수 있음! -d는 백그라운드 옵션
+```docker-compose up -d```
+
+
+### Docker 이미지 업로드
 ```docker commit -m "<메세지>" <도커id> dockerhub계정/이미지이름:태그```: docker 이미지 커밋(컨테이너에서 이미지 생성, 포트포워딩 새로 짜줄때 많이 씀)   
 ```docker commit <도커id> <이미지이름>```: docker 이미지 커밋(컨테이너에서 이미지 생성, 포트포워딩 새로 짜줄때 많이 씀)
 ```docker push dockerhub계정/이미지이름:태그```: dockerhub에 이미지 업로드
 
-```docker cp /path/foo.txt <도커id>:/path/foo.txt```: 호스트에서 컨테이너로 파일 전송하는 방법   
-```docker cp <도커id>:/path/foo.txt /path/foo.txt```:컨테이너에서 호스트로 파일 전송하는 방법   
+### Docker 이미지 파일화 및 다시 로딩
 
-```docker run -p 443:1443 -p 8080:8000  -itd -v <호스트의 로컬디렉토리>:<컨테이너의 디렉토리> --name <생성할컨테이너이름> <이미지이름>```: -v 옵션으로 공유폴더 마운트를 해줄 수 있음! -d는 백그라운드 옵션
+#### 컨테이너 To 이미지:태그
+```
+sudo docker commit oj-postgres oj-postgres:181107
+sudo docker commit oj-backend oj-backend:181107
+sudo docker commit oj-redis oj-redis:181107
+sudo docker commit judge-server judge-server:181107
+```
+
+#### 이미지:태그 To 파일(tar)
+```
+sudo docker save oj-redis:181107 > oj-redis
+sudo docker save oj-backend:181107 > oj-backend
+sudo docker save oj-postgres:181107 > oj-postgres
+sudo docker save judge-server:181107 > judge-server 
+```
+
+#### 중간팁, docker관련 명령어 검색
+```history | grep docker```
+
+#### 파일 To 이미지
+```
+docker load < judge-server
+docker load < oj-backend
+docker load < oj-postgres
+docker load < oj-redis
+```
+
+#### 다시 로딩 (docker-compose.yml)
+```
+1 version: "3"
+2 services:
+3
+4   oj-redis:
+5     image: oj-redis:180918  <-- 이 부분을 images에 있는 이미지:태그 로 변경
+6     container_name: oj-redis_180918
+7     restart: always
+8     volumes:
+9       - $PWD/data/redis:/data
+10     ports:
+11       - "0.0.0.0:6379:6379"
+```
+```docker-compose up -d```로 새로 이미지 생성
 
 참고용!!: https://www.slideshare.net/rkawkxms/docker-container
 도커 치트시트 https://gist.github.com/nacyot/8366310

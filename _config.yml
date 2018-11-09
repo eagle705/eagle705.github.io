@@ -13,12 +13,12 @@ url:                 https://eagle705.github.io
 baseurl:             ""
 
 # A very short description of your page
-tagline:             오늘 하루를 사는 것이 행복이다
+tagline:             There is no best choice, but only a choice not to regret
 
 # A short description of the page, used in the sidebar and as fallback for the meta description tag.
 # Markdown enabled, but don't use more than one paragraph (enforced by `>`)
 description:         >
-  오늘!!만 사는 사람
+  Try your best rather than be the best
 
 # This should be the same author as first entry in `_data/authors.yml`
 author:
