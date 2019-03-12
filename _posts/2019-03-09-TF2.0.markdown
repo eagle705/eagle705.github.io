@@ -1,0 +1,57 @@
+---
+layout: post
+title:  "TF 2.0 dev summit 2019"
+subtitle:   "tf2.0"
+categories: cslog
+tags: deeplearning
+comments: true
+---
+
+TF가 어느새 벌써 2.0 버전이 되었다. 이 프레임워크를 처음엔 떠나고 싶었지만.. 그 발전 속도가 너무나 빨랐고, 커버리지는 물론이며, 점점 사용성도 좋아졌기에 다시 돌아오게 되었고 요즘엔 잘 쓰고 있다. 근데 이번 발표때 나온 기능을 보니 그 전보다 더 좋아졌기에 정말 좋은 소식이 아닐 수 없겠다. 조금 정리해서 포스팅하고자하는데, 도움이 되면 좋겠다.
+
+
+
+
+#### Summary
+- ```tf.keras``` as the high-level API
+- ```Eager execution``` by default
+- Duplicate functionality 제거
+- internal ops 도 접근 가능 by ```tf.raw_ops```
+- Migration guide 제공 (tf_upgrade_v2)
+
+#### High level API with keras
+- TF2.0에서는 keras와 tf의 특징들을 더 잘 융합하려 노력했음 ex) tf.estimator, tf.eager (default now), tf.data (with eager!!) 
+- 버전 통합!! ex. one version of LSTM, GRU (GPU사용시 cudnn kernel 자동 적용)
+- ```tf.feature_column``` -> keras, estimator 둘다 적용 가능
+- TensorBaord 적용이 쉬움, 게다가 프로파일링도 제공
+
+![](assets/markdown-img-paste-20190309145930883.png)
+
+
+```python
+tb_callback = tf.keras.callbacks.TensorBoard(log_dir=logi_dir)
+model.fit (
+x_train, y_train, epochs=5,
+validation_data=[x_test,y_test],
+callbacks=[tb_callback]
+)
+```
+- Multi-GPU 사용이 편함!! with 구문으로 처리하면 끝~~!
+```python
+strategy = tf.distribute.MirroredStrategy()
+with strategy.scope():
+  model = tf.keras.models.sequential([])
+  model.compile()  
+```
+
+#### What about Graph?
+- graph화하면 TPU나 모바일등등 특정 device에서 좋은 성능을 낼 수 있음
+- eager mode가 default로 셋팅 됨에 따라 tf.function API로 대체함
+- session.run  안써도됨
+```python
+@tf.function
+def add(a, b):
+  return a + b
+```
+- graph가 eager모드보다 10배정도 더 빠름 (0.004 vs 0.03; LSTM cell 실행 선언 예제)
+

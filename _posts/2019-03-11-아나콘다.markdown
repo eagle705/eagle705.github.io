@@ -1,0 +1,44 @@
+---
+layout: post
+title:  "Anaconda 정리"
+subtitle:   "상용배포까지"
+categories: cslog
+tags: deeplearning
+comments: true
+---
+
+Anaconda야 뭐 파이썬을 쓰는 사람이라면 이미 다 알고있는 필수템이지만, 실제로 아나콘다 환영을 배포를 위해 써본적은 없어서 이 기회에 한 번 정리해보고자 한다.
+
+
+
+
+#### Export
+- 환경 추출은 다음과 같이하면 된다
+- 추출할 환경에 접속 후 
+
+```bash
+(dl_py3)  eagle@eagle-1 ~/workspace/project conda-env export -f env.yml
+
+(dl_py3)  eagle@eagle-1 ~/workspace/project ls
+env.yml
+```
+
+- env.yml 파일은 아래와 같은 구조를 갖고 있다.
+
+```
+ 1 name: dl_py3
+ 2 channels:
+ 3   - defaults
+ 4 dependencies:
+ 5   - alabaster=0.7.10=py36h174008c_0
+ 6   - anaconda=5.2.0=py36_3
+ 7   - anaconda-client=1.6.14=py36_0
+...(중략)
+ 248 prefix: /Users/eagle/anaconda3/envs/dl_py3
+
+```
+- 만약, ```requirements.txt```로 해결하고 싶다면 
+
+```bash
+(dl_py3)  eagle@eagle-1 ~/workspace/project pip freeze > requirements.txt
+```

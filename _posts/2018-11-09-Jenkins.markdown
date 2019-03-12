@@ -1,0 +1,62 @@
+---
+layout: post
+title:  "Jenkins 설치"
+subtitle:   "CI"
+categories: cslog
+tags: deeplearning
+comments: true
+---
+
+예전에 학부때 웹개발 관련 인턴을 6개월 정도 한적이있었다. 그때 잠깐 Jenkins 얘기가 나왔었는데.. 안타깝게 인턴기간이 끝나서 사용해보질 못했었다. 그런데 이번에 회사에서 사용할 기회가 생겨서 이번 일을 계기로 짧게 포스팅 해볼까 한다.
+
+#### 환경
+- MacOS
+- homebrew 설치
+
+#### 설치
+```brew install jenkins``` 명령어 입력
+
+```
+==> Downloading http://mirrors.jenkins.io/war/2.149/jenkins.war
+==> Downloading from http://ftp-chi.osuosl.org/pub/jenkins/war/2.149/jenkins.war
+######################################################################## 100.0%
+==> jar xvf jenkins.war
+==> Caveats
+Note: When using launchctl the port will be 8080.
+
+To have launchd start jenkins now and restart at login:
+  brew services start jenkins
+Or, if you don't want/need a background service you can just run:
+  jenkins
+==> Summary
+🍺  /usr/local/Cellar/jenkins/2.149: 7 files, 75.8MB, built in 22 seconds
+```
+
+#### 실행
+```brew services start jenkins``` : 시작
+```brew services stop jenkins``` : 중단
+```brew services restart jenkins``` : 재시작
+
+
+```
+==> Tapping homebrew/services
+Cloning into '/usr/local/Homebrew/Library/Taps/homebrew/homebrew-services'...
+remote: Enumerating objects: 14, done.
+remote: Counting objects: 100% (14/14), done.
+remote: Compressing objects: 100% (10/10), done.
+remote: Total 14 (delta 0), reused 9 (delta 0), pack-reused 0
+Unpacking objects: 100% (14/14), done.
+Tapped 1 command (43 files, 55KB).
+==> Successfully started `jenkins` (label: homebrew.mxcl.jenkins)
+```
+- 실행하면 local 8080 포트에서 접속가능
+
+#### 설정
+- 젠킨스의 설정파일은 다음 위치에 있음
+- ```/usr/local/opt/jenkins/```에서 ```homebrew.mxcl.jenkins.plist```파일을 수정하면 됨
+#### 빌드셋팅
+- http://kingbbode.tistory.com/35
+
+##### Reference
+https://www.hooni.net/xe/study/79186
+
