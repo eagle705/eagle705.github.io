@@ -7,14 +7,20 @@ order: 10
 
 ## 소개
 
-안녕하세요, 윤주성입니다.
+안녕하세요, 자연어처리와 머신러닝에 관심있는 윤주성입니다.
 
 반갑습니다.
 
-글을 읽고, 정리하는 것
-연구하는 것 등을 좋아합니다.
+저는
+
+[1] 글을 읽고, 정리하는 것, 연구하고 발표하는 것 등을 좋아합니다
+[2] ML & NLP 교육에 관심이 있습니다
 
 하루 하루를 성실히 사는 것이, 바짝 살고 쭉 노는 것 보다 낫다고 믿습니다.
+
+*"Better is one day in your court than a thousand elsewhere"*
+
+Email: xelloss705@naver.com / xelloss705@gmail.com
 
 ## 약력
 

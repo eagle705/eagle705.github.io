@@ -1,0 +1,48 @@
+---
+layout: post
+title:  "PlantUML"
+subtitle:   "다이어그램그리기"
+categories: cslog
+tags: deeplearning
+comments: true
+---
+
+PlantUML은 흔히 사용하는 UML을 language를 통해 코딩하듯 그릴 수 있는걸 의미한다. 이번에 프로젝트를하면서 처음 사용해보게되었는데 생각보다 진짜 와.. 너무 편해서 이 기회에 한번 정리하고자한다.
+#### Reference
+- 사실상 아래 레퍼를 따라하는 것만으로도 마스터할 수 있음
+- http://plantuml.com/ko/sequence-diagram
+
+
+#### 시작과 끝
+```
+@startuml
+<내용>
+@enduml
+```
+
+#### Sequence diagram
+- 화살표 한개는 실선을 의미 ( -> ) : 동기 (비동기는 화살표가 반쪽짜리)
+- 화살표 두개는 점선을 의미 ( -- > ) : 반환
+- 자기 자신을 참조하려면 from, to 를 같은 이름을 쓰면됨
+- group핑 가능
+- loop 표현가능
+- actor 표현가능
+- title 달 수 있고
+- page도 나눌 수 있음
+
+
+#### example
+
+
+```
+@startuml
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
+
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: another authentication Response
+@enduml
+```
+**- 결과:**   
+![](assets/markdown-img-paste-20190319101130516.png)
+

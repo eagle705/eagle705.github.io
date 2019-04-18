@@ -8,7 +8,7 @@ eagle705:
   # Used at the bottom of each page and at the top of the `about` layout
   # Markdown enabled, can use multiple paragraphs (enabled by `|`)
   about:             |
-    맡은자, 오늘만 사는 사람
+    Steward live in Adullam
 
   # This photo will be used in the about section
   picture:

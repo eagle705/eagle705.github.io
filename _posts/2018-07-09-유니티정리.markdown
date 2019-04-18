@@ -2,7 +2,7 @@
 layout: post
 title:  "유니티 정리"
 subtitle:   "유니티 Get Started"
-categories: essay
+categories: cslog
 tags: 회사생활
 comments: true
 ---
@@ -63,4 +63,3 @@ https://unity3d.com/kr/learn/tutorials
 https://unity3d.com/kr/learn/tutorials/s/survival-shooter-tutorial
 
 asset list
-

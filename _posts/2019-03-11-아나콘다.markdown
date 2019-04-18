@@ -9,15 +9,27 @@ comments: true
 
 Anaconda야 뭐 파이썬을 쓰는 사람이라면 이미 다 알고있는 필수템이지만, 실제로 아나콘다 환영을 배포를 위해 써본적은 없어서 이 기회에 한 번 정리해보고자 한다.
 
+#### View
+```bash
+conda info --envs
+```
 
+#### Conda create
+```
+conda create -n dl_py3 python=3.6 anaconda
+```
 
+#### Conda remove
+```
+conda remove --name myenv --all
+```
 
 #### Export
 - 환경 추출은 다음과 같이하면 된다
 - 추출할 환경에 접속 후 
 
 ```bash
-(dl_py3)  eagle@eagle-1 ~/workspace/project conda-env export -f env.yml
+(dl_py3)  eagle@eagle-1 ~/workspace/project conda-env -n dl_py3 export -f env.yml
 
 (dl_py3)  eagle@eagle-1 ~/workspace/project ls
 env.yml
@@ -35,8 +47,15 @@ env.yml
  7   - anaconda-client=1.6.14=py36_0
 ...(중략)
  248 prefix: /Users/eagle/anaconda3/envs/dl_py3
+```
+
+#### Import
+추출한걸 다시 import하려면
 
 ```
+conda env create -f env.yml
+```
+
 - 만약, ```requirements.txt```로 해결하고 싶다면 
 
 ```bash
