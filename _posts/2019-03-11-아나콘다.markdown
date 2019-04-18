@@ -26,7 +26,7 @@ conda remove --name myenv --all
 
 #### Export
 - 환경 추출은 다음과 같이하면 된다
-- 추출할 환경에 접속 후 
+- 추출할 환경에 접속 후
 
 ```bash
 (dl_py3)  eagle@eagle-1 ~/workspace/project conda-env -n dl_py3 export -f env.yml
@@ -56,7 +56,7 @@ env.yml
 conda env create -f env.yml
 ```
 
-- 만약, ```requirements.txt```로 해결하고 싶다면 
+- 만약, ```requirements.txt```로 해결하고 싶다면
 
 ```bash
 (dl_py3)  eagle@eagle-1 ~/workspace/project pip freeze > requirements.txt

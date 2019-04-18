@@ -7,12 +7,12 @@ tags: deeplearning
 comments: true
 ---
 
-오늘은 2016년도의 NMT 모델에 대해서 알아보고자한다. 발표를 갑작스레 맡게되었는데 음.. 오랜만에 NMT논문도 읽어보고 좋은 것 같다. ()포스팅하고)
+오늘은 2016년도의 NMT 모델에 대해서 알아보고자한다. 발표를 갑작스레 맡게되었는데 음.. 오랜만에 NMT논문도 읽어보고 좋은 것 같다. (포스팅도 하고)
 
 ### Neural Machine Translation in Linear Time
-- 저자:Nal Kalchbrenner, Lasse Espeholt, Karen Simonyan, Aaron van den Oord, Alex Graves, Koray Kavukcuoglu (Google Deepmind, London UK)
-- 딥마인드 (~~말 다했죠~~)
--
+- 저자:Nal Kalchbrenner, Lasse Espeholt, Karen Simonyan, Aaron van den Oord, Alex Graves, Koray Kavukcuoglu (Google Deepmind, London UK)   
+- 딥마인드 (~~말 다했다~~)
+
 ### Who is an Author?
 ![](assets/markdown-img-paste-20190417203106628.png)
 
