@@ -1,4 +1,4 @@
- ---
+---
 layout: post
 title:  "Neural Machine Translation in Linear Time"
 subtitle:   "2016"
