@@ -14,20 +14,20 @@ comments: true
 - 딥마인드 (~~말 다했다~~)
 
 ### Who is an Author?
-![](https://eagle705.github.io/_posts/assets/markdown-img-paste-20190417203106628.png)
+![](https://eagle705.github.io/_posts/assets/img/markdown-img-paste-20190417203106628.png)
 
 #### Abstract
 - 이 당시엔 Novel architecture였다 (2016년, 후에 ```Attention is all you need``` 논문에서도 인용함)
 - ```ByteNet```이라고 부름
 
-![](https://eagle705.github.io/_posts/assets/markdown-img-paste-20190412152730173.png)
+![](https://eagle705.github.io/_posts/assets/img/markdown-img-paste-20190412152730173.png)
 - one-dimensional CNN이고 Encoder-Decoder구조인데 Decoder를 Encoder위에 Stacking한 구조임
   - sequence의 temporal resolution 보존
   - source와 target의 lengths가 다른 걸 잘 처리함   
 
 - dilation방식(스케일을 넓힐 때 주로 사용함 자세한 내용은 아래 블로그 참고)의 CNN을 encoder(not masked), decoder(masked)에서 모두 사용함
 - https://m.blog.naver.com/PostView.nhn?blogId=laonple&logNo=220991967450&proxyReferer=https%3A%2F%2Fwww.google.com%2F)
-- ![](https://eagle705.github.io/_posts/assets/markdown-img-paste-20190412152535695.png)
+- ![](https://eagle705.github.io/_posts/assets/img/markdown-img-paste-20190412152535695.png)
 - Contribution
   - sequence length에 linear한 runtime을 자랑함 (단점은 메모리가 좀 더 많이 필요함, ~~layer를 더 쌓아서 그런건가~~)
   - character-level LM에서 SOTA기록함 (이전 SOTA였던 RNN 프레임워크 성능 깸)
@@ -69,7 +69,7 @@ comments: true
 #### 2. Neural Translation Model
 - NMT model은 다음의 분포를 estimate함   
 
-![](https://eagle705.github.io/_posts/assets/markdown-img-paste-20190415201158509.png)
+![](https://eagle705.github.io/_posts/assets/img/markdown-img-paste-20190415201158509.png)
 - s: source toekns, t: target tokens
 - 토큰은 단어가 될수도, 캐릭터가 될 수도 있음
 - source network(encoder)와 targer network(decoder)로 source representation을 target string이 되게 만들 것임
@@ -101,12 +101,12 @@ comments: true
 ##### 3.2. Dynamic Unfolding
 - Encoder와 Decoder가 처리하는 sequence의 length가 다르다면 둘은 directly connected 될 수 없음
 - 이를 해결하기 위해 Dynamic Unfolding이라는 메커니즘을 제안함
-![](https://eagle705.github.io/_posts/assets/markdown-img-paste-20190416121748296.png)
+![](https://eagle705.github.io/_posts/assets/img/markdown-img-paste-20190416121748296.png)
 - 원리는 간단함. ```encoder의 output의 representation```이 적당한 길이 ```|t^|```(```|s|```에 linear relationship)를 갖도록 생성함; source sequence length ```|s|```와 target sequence length ```|t|``` 로 ~~적절하게(?)~~ 생성
 - 대게 ```|t|``` 보다는 ```|t^|```가 길게 나옴 (a=1.20, b=0으로 논문에서 설정함)
-- ![](https://eagle705.github.io/_posts/assets/markdown-img-paste-20190416155539527.png)
+- ![](https://eagle705.github.io/_posts/assets/img/markdown-img-paste-20190416155539527.png)
 - 이 적절한 길이의 ```encoder output representation```으로 decoder에서 상황에 맞게(decoding되는 길이에 맞게) 가져다 쓰며 decoding함
-![](https://eagle705.github.io/_posts/assets/markdown-img-paste-20190416122507483.png)
+![](https://eagle705.github.io/_posts/assets/img/markdown-img-paste-20190416122507483.png)
 - EOS가 미리 나오면 그 time step까지만 쓰고, ```|t^|```보다 길게 나오면 encoder output representation 없이 EOS 나올때 까지 decoding 진행함
 - source에 padding을 추가해서 생성함 (논문에 자세히는 안나옴)
 
@@ -134,7 +134,7 @@ comments: true
     - Multiplicative Units(MU)는 Video pixel Networks (Kalchbrenner et al., 2016b; 본인이 썼던 논문) 에서 가져온 개념임
 - 두 버전 모두 다 활성함수 전에 Layer-Norm 사용함
 
-![](https://eagle705.github.io/_posts/assets/markdown-img-paste-20190416152422314.png)
+![](https://eagle705.github.io/_posts/assets/img/markdown-img-paste-20190416152422314.png)
 
 
 #### 4 Model Comparison
@@ -142,7 +142,7 @@ comments: true
 - 비교를 위해 Recurrent 버전까지 추가하겠음
 - [1] Decoder를 RNN으로 바꿔보자
 - [2] Enocder, Decoder 모두 RNN으로 바꾸되 stacked decoder 유지하자 (RNN Enc-Dec 구조와 가장 유사함)
-![](https://eagle705.github.io/_posts/assets/markdown-img-paste-20190416161742613.png)
+![](https://eagle705.github.io/_posts/assets/img/markdown-img-paste-20190416161742613.png)
 
 ##### 4.2 Comparison of Properties
 - Runtime 비교
@@ -152,7 +152,7 @@ comments: true
   - Path_S: length from source token to any output target token
   - Path_T: length from input target token to any output target token
 - ByteNet이 linear runtime도 보존 되고, RP도 만족시킴
-![](https://eagle705.github.io/_posts/assets/markdown-img-paste-20190416162108122.png)
+![](https://eagle705.github.io/_posts/assets/img/markdown-img-paste-20190416162108122.png)
 
 ##### 5. Character Prediction
 - Character-level language modelling benchmark에 대해서 평가함
@@ -178,7 +178,7 @@ comments: true
 - Table 3의 결과는 모두 LSTM 기반임
 - ByteNet이 성능이 제일 좋음 (현재는 24-layer transformer-XL이 SOTA)
 - 링크: http://nlpprogress.com/english/language_modeling.html
-  ![](https://eagle705.github.io/_posts/assets/markdown-img-paste-20190416185445267.png)
+  ![](https://eagle705.github.io/_posts/assets/img/markdown-img-paste-20190416185445267.png)
 
 ##### 6. Character-Level Machine Translation
 - WMT English to German translation Task에 대해서 평가함
@@ -200,17 +200,17 @@ comments: true
   - Beam search 사용: beam of size 12
 - Table2와 Table4에 따르면 ByteNet이 Character-level과 subword-level NMT와 비교할때 성능이 제일 좋음
   - 그러나 word-pieces를 사용하는 GNMT보다는 낮은데 word-pieces는 subword라고 생각안하고 word-level이라고 생각하는듯  
-- ![](https://eagle705.github.io/_posts/assets/markdown-img-paste-20190417103235370.png)
+- ![](https://eagle705.github.io/_posts/assets/img/markdown-img-paste-20190417103235370.png)
 
-- ![](https://eagle705.github.io/_posts/assets/markdown-img-paste-20190417103341820.png)
+- ![](https://eagle705.github.io/_posts/assets/img/markdown-img-paste-20190417103341820.png)
 - Table 5는 ByteNet의 English-German Translation 결과를 보여줌
 - recodering, trasliteration(단어 그대로 갖다 쓰는거)이 일어나는 특징이 있음
-- ![](https://eagle705.github.io/_posts/assets/markdown-img-paste-20190417111340546.png)
+- ![](https://eagle705.github.io/_posts/assets/img/markdown-img-paste-20190417111340546.png)
 - Figure 6는 gradient를 heatmap으로 시각화한건데, 단어는 단어를 구성하는 characters의 gradient를 합치고, 각 컬럼에 대해서 normalization한 것임
 - 두가지 dependency를 표현함
   - source와 output의 dependency
   - target과 previous target input의 dependency도 보여줌
-- ![](https://eagle705.github.io/_posts/assets/markdown-img-paste-20190417113019206.png)
+- ![](https://eagle705.github.io/_posts/assets/img/markdown-img-paste-20190417113019206.png)
 
 ##### 7. Conclusion
 - linear running time 갖는 NMT 제안함
