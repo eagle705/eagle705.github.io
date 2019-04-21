@@ -44,5 +44,4 @@ Alice <-- Bob: another authentication Response
 @enduml
 ```
 **- 결과:**   
-![](assets/markdown-img-paste-20190319101130516.png)
-
+![](https://eagle705.github.io/_posts/assets/markdown-img-paste-20190319101130516.png)

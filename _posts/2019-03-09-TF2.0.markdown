@@ -20,12 +20,12 @@ TF가 어느새 벌써 2.0 버전이 되었다. 이 프레임워크를 처음엔
 - Migration guide 제공 (tf_upgrade_v2)
 
 #### High level API with keras
-- TF2.0에서는 keras와 tf의 특징들을 더 잘 융합하려 노력했음 ex) tf.estimator, tf.eager (default now), tf.data (with eager!!) 
+- TF2.0에서는 keras와 tf의 특징들을 더 잘 융합하려 노력했음 ex) tf.estimator, tf.eager (default now), tf.data (with eager!!)
 - 버전 통합!! ex. one version of LSTM, GRU (GPU사용시 cudnn kernel 자동 적용)
 - ```tf.feature_column``` -> keras, estimator 둘다 적용 가능
 - TensorBaord 적용이 쉬움, 게다가 프로파일링도 제공
 
-![](assets/markdown-img-paste-20190309145930883.png)
+![](https://eagle705.github.io/_posts/assets/markdown-img-paste-20190309145930883.png)
 
 
 ```python
@@ -54,4 +54,3 @@ def add(a, b):
   return a + b
 ```
 - graph가 eager모드보다 10배정도 더 빠름 (0.004 vs 0.03; LSTM cell 실행 선언 예제)
-
