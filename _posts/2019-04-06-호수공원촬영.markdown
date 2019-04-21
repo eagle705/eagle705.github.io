@@ -2,8 +2,8 @@
 layout: post
 title:  "광교호수공원 드론 촬영"
 subtitle:   "광교호수공원촬영"
-categories: cslog
-tags: deeplearning
+categories: photo
+tags: drone
 comments: true
 ---
 
@@ -19,5 +19,3 @@ comments: true
 
 
 ![](assets/광교호수4_웹용.jpg)
-
-
