@@ -1,0 +1,23 @@
+---
+layout: post
+title:  "광교호수공원 드론 촬영"
+subtitle:   "광교호수공원촬영"
+categories: cslog
+tags: deeplearning
+comments: true
+---
+
+[190413] 광교호수공원에서 드론 촬영한거 몇가지 기록 남겨보고자한다. 개인적으로는 너무 만족스러웠다:)
+
+![](assets/광교호수1_웹용.jpg)
+
+
+![](assets/광교호수2_웹용.jpg)
+
+
+![](assets/광교호수3_웹용.jpg)
+
+
+![](assets/광교호수4_웹용.jpg)
+
+
