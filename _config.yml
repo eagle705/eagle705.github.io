@@ -27,7 +27,7 @@ author:
 
 # Fallback image and color
 image:               /assets/img/sidebar_img.jpg
-color:               '#4f86aa'
+color:               '#a2393a' # #4f86aa
 
 # The font used for headings. Expects a string that is a valid CSS font-family value.
 font_heading:        "'Lato', 'Sans-serif'"
