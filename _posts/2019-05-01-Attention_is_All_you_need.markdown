@@ -5,6 +5,7 @@ subtitle:   "2017, NIPS"
 categories: cslog
 tags: deeplearning
 comments: true
+use_math: true
 ---
 
 이번엔 오늘날의 NLP계의 표준이 된 Transformer를 제안한 논문인 ```Attenion Is All You Need```에 대해서 리뷰해보고자 한다. 대략적인 내용은 이미 알고 있었지만, 디테일한 부분도 살펴보고자 한다.

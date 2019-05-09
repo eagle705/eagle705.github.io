@@ -5,6 +5,7 @@ subtitle:   "Bert"
 categories: cslog
 tags: deeplearning
 comments: true
+use_math: true
 ---
 
 요즘 NLP의 발전이 빨라졌는데, 그 중싱엔 Self-Attention -> Transformer -> BERT 가 있다. NLP계의 ImageNet 시대가 열렸다 라고 말할정도로 큰 발전을 이루어졌는데, 그 중심에는 BERT가 있다. 오늘 그 핫하다는 BERT에 대해서 한번 알아보자.
@@ -28,7 +29,7 @@ Jacob Devlin is a Senior Research Scientist at Google. At Google, his primary re
 - 결과적으로는 pre-trained BERT representations는 단지 output layer 한개만 추가해도 다양한 영역에서 SOTA를 찍는 fine-tune이 가능함
 - 11개의 NLP Task에서 new SOTA기록하고, SQuAD v1.1 QA에서 사람보다 2.0 높은 F1 성능 기록함
   - GLUE benchmark에서 **80.4%** 달성함 기존 것보다 **7.6%** 향상시킴
-  
+
 
 
 #### 1. Introduction
@@ -46,16 +47,16 @@ Jacob Devlin is a Senior Research Scientist at Google. At Google, his primary re
 - BERT에서는 기존에 비판했던 objective function을 쓰진 않음(left-to-right 구조에 dependent했던). 대신에 **MLM(Masked Language Model**; Taylor, 1953)의 objective function을 사용함
 - MLM은 랜덤하게 input token의 일부를 masking처리 후 그 부분을 예측하는 것을 목표로함.
 - ```MLM objective allows the representation to fuse the left and the right context``` (해석보단 원문으로)
-- 본 논문의 contribution은 
+- 본 논문의 contribution은
   - Bidirectional pre-training for LM by MLM (maksed language models)
-  - task-specific architecture에 대한 model engineering 안해도됨. BERT는 fine-tuning based representation model로는 sentence-level, token-level tasks에서 첫번째로 SOTA 찍은 모델임 
+  - task-specific architecture에 대한 model engineering 안해도됨. BERT는 fine-tuning based representation model로는 sentence-level, token-level tasks에서 첫번째로 SOTA 찍은 모델임
   - 11개의 NLP Task에서 SOTA 찍었음. 코드도 공개함(https://github.com/google-research/bert)
 
 
 
 #### 2. Related work
 ##### 2.1. Feature-based Approaches
-- non-neural과 neural(word2vec)한 방법으로 나뉨 
+- non-neural과 neural(word2vec)한 방법으로 나뉨
 - pre-trained word embedding은 learned from scratch로부터 얻은 embedding보다 확연히 개선된 결과를 보였었음
 - ELMo는 traditional word embeddign research를 different dimension에 따라 일반화시킴
 - ELMo는 context-sensitive features를 LM으로부터 추출함
@@ -81,7 +82,7 @@ Jacob Devlin is a Senior Research Scientist at Google. At Google, his primary re
   - pre-training procedures
   - fine-tuning procedures
   - differences between BERT and OpenAI GPT
-  
+
 #### 3.1 Model Architecture
   - BERT는 multi-layer Bidirectional Transformer encoder를 기반으로 함(tensor2tensor 참고)
   - Transformer 자체는 요즘 어디에서나 쓰임(the use of Transformer has become ubiquitous)
