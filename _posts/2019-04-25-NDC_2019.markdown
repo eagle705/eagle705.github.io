@@ -1,0 +1,46 @@
+---
+layout: post
+title:  "2019 NDC"
+subtitle:   "AI Track"
+categories: cslog
+tags: cslog
+comments: true
+---
+
+2019년 NDC 참관 리뷰
+
+#### 게임디자이너 & 확률 통계
+
+- 발표자: 박세환 - 넥슨코리아
+
+#### Deep Learning & Game Data Analysis
+
+- 발표자: 김승원 - 크래프톤 / KRAFTON
+
+- 이탈유저 예측
+  - 한달동안 접속안하면 이탈유저라 정의함
+  - 유저들의 변수를 로그로 가져옴
+    - 던전 플레이기록
+    - 돈쓴기록
+    - 강화기록
+  - normalization (min-max norm)
+  - Fill Missing Values 
+    - 없앨거냐
+    - -1로 채울거냐 
+    - 대략 채워넣을거냐
+  - NCsoft competition result 2017
+- Monster Clear time regression model
+  - Design된 몬스터에 대한 클리어 시간 예측
+  - model feature
+    - 유저정보
+      - 장비레벨
+      - 파티구성 정보: 탱커, 딜러, 힐러
+      - 무기 등급, 강화정도
+      - 크리스탈 정보
+    - 몬스터 정보
+      - HP
+      - ...
+
+- 헤비유저 예측
+
+

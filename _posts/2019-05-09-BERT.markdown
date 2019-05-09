@@ -1,0 +1,88 @@
+---
+layout: post
+title:  "BERT- Pre-training of Deep Bidirectional Transformers for Language Understanding"
+subtitle:   "Bert"
+categories: cslog
+tags: deeplearning
+comments: true
+---
+
+요즘 NLP의 발전이 빨라졌는데, 그 중싱엔 Self-Attention -> Transformer -> BERT 가 있다. NLP계의 ImageNet 시대가 열렸다 라고 말할정도로 큰 발전을 이루어졌는데, 그 중심에는 BERT가 있다. 오늘 그 핫하다는 BERT에 대해서 한번 알아보자.
+
+### BERT- Pre-training of Deep Bidirectional Transformers for Language Understanding
+- 저자:Jacob Devlin Ming-Wei Chang Kenton Lee Kristina Toutanova (**Google AI** ~~Google AI니 말다했지~~)
+
+### Who is an Author?
+
+Jacob Devlin is a Senior Research Scientist at Google. At Google, his primary research interest is developing fast, powerful, and scalable deep learning models for information retrieval, question answering, and other language understanding tasks. From 2014 to 2017, he worked as a Principle Research Scientist at Microsoft Research, where he led Microsoft Translate's transition from phrase-based translation to neural machine translation (NMT). He also developed state-of-the-art on-device models for mobile NMT. Mr. Devlin was the recipient of the ACL 2014 Best Long Paper award and the NAACL 2012 Best Short Paper award. He received his Master's in Computer Science from the University of Maryland in 2009, advised by Dr. Bonnie Dorr.
+
+![](/assets/img/markdown-img-paste-20190509155558988.png)
+
+
+#### 느낀점
+
+
+#### Abstract
+- **BERT**는 **B**idirectional **E**ncoder **R**epresentations from **T**ransformers의 약자임
+- 최근의 language representation models과 다르게 BERT는 Bidirectional representations을 pre-train하기 위해 디자인됨
+- 결과적으로는 pre-trained BERT representations는 단지 output layer 한개만 추가해도 다양한 영역에서 SOTA를 찍는 fine-tune이 가능함
+- 11개의 NLP Task에서 new SOTA기록하고, SQuAD v1.1 QA에서 사람보다 2.0 높은 F1 성능 기록함
+  - GLUE benchmark에서 **80.4%** 달성함 기존 것보다 **7.6%** 향상시킴
+  
+
+
+#### 1. Introduction
+- pre-trained LM은 예로부터 NLP의 성능을 올리기에 효과적인 방법이었음
+- Pre-trained Language Representation을 적용하는데는 2가지 전략이 있음 (*feature-based* and *fine-tuning*)
+- **feature-based: ELMo** (Peters al., 2018), 특정 아키텍처를 사용하는데 이때, pre-trained representation이 addtional features로 얻어짐
+- **fine-tuning: GPT** (Generative Pre-trained Transformer) (Radford et al., 2018; OpenAI)
+- 기존 연구에선 두 접근법 모두 같은 objective function을 사용함; pre-trainining시에 **unidirectional LM**이 language representation을 학습하기 위해 쓰는 objective function
+- 본 연구에서는 그러한 현재의 기법이 특별히 fine-tuning approach에서는 pre-trained representation의 power를 매우 제한(**serverly restrict**)한다고 주장함
+- 주된 한계는 Standard LM이 unidirectional하다는 것임. 이는 아키텍처의 선택을 제한하게됨.
+- 예를들면, OpenAI의 GPT의 경우 left-to-right 구조로써, self-attetnion에서 모든 토큰들이 previous token에만 attention을 갖게됨 (Vaswani et al., 2017)
+- 이러한 제한들은 sentence level에서 sub-optimal에 도달할 수 밖에 없게 함(SQuAD같은 token-level task에서 이러한 구조의 fine-tuning은 안좋을 수 있음(could be devastating))
+- 결론: Bidirectional 하게 해야함. ```it is crucial to incorporate context from both directions```
+- 본 논문에서는 fine-tuning based approach를 BERT를 제안함으로써 개선시킴! (현재로썬 살짝 GPT에 숟가락 얹은것 같기도..)
+- BERT에서는 기존에 비판했던 objective function을 쓰진 않음(left-to-right 구조에 dependent했던). 대신에 **MLM(Masked Language Model**; Taylor, 1953)의 objective function을 사용함
+- MLM은 랜덤하게 input token의 일부를 masking처리 후 그 부분을 예측하는 것을 목표로함.
+- ```MLM objective allows the representation to fuse the left and the right context``` (해석보단 원문으로)
+- 본 논문의 contribution은 
+  - Bidirectional pre-training for LM by MLM (maksed language models)
+  - task-specific architecture에 대한 model engineering 안해도됨. BERT는 fine-tuning based representation model로는 sentence-level, token-level tasks에서 첫번째로 SOTA 찍은 모델임 
+  - 11개의 NLP Task에서 SOTA 찍었음. 코드도 공개함(https://github.com/google-research/bert)
+
+
+
+#### 2. Related work
+##### 2.1. Feature-based Approaches
+- non-neural과 neural(word2vec)한 방법으로 나뉨 
+- pre-trained word embedding은 learned from scratch로부터 얻은 embedding보다 확연히 개선된 결과를 보였었음
+- ELMo는 traditional word embeddign research를 different dimension에 따라 일반화시킴
+- ELMo는 context-sensitive features를 LM으로부터 추출함
+- contextual word embedding과 task-specific architectures의 결합으로 ELMo는 여러 NLP task(QA on SQuAD, SA, NER)에서 SOTA를 기록함
+
+##### 2.2. Fine-tuning Approaches
+- 최근 트렌드라고 할 수 있음, LM에 transfer learning을 적용하는 것임
+- LM Objective에 대해서 pre-training 후에 fine-tuning하는 것임
+- 장점중 하나는 few parameter만 다시 learning이 필요하다는것임
+- 이러한 기법을 사용한 OpenAI GPT가 GLUE bechmark에서 SOTA 찍었었음 (Wang et al., 2018)
+
+##### 2.3. Transfer Learning from Supervised Data
+- unsupervised pre-training의 장점은 거의 unlimited한 data를 쓸 수 있다는 것이지만, 최근 supervised task with large datasets로부터 transfer 하는 연구도 제안됨
+  - Natural Language Inference
+  - Machine Translation
+- CV에서는 transfer learning이 이미 많이 사용됨 (to fine-tune models pre-trained on ImageNet)
+
+#### 3. BERT
+- 본 섹션에서는 아래와 같은 항목을 다룸
+  - Model architecture
+  - input representation
+  - pre-training tasks
+  - pre-training procedures
+  - fine-tuning procedures
+  - differences between BERT and OpenAI GPT
+  
+#### 3.1 Model Architecture
+  - BERT는 multi-layer Bidirectional Transformer encoder를 기반으로 함(tensor2tensor 참고)
+  - Transformer 자체는 요즘 어디에서나 쓰임(the use of Transformer has become ubiquitous)
+  - Transformers의 상세한 구조는 본 논문에서 스킵함(다음 링크 참고: http://nlp.seas.harvard.edu/2018/04/03/attention.html)
