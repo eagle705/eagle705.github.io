@@ -37,7 +37,7 @@ comments: true
 - 2개의 machine translation task에 대해서 실험했고, 병렬화도 잘되고 학습시간도 짧으면서 퀄리티도 우월함을 확인함
 - WMT 2014 English-to-German translation task에서 28.4 BLEU를 기록함 (다른 모델보다 2 BLEU 정도 높음)
 - WMT 2014 English-to-French translation task에서는 41.8 BLEU로 SOTA 기록함 (8 GPUs로 3.5days 걸림)
-- 다른 Task에서도 Generalize 잘됨 
+- 다른 Task에서도 Generalize 잘됨
 
 #### 1. Introduction
 - RNN, LSTM, GRU 등은 sequence modeling (language modeling, machine translation)에서 SOTA를 기록해왔음
@@ -52,7 +52,7 @@ comments: true
 - 위의 연구들은 dependency를 고려하려는 관점에서 볼 때, distance에 대해서 linear (ConvS2S), 혹은 logarithm (ByteNet) 한 고려가 가능했음
 - 하지만 position의 거리에 따른 dependency를 학습하는건 더 어렵게 만들었음 (~~이 부분은 잘 이해가 안가네.. 음 그 이전 모델보다는 더 잘되는거 아닌가? 지적하는 근거가 뭐지..~~)
 - Transformer에서는 constant 레벨까지 operation 숫자를 줄일 수 있음(~~N개에 대한 dependency있지만 병렬처리가 가능해서 그런듯..?~~)
-- Self-Attention (다른 말로, intra-attention)은 한 시퀀스 내에서 서로 다른 position들의 관계 representation을 계산하기 위한 attention mechanism임 
+- Self-Attention (다른 말로, intra-attention)은 한 시퀀스 내에서 서로 다른 position들의 관계 representation을 계산하기 위한 attention mechanism임
 - Self-attention은 이미 여러 task에서 성공했음 (reading comprehension, abstractive summarization, textual entailment, learning task-independent sentence representations)
 
 
@@ -68,12 +68,12 @@ comments: true
 ##### 3.1. Encoder and Decoder Stacks
 - Encoder
 - 인코더는 *N* = 6 개의 identical layer의 스택으로 이루어져있음
-- 각 layer는 두 개의 sub-layer로 이루어져있음 
+- 각 layer는 두 개의 sub-layer로 이루어져있음
   - 첫번째는 multi-head self-attention mechansim
   - 두번째는 position-wise fully connected feed-forward network
   ```python
   def sub_layer(self, x, training=False, padding_mask=None):
-      out_1, attention_weight = self.mha(x, K = x, V = x, mask=padding_mask, flag="encoder_mask") 
+      out_1, attention_weight = self.mha(x, K = x, V = x, mask=padding_mask, flag="encoder_mask")
       out_1 = self.dropout1(out_1, training=training)
       out_2 = self.layer_norm_1(out_1 + x)
       out_3 = self.position_wise_fc(out_2)
@@ -98,7 +98,7 @@ for i in range(self.layer_num):
 - 디코더 또한 *N* = 6 개의 identical layer의 스택으로 이루어져있음
 - 디코더에는 2개가 아닌 3개의 sub-layer로 구성됨
   - 첫째는 Masked Multi-Head self-Attention 임. 입력 포지션 상에서 이어서 나오는 것들을 마스킹해버려서 position *i* 를 예측할때 known outputs at position less than *i* 만 사용 가능하게 함
-  - 두번째는 Multi-Head Attention임 얘는 encoder의 output에 적용됨 
+  - 두번째는 Multi-Head Attention임 얘는 encoder의 output에 적용됨
   - 세번째는 Feed Forward Network임
   - 결국 첫번째 sub-layer가 좀 특이한거고 두번째 sub-layer의 인풋에 encoder의 output이 들어가는 게 차이임
   ```python
@@ -106,7 +106,7 @@ for i in range(self.layer_num):
     out_1, attention_weight_lah_mha_in_decoder = self.look_ahead_mha(x, K = x, V = x, mask = look_ahead_mask, flag="look_ahead_mask")
     out_1 = self.dropout1(out_1, training=training)
     out_2 = self.layer_norm_1(out_1 + x)
-    out_3, attention_weight_pad_mha_in_decoder = self.mha(out_2, K = encoder_ouput, V = encoder_ouput, mask = padding_mask, flag="padding_mask") 
+    out_3, attention_weight_pad_mha_in_decoder = self.mha(out_2, K = encoder_ouput, V = encoder_ouput, mask = padding_mask, flag="padding_mask")
     out_3 = self.dropout2(out_3, training=training)
     out_4 = self.layer_norm_2(out_3 + out_2)
     out_5 = self.position_wise_fc(out_4)
@@ -166,6 +166,7 @@ def scaled_dot_product_attention(self, Q, K, V, mask=None, flag=None):
 - dim of Q == num of tokens X $d_{model}$ 로 생각하면 될 듯
 - 본 논문에서는 mutli-head를 8개로 나눠서, 전체 512 차원을 64 차원의 8개 유닛으로 만듬
 - 원래는 input 임베딩을 쪼개고, 거기에 맞는 fc를 넣어주면 된다고 생각했는데, $W_{i}^Q$를 $Q$에 곱해 주는거 자체가 input 임베딩을 쪼개는 것임 결과 차원이 num of toknes X $d_{k}$로 나오니까
+
 ```python
 def split_head(self, vector):
     """Split the last dimension into (num_heads, depth).
@@ -195,11 +196,12 @@ def call(self, Q, K, V, mask=None, flag=None):
 
 ##### 3.2.3. Applications of Attention in our Model
 - 트랜스포머에서는 멀티헤드 어텐션을 3곳에 적용함
-- 첫번째, **"encoder-decoder Attention" layer**에 적용함
+- 첫번째, **"encoder-decoder Attention" layer** 에 적용함
   - decoder의 input에 대해서 Attention 적용하고 그 결과를 Query로 만든 다음 레이어에 적용할때 encoder의 output을 key,value로 사용함
   - 이렇게 하면 decoder의 input도 모두 고려하면서, encoder의 output도 모두 고려하는 seq2seq 모델에 attention을 적용한것과 비슷하게 됨
-- 두번째, **"self-attention layer" in encoder**에 적용함, 이 역시도 sequence 내의 모든 position을 다 고려할 수 있음 
-- 세번째, **"self-attention layer" in decoder**에 적용함, 보지못한 정보를 보는 것을 막기 위해 (```to prevent leftward information flow in the decoder to preserve the auto-regressive property```) scaled dot-product attention안에 마스킹을 적용함(minus infinity) (Figure 2)
+- 두번째, **"self-attention layer" in encoder** 에 적용함, 이 역시도 sequence 내의 모든 position을 다 고려할 수 있음
+- 세번째, **"self-attention layer" in decoder** 에 적용함, 보지못한 정보를 보는 것을 막기 위해 (```to prevent leftward information flow in the decoder to preserve the auto-regressive property```) scaled dot-product attention안에 마스킹을 적용함(minus infinity) (Figure 2)
+
 ```python
 def create_padding_mask(seq):
     seq = tf.cast(tf.math.equal(seq, 0), tf.float32)
@@ -268,6 +270,7 @@ def create_masks(inp, tar):
 - learned  linear transformation & softmax function을 사용함
 - two embedding layers, pre-softmax linear transformation에 대해서 weight matrix를 공유함
 - embedding layer에서 weights에 $\sqrt{d_{model}}$를 곱해줌 (스케일링)
+
 ```python
 x = self.embed(inputs)  # (batch, seq, word_embedding_dim)
 x *= tf.math.sqrt(tf.cast(self.embed_dim, tf.float32))
@@ -328,7 +331,7 @@ def add_positional_encoding(self, embed):
 - 8 NVIDIA P100 GPUs 사용
 - base model
 - each training step은 0.4 초 걸림
-- 학습에 사용한 steps or time: 100,000 steps or 12 hours 
+- 학습에 사용한 steps or time: 100,000 steps or 12 hours
 - big models
 - 스텝당 1.0 초 걸림, 300,000steps (3.5 days) 소요
 
@@ -340,7 +343,7 @@ def add_positional_encoding(self, embed):
 - 그 후에는 inverse square root of the step number 비율로 감소함
 - *warmup_steps* = 4,000으로 셋팅함
 ![](/assets/img/markdown-img-paste-20190502143435933.png)
-  
+
 ##### 5.4. Regularization
 - 3가지 기법 적용함 (~~왜 논문에는 근데 레벨이 2개밖에 없지..~~)
   - Residual Dropout
@@ -374,7 +377,7 @@ def add_positional_encoding(self, embed):
 #### 7. Conclusion
 - Attention만 의존하는 모델 처음으로 발표함
 - recurrent layer를 multi-headed self-attention을 쓰는 encoder-decoder 구조로 대체함
-- rnn, cnn보다 학습 빨리됨 
+- rnn, cnn보다 학습 빨리됨
 - NMT에서 SOTA 찍음
 - 다른 도메인에도 적용 될수 있을거라 생각함
 
