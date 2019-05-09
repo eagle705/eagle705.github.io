@@ -2,7 +2,7 @@
 layout: post
 title:  "Attention Is All You Need"
 subtitle:   "2017, NIPS"
-categories: cslog
+categories: paper
 tags: deeplearning
 comments: true
 use_math: true

@@ -2,7 +2,7 @@
 layout: post
 title:  "Deep contextualized word representations(ELMo)"
 subtitle:   "ELMo"
-categories: cslog
+categories: paper
 tags: deeplearning
 comments: true
 ---
@@ -25,7 +25,7 @@ comments: true
 - 이 관점으로 새로운 representation을 제안 하겠음
 - **Vector를 LM과 함께 학습된 BiLSTM으로부터 얻어낼 것임**
 - 이러한 이유로, ELMo(Embeddings from Language Models) representation이라 칭할 것임
-- 
+-
 - internal states를 조합해주는건 매우 풍부한 word representation을 줌
 - higher-level LSTM states는 context-dependent aspects of word meaning을 잘 캡쳐함
 - lower-level states는 aspects of syntax(e.g. POS)를 잘함
@@ -34,7 +34,7 @@ comments: true
 - 기존 word2vec관련 연구는 single context independent representation을 각 단어에 대해서만 얻었음
 - subword등을 통해 이를 개선하려는 연구도 있었
 - 본 논문의 연구 또한 subword unit의 도움을 character convolutions을 통해 얻었음
-- ```context2vec```이라는 context-dependent representation에 대한 연구도 있었음. BiLSTM으로 pivot word 주변의 context를 encoding함. NMT에 쓰인 ```CoVe```라는 임베딩기법도 비슷한 방법임. 
+- ```context2vec```이라는 context-dependent representation에 대한 연구도 있었음. BiLSTM으로 pivot word 주변의 context를 encoding함. NMT에 쓰인 ```CoVe```라는 임베딩기법도 비슷한 방법임.
 - NMT의 경우 parallel corpora의 한계가 있음. 본 연구에서는 monolingual data로 이러한 문제를 해결하고자함. (30 million sentences)
 
 #### ELMo: Embeddings from Language Models
@@ -51,4 +51,3 @@ comments: true
 - ELMo는 biLM 모델에 있는 중간레이어의 표현(intermediate layer representations)임
 - 각 token (t_k)마다 L-layer biLM에서는 2L+1개의 representation을 계산함 = L(hidden h) * 2(bidirection) + 1(input x)
 - ELMo는 각 layer의 벡터를 다 써도되고, top만 떼서 써도 되긴하는듯(CoVe처럼)
-

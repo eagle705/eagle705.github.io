@@ -2,7 +2,7 @@
 layout: post
 title:  "BERT- Pre-training of Deep Bidirectional Transformers for Language Understanding"
 subtitle:   "Bert"
-categories: cslog
+categories: paper
 tags: deeplearning
 comments: true
 use_math: true

@@ -2,7 +2,7 @@
 layout: post
 title:  "Neural Machine Translation in Linear Time"
 subtitle:   "2016"
-categories: cslog
+categories: paper
 tags: deeplearning
 comments: true
 ---
