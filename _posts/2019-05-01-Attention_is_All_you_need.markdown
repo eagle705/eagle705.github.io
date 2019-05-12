@@ -11,8 +11,9 @@ use_math: true
 이번엔 오늘날의 NLP계의 표준이 된 Transformer를 제안한 논문인 ```Attenion Is All You Need```에 대해서 리뷰해보고자 한다. 대략적인 내용은 이미 알고 있었지만, 디테일한 부분도 살펴보고자 한다.
 
 ### Attention Is All You Need
-- 저자:Ashish Vaswani, 외 7명 (Google Brain)
+- 저자: Ashish Vaswani, 외 7명 (Google Brain)
 - ~~구글브레인..wow~~
+- NIPS 2017 accepted
 
 ### Who is an Author?
 
@@ -68,53 +69,52 @@ use_math: true
 
 ##### 3.1. Encoder and Decoder Stacks
 - Encoder
-- 인코더는 *N* = 6 개의 identical layer의 스택으로 이루어져있음
-- 각 layer는 두 개의 sub-layer로 이루어져있음
-  - 첫번째는 multi-head self-attention mechansim
-  - 두번째는 position-wise fully connected feed-forward network
+  - 인코더는 *N* = 6 개의 identical layer의 스택으로 이루어져있음
+  - 각 layer는 두 개의 sub-layer로 이루어져있음
+    - 첫번째는 multi-head self-attention mechansim
+    - 두번째는 position-wise fully connected feed-forward network
+    ```python
+    def sub_layer(self, x, training=False, padding_mask=None):
+        out_1, attention_weight = self.mha(x, K = x, V = x, mask=padding_mask, flag="encoder_mask")
+        out_1 = self.dropout1(out_1, training=training)
+        out_2 = self.layer_norm_1(out_1 + x)
+        out_3 = self.position_wise_fc(out_2)
+        out_3 = self.dropout2(out_3, training=training)
+        out_4 = self.layer_norm_2(out_2 + out_3)
+        return out_4, attention_weight
+    ```
+  - 두 개의 레이어에 각각 residual connection & layer normalization을 적용함
+  - 각 sub-layer의 output은 **LayerNorm(*x* + Sublayer(*x*))** 형태임
+    - layerNorm은 ```tf.keras.layers.LayerNormalization```  API로 쉽게 구현 가능함
+    - Hidden units들에 대해 Norm을 계산하기 때문에 Batch Norm과 다르다고함 (추가로 공부 필요)
+  - ```where Sublayer(x) is the function implemented by the sub-layer itself```
   ```python
-  def sub_layer(self, x, training=False, padding_mask=None):
-      out_1, attention_weight = self.mha(x, K = x, V = x, mask=padding_mask, flag="encoder_mask")
-      out_1 = self.dropout1(out_1, training=training)
-      out_2 = self.layer_norm_1(out_1 + x)
-      out_3 = self.position_wise_fc(out_2)
-      out_3 = self.dropout2(out_3, training=training)
-      out_4 = self.layer_norm_2(out_2 + out_3)
-      return out_4, attention_weight
+  for i in range(self.layer_num):
+      x, attention_block1, attention_block2 = self.sub_layer(x, encoder_ouput, training, look_ahead_mask, padding_mask)
+      attention_weights['decoder_layer{}_block1'.format(i + 1)] = attention_block1
+      attention_weights['decoder_layer{}_block2'.format(i + 1)] = attention_block2
   ```
-- 두 개의 레이어에 각각 residual connection & layer normalization을 적용함
-- 각 sub-layer의 output은 **LayerNorm(*x* + Sublayer(*x*))** 형태임
-  - layerNorm은 ```tf.keras.layers.LayerNormalization```  API로 쉽게 구현 가능함
-  - Hidden units들에 대해 Norm을 계산하기 때문에 Batch Norm과 다르다고함 (추가로 공부 필요)
-- ```where Sublayer(x) is the function implemented by the sub-layer itself```
-```python
-for i in range(self.layer_num):
-    x, attention_block1, attention_block2 = self.sub_layer(x, encoder_ouput, training, look_ahead_mask, padding_mask)
-    attention_weights['decoder_layer{}_block1'.format(i + 1)] = attention_block1
-    attention_weights['decoder_layer{}_block2'.format(i + 1)] = attention_block2
-```
-
-- residual connection을 하기 위해서 모델에 있는 모든 sub-layer는(embedding layer까지 포함) output의 dimension *d*<sub>model</sub> = 512 로 셋팅함
+  - residual connection을 하기 위해서 모델에 있는 모든 sub-layer는(embedding layer까지 포함) output의 dimension *d*<sub>model</sub> = 512 로 셋팅함
 - Decoder
-- 디코더 또한 *N* = 6 개의 identical layer의 스택으로 이루어져있음
-- 디코더에는 2개가 아닌 3개의 sub-layer로 구성됨
-  - 첫째는 Masked Multi-Head self-Attention 임. 입력 포지션 상에서 이어서 나오는 것들을 마스킹해버려서 position *i* 를 예측할때 known outputs at position less than *i* 만 사용 가능하게 함
-  - 두번째는 Multi-Head Attention임 얘는 encoder의 output에 적용됨
-  - 세번째는 Feed Forward Network임
-  - 결국 첫번째 sub-layer가 좀 특이한거고 두번째 sub-layer의 인풋에 encoder의 output이 들어가는 게 차이임
-  ```python
-  def sub_layer(self, x, encoder_ouput, training=False, look_ahead_mask=None, padding_mask=None):
-    out_1, attention_weight_lah_mha_in_decoder = self.look_ahead_mha(x, K = x, V = x, mask = look_ahead_mask, flag="look_ahead_mask")
-    out_1 = self.dropout1(out_1, training=training)
-    out_2 = self.layer_norm_1(out_1 + x)
-    out_3, attention_weight_pad_mha_in_decoder = self.mha(out_2, K = encoder_ouput, V = encoder_ouput, mask = padding_mask, flag="padding_mask")
-    out_3 = self.dropout2(out_3, training=training)
-    out_4 = self.layer_norm_2(out_3 + out_2)
-    out_5 = self.position_wise_fc(out_4)
-    out_6 = self.layer_norm_3(out_4 + out_5)
+  - 디코더 또한 *N* = 6 개의 identical layer의 스택으로 이루어져있음
+  - 디코더에는 2개가 아닌 3개의 sub-layer로 구성됨
+    - 첫째는 Masked Multi-Head self-Attention 임. 입력 포지션 상에서 이어서 나오는 것들을 마스킹해버려서 position *i* 를 예측할때 known outputs at position less than *i* 만 사용 가능하게 함
+    - 두번째는 Multi-Head Attention임 얘는 encoder의 output에 적용됨
+    - 세번째는 Feed Forward Network임
+    - 결국 첫번째 sub-layer가 좀 특이한거고 두번째 sub-layer의 인풋에 encoder의 output이 들어가는 게 차이임
+    ```python
+    def sub_layer(self, x, encoder_ouput, training=False, look_ahead_mask=None, padding_mask=None):
+        out_1, attention_weight_lah_mha_in_decoder = self.look_ahead_mha(x, K = x, V = x, mask = look_ahead_mask, flag="look_ahead_mask")
+        out_1 = self.dropout1(out_1, training=training)
+        out_2 = self.layer_norm_1(out_1 + x)
+        out_3, attention_weight_pad_mha_in_decoder = self.mha(out_2, K = encoder_ouput, V = encoder_ouput, mask = padding_mask, flag="padding_mask")
+        out_3 = self.dropout2(out_3, training=training)
+        out_4 = self.layer_norm_2(out_3 + out_2)
+        out_5 = self.position_wise_fc(out_4)
+        out_6 = self.layer_norm_3(out_4 + out_5)
 
-    return out_6, attention_weight_lah_mha_in_decoder, attention_weight_pad_mha_in_decoder
-  ```
+        return out_6, attention_weight_lah_mha_in_decoder, attention_weight_pad_mha_in_decoder
+    ```
 
 ##### 3.2. Attention
 - Attention function은 query와 key-value pair를 output에 매핑하는것으로 설명 가능함
@@ -278,8 +278,8 @@ x *= tf.math.sqrt(tf.cast(self.embed_dim, tf.float32))
 x = self.add_positional_encoding(x)
 ```
 ##### 3.5. Positional Encoding
-- 본 모델에서는 recurrence도 convoltion도 없기 때문에 position 정보를 알 수가 없음
-- 그렇기 때문에 position information을 injdect해줘야함
+- 본 모델에서는 recurrence도 convolution도 없기 때문에 position 정보를 알 수가 없음
+- 그렇기 때문에 position information을 inject해줘야함
 - "positional encodings"를 input embedding에 더하겠음 (```input embedding + positional encodings```)
 
 ![](/assets/img/markdown-img-paste-20190502141136158.png)
@@ -319,14 +319,14 @@ def add_positional_encoding(self, embed):
 #### 5. Training
 ##### 5.1. Training Data and Batching
 - Data1: WMT 2014 English-German dataset
-- 4.5 million sentence pairs
-- byte-pair encoding
-- source-target vocabulary of about 37,000 tokens
+  - 4.5 million sentence pairs
+  - byte-pair encoding
+  - source-target vocabulary of about 37,000 tokens
 - Data2: larger WMT 2014 English-French dataset
-- 36M sentences
-- split tokens in a 32,000 word-piece vocabulary
-- sentence length가 비슷한 애들끼리 batch 처리함
-- 각 배치당 25,000 source tokens, 25,000 target tokens 정도를 포함함
+  - 36M sentences
+  - split tokens in a 32,000 word-piece vocabulary
+  - sentence length가 비슷한 애들끼리 batch 처리함
+  - 각 배치당 25,000 source tokens, 25,000 target tokens 정도를 포함함
 
 ##### 5.2. Hardware and Schedule
 - 8 NVIDIA P100 GPUs 사용

@@ -84,6 +84,33 @@ Jacob Devlin is a Senior Research Scientist at Google. At Google, his primary re
   - differences between BERT and OpenAI GPT
 
 #### 3.1 Model Architecture
-  - BERT는 multi-layer Bidirectional Transformer encoder를 기반으로 함(tensor2tensor 참고)
+  - BERT는 multi-layer Bidirectional Transformer encoder를 기반으로 함(tensor2tensor에 배포된 코드 참고)
   - Transformer 자체는 요즘 어디에서나 쓰임(the use of Transformer has become ubiquitous)
   - Transformers의 상세한 구조는 본 논문에서 스킵함(다음 링크 참고: http://nlp.seas.harvard.edu/2018/04/03/attention.html)
+  - notations
+    - $L$ : the number of layers (Transformer blocks)
+    - $H$ : the hidden size
+    - $A$ : the number of self-attention heads
+  - Hyper params in all cases
+    - the feed-forward/filter size = 4$H$, i.e,. 4x768 = 3072, 4x1024 = 4096
+    - **BERT<sub>BASE</sub>**: $L$=12, $H$=768, $A$=12, ToTal Params=110M
+    - **BERT<sub>LARGE</sub>**: $L$=24, $H$=1024, $A$=16, ToTal Params=340M
+  - BERT<sub>BASE</sub>는 OpenAI GPT랑 같은 모델 사이즈를 갖게함
+  - BERT Transformer는 Bidirectional self-attention을 쓰고, GPT는 constrained self-attention(left의 context만 볼 수 있음)을 씀
+  - Transformer Encoder: the Bidirectional Transformer
+  - Transformer Decoder: the left-context-only version Transformer
+  
+#### 3.2 Input Representation
+  - BERT의 Input Reresentation은 sigle text sentence와 pair of text sentences([Qeustion, Answer])을 모두 하나의 토큰 시퀀스(one token sequence)에 담아서 처리함
+    - WordPiece embeddings 사용함 (with a 30,000 token vocabulary) (Wu et al., 2016)
+      - split word peices 는 ## 으로 처리함
+    - learned positional embeddings 사용함 (sequence lengths up to 512 tokens)
+    - 모든 sequence의 첫 토큰은 항상 the speical classification embedding([CLS])로 함. 이 토큰에 대응되는 output vector를 classification할 때 사용함
+    - Sentence pairs는 single sequence에 들어가게 됨. 
+      - Speical token ([SEP])로 sentences를 분리함
+      - 첫번째 sentence에는 every tokens마다 learned sentence A embedding을 더함
+      - 두번째 sentence에는 every tokens마다 learned sentence B embedding을 더함
+  - Single-sentence inputs에 대해서는 sentence A embeddings만 사용함
+![](/assets/img/markdown-img-paste-20190510154828348.png)
+
+
