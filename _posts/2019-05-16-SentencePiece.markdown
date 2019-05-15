@@ -24,6 +24,7 @@ BERT에서는 input을 WordPiece로 짤라서 주는데, 이걸 더 일반화 �
 - 언어에 상관없이 적용 가능
 - OOV 대처 가능
 - 적은 vocab size로 높은 성능기록
+- 빠름
 
 #### Install
 - python module 설치
@@ -34,13 +35,14 @@ pip install sentencepiece
 pip install tf_sentencepiece
 ```
 
-#### Usage
-##### Training
+### Usage
+#### Training
 - 전체적인 arg는 아래 그림 참조
 ![](/assets/img/markdown-img-paste-20190516012243358.png)
 - input은 String이 아니라 문서 파일을 사용함
 - vocab_size 때문에 에러가 날때가 있음, 실행할 때 에러메세지에서 적합한 vocab_size 알려주니 거기에 맞추면됨
 - 아래와 같이 코드를 실행해주면 sentencepiece tokenizer가 학습이 됨
+
 ```python
 import sentencepiece as spm
 templates = '--input={} --model_prefix={} --vocab_size={} --control_symbols=[CLS],[MASK],[SEP] --pad_id=0 --bos_id=1 --eos_id=2 --unk_id=3'
@@ -66,10 +68,10 @@ spm.SentencePieceTrainer.Train(cmd)
 - 결과 화면
 ```
 sentencepiece_trainer.cc(116) LOG(INFO) Running command: --input=./data_in/sentencepiece_train.txt --model_prefix=m --vocab_size=778 --control_symbols=[CLS],[MASK],[SEP] --pad_id=0 --bos_id=1 --eos_id=2 --unk_id=3
-sentencepiece_trainer.cc(49) LOG(INFO) Starts training with : 
+sentencepiece_trainer.cc(49) LOG(INFO) Starts training with :
 TrainerSpec {
   input: ./data_in/sentencepiece_train.txt
-  input_format: 
+  input_format:
   model_prefix: m
   model_type: UNIGRAM
   vocab_size: 778
@@ -100,14 +102,14 @@ TrainerSpec {
   bos_piece: <s>
   eos_piece: </s>
   pad_piece: <pad>
-  unk_surface:  ⁇ 
+  unk_surface:  ⁇
 }
 NormalizerSpec {
   name: nmt_nfkc
   add_dummy_prefix: 1
   remove_extra_whitespaces: 1
   escape_whitespaces: 1
-  normalization_rule_tsv: 
+  normalization_rule_tsv:
 }
 
 trainer_interface.cc(267) LOG(INFO) Loading corpus: ./data_in/sentencepiece_train.txt
@@ -150,22 +152,24 @@ trainer_interface.cc(531) LOG(INFO) Saving vocabs: m.vocab
 #### Load model & Encoding, Decoding
 - 학습 후 위키피디아 본문의 일부를 SentencePiece로 tokenization 해봄
 - default control symbol은 학습할때 넣어주었던 값대로 나옴
-- SentencePiece에서는 default control symbol을 인코딩시에 text 앞뒤에 추가할 수 있는 옵션이 있음 
+- SentencePiece에서는 default control symbol을 인코딩시에 text 앞뒤에 추가할 수 있는 옵션이 있음
   - ```bos:eos``` 옵션은 문장에 ```<s> , </s>``` 토큰을 추가함
   - ```reverse```옵션은 순서를 거꾸로 만들어서 인코딩함
   - ```:``` 표시로 중첩해서 사용할 수 있음
   - BERT에서는 굳이 쓸 필요 없고, 따로 추가하는 작업을 하는게 맞을 듯  
+
   ```python
   extra_options = 'bos:eos' #'reverse:bos:eos'
   sp.SetEncodeExtraOptions(extra_options)
   ```
 - SentencePiece tokenizer APIs (나머지는 문서 참조):
-  - raw_text-to-enc_text: ```sp.EncodeAsPieces``` 
-  - raw_text-to-enc_id: ```sp.EncodeAsIds``` 
+  - raw_text-to-enc_text: ```sp.EncodeAsPieces```
+  - raw_text-to-enc_id: ```sp.EncodeAsIds```
   - enc_text-to-raw_text: ```sp.decode_pieces```
   - enc_id-to-enc_text: ```sp.IdToPiece```
 
 - 코드
+
 ```python
 # Load model
 sp = spm.SentencePieceProcessor()
@@ -177,9 +181,9 @@ print(sp.eos_id()) # 결과: 2
 print(sp.unk_id()) # 결과: 3
 
 training_corpus = """
-초기 인공지능 연구에 대한 대표적인 정의는 다트머스 회의에서 존 매카시가 제안한 것으로 "기계를 인간 행동의 지식에서와 같이 행동하게 만드는 것"이다. 
-그러나 이 정의는 범용인공지능(AGI, 강한 인공지능)에 대한 고려를 하지 못한 것 같다. 
-인공지능의 또다른 정의는 인공적인 장치들이 가지는 지능이다. 
+초기 인공지능 연구에 대한 대표적인 정의는 다트머스 회의에서 존 매카시가 제안한 것으로 "기계를 인간 행동의 지식에서와 같이 행동하게 만드는 것"이다.
+그러나 이 정의는 범용인공지능(AGI, 강한 인공지능)에 대한 고려를 하지 못한 것 같다.
+인공지능의 또다른 정의는 인공적인 장치들이 가지는 지능이다.
 """
 
 training_corpus = training_corpus.replace("\n", '').split('.')[:-1] # 개행문자제거, 문장 분리
@@ -205,6 +209,7 @@ for i in range(10):
 ```
 
 - 결과
+
 ```
 raw text:  초기 인공지능 연구에 대한 대표적인 정의는 다트머스 회의에서 존 매카시가 제안한 것으로 "기계를 인간 행동의 지식에서와 같이 행동하게 만드는 것"이다
 enc text:  ['<s>', '▁', '초', '기', '▁', '인', '공', '지', '능', '▁', '연', '구', '에', '▁', '대', '한', '▁', '대', '표', '적', '인', '▁', '정', '의', '는', '▁', '다', '트', '머', '스', '▁', '회', '의', '에', '서', '▁', '존', '▁', '매', '카', '시', '가', '▁', '제', '안', '한', '▁', '것', '으', '로', '▁', '"', '기', '계', '를', '▁', '인', '간', '▁', '행', '동', '의', '▁', '지', '식', '에', '서', '와', '▁', '같', '이', '▁', '행', '동', '하', '게', '▁', '만', '드', '는', '▁', '것', '"', '이', '다', '</s>']
@@ -233,7 +238,8 @@ enc ids:  [1, 7, 43, 669, 30, 776, 9, 7, 116, 20, 439, 7, 53, 9, 10, 7, 43, 669,
 9: 의
 ```
 
-#### 전체 코드
+### 전체 코드
+
 ```python
 import sentencepiece as spm
 templates = '--input={} --model_prefix={} --vocab_size={} --control_symbols=[CLS],[MASK],[SEP] --pad_id=0 --bos_id=1 --eos_id=2 --unk_id=3'
@@ -254,9 +260,9 @@ print(sp.eos_id()) # 결과: 2
 print(sp.unk_id()) # 결과: 3
 
 training_corpus = """
-초기 인공지능 연구에 대한 대표적인 정의는 다트머스 회의에서 존 매카시가 제안한 것으로 "기계를 인간 행동의 지식에서와 같이 행동하게 만드는 것"이다. 
-그러나 이 정의는 범용인공지능(AGI, 강한 인공지능)에 대한 고려를 하지 못한 것 같다. 
-인공지능의 또다른 정의는 인공적인 장치들이 가지는 지능이다. 
+초기 인공지능 연구에 대한 대표적인 정의는 다트머스 회의에서 존 매카시가 제안한 것으로 "기계를 인간 행동의 지식에서와 같이 행동하게 만드는 것"이다.
+그러나 이 정의는 범용인공지능(AGI, 강한 인공지능)에 대한 고려를 하지 못한 것 같다.
+인공지능의 또다른 정의는 인공적인 장치들이 가지는 지능이다.
 """
 
 training_corpus = training_corpus.replace("\n", '').split('.')[:-1] # 개행문자제거, 문장 분리
