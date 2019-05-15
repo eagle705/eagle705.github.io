@@ -58,7 +58,7 @@ spm.SentencePieceTrainer.Train(cmd)
   - Control symbol은 ```<s>, </s>```와 같은 텍스트를 인코딩하고 디코딩할때 사용하는 특수 토큰임
   - User defined symbol은 그냥 넣고 싶은거 넣는것임. 얘는 input text에 들어가면 나중에 extract할때 다른 것과 같이 하나의 piece로 인식됨
   - [문서 참고](https://github.com/google/sentencepiece/blob/master/doc/special_symbols.md)
-- 보통 Control symbol을 많이 쓰기 떄문에 추가해줘야함
+- 보통 Control symbol을 많이 쓰기  문에 추가해줘야함
 - control symbol인 ```[CLS], [MASK], [SEP]``` 토큰을 추가해주기 위 ```--control_symbols``` 옵션을 사용함
 - default control token으로 pad, bos, eos, unk 토큰등이 있음
   - pad 토큰의 경우 default 값은 비활성화라서 사전의 0번째 인덱스는 보통 ```<s>``` 토큰임
@@ -66,6 +66,7 @@ spm.SentencePieceTrainer.Train(cmd)
 
 
 - 결과 화면
+
 ```
 sentencepiece_trainer.cc(116) LOG(INFO) Running command: --input=./data_in/sentencepiece_train.txt --model_prefix=m --vocab_size=778 --control_symbols=[CLS],[MASK],[SEP] --pad_id=0 --bos_id=1 --eos_id=2 --unk_id=3
 sentencepiece_trainer.cc(49) LOG(INFO) Starts training with :
