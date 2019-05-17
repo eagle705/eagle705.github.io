@@ -45,7 +45,7 @@ pip install tf_sentencepiece
 
 ```python
 import sentencepiece as spm
-templates = '--input={} --model_prefix={} --vocab_size={} --control_symbols=[CLS],[MASK],[SEP] --pad_id=0 --bos_id=1 --eos_id=2 --unk_id=3'
+templates = '--input={} --model_prefix={} --vocab_size={} --control_symbols=[CLS],[SEP] --user_defined_symbols=[MASK] --pad_id=0 --bos_id=1 --eos_id=2 --unk_id=3'
 vocab_size = 778
 prefix = 'm'
 input_file = './data_in/sentencepiece_train.txt'
@@ -68,7 +68,7 @@ spm.SentencePieceTrainer.Train(cmd)
 - 결과 화면
 
 ```
-sentencepiece_trainer.cc(116) LOG(INFO) Running command: --input=./data_in/sentencepiece_train.txt --model_prefix=m --vocab_size=778 --control_symbols=[CLS],[MASK],[SEP] --pad_id=0 --bos_id=1 --eos_id=2 --unk_id=3
+sentencepiece_trainer.cc(116) LOG(INFO) Running command: --input=./data_in/sentencepiece_train.txt --model_prefix=m --vocab_size=778 --control_symbols=[CLS],[SEP] --user_defined_symbols=[MASK] --pad_id=0 --bos_id=1 --eos_id=2 --unk_id=3
 sentencepiece_trainer.cc(49) LOG(INFO) Starts training with :
 TrainerSpec {
   input: ./data_in/sentencepiece_train.txt
@@ -91,8 +91,8 @@ TrainerSpec {
   split_by_whitespace: 1
   treat_whitespace_as_suffix: 0
   control_symbols: [CLS]
-  control_symbols: [MASK]
   control_symbols: [SEP]
+  user_defined_symbols: [MASK]
   hard_vocab_limit: 1
   use_all_vocab: 0
   unk_id: 3
@@ -120,8 +120,8 @@ trainer_interface.cc(330) LOG(INFO) Adding meta_piece: <s>
 trainer_interface.cc(330) LOG(INFO) Adding meta_piece: </s>
 trainer_interface.cc(330) LOG(INFO) Adding meta_piece: <unk>
 trainer_interface.cc(330) LOG(INFO) Adding meta_piece: [CLS]
-trainer_interface.cc(330) LOG(INFO) Adding meta_piece: [MASK]
 trainer_interface.cc(330) LOG(INFO) Adding meta_piece: [SEP]
+trainer_interface.cc(330) LOG(INFO) Adding meta_piece: [MASK]
 trainer_interface.cc(335) LOG(INFO) Normalizing sentences...
 trainer_interface.cc(384) LOG(INFO) all chars count=39749
 trainer_interface.cc(392) LOG(INFO) Done: 99.9522% characters are covered.
@@ -243,7 +243,7 @@ enc ids:  [1, 7, 43, 669, 30, 776, 9, 7, 116, 20, 439, 7, 53, 9, 10, 7, 43, 669,
 
 ```python
 import sentencepiece as spm
-templates = '--input={} --model_prefix={} --vocab_size={} --control_symbols=[CLS],[MASK],[SEP] --pad_id=0 --bos_id=1 --eos_id=2 --unk_id=3'
+templates = '--input={} --model_prefix={} --vocab_size={} --control_symbols=[CLS],[SEP] --user_defined_symbols=[MASK] --pad_id=0 --bos_id=1 --eos_id=2 --unk_id=3'
 vocab_size = 778
 prefix = 'm'
 input_file = './data_in/sentencepiece_train.txt'
