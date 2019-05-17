@@ -26,6 +26,10 @@ BERT에서는 input을 WordPiece로 짤라서 주는데, 이걸 더 일반화 �
 - 적은 vocab size로 높은 성능기록
 - 빠름
 
+#### Note
+- dictionary 형태의 사전은 따로 프로퍼티로 선언되어있진 않음
+- [github issue 참고](https://github.com/google/sentencepiece/issues/328)
+
 #### Install
 - python module 설치
 - tf에서 사용가능한 모듈이 따로 있음 (computational graph안에 tokenizer 포함됨)
@@ -59,7 +63,8 @@ spm.SentencePieceTrainer.Train(cmd)
   - User defined symbol은 그냥 넣고 싶은거 넣는것임. 얘는 input text에 들어가면 나중에 extract할때 다른 것과 같이 하나의 piece로 인식됨
   - [문서 참고](https://github.com/google/sentencepiece/blob/master/doc/special_symbols.md)
 - 보통 Control symbol을 많이 쓰기  문에 추가해줘야함
-- control symbol인 ```[CLS], [MASK], [SEP]``` 토큰을 추가해주기 위 ```--control_symbols``` 옵션을 사용함
+- control symbol인 ```[CLS], [SEP]``` 토큰을 추가해주기 위해 ```--control_symbols``` 옵션을 사용함
+- user defined symbol인 ```[MASK]``` 토큰을 추가해주기 위해 ```--user_defined_symbols``` 옵션을 사용함
 - default control token으로 pad, bos, eos, unk 토큰등이 있음
   - pad 토큰의 경우 default 값은 비활성화라서 사전의 0번째 인덱스는 보통 ```<s>``` 토큰임
   - 우리는 pad 토큰도 쓸거기 때문에 활성화 시켜줘야하는데, 옵션값으로 id를 부여하면 활성화됨 ```--pad_id=0 --bos_id=1 --eos_id=2 --unk_id=3```
