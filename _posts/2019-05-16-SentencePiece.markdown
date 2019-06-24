@@ -15,6 +15,7 @@ BERT에서는 input을 WordPiece로 짤라서 주는데, 이걸 더 일반화 �
 - 저자:Taku Kudo, John Richardson (Google, Inc)
 - EMNLP 2018
 - Official Repo: https://github.com/google/sentencepiece
+- Recommended Tutorial: https://github.com/google/sentencepiece/blob/master/python/sentencepiece_python_module_example.ipynb
 
 ### Who is an Author?
 

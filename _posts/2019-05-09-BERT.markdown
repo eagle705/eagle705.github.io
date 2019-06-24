@@ -25,6 +25,11 @@ Jacob Devlin is a Senior Research Scientist at Google. At Google, his primary re
 - Bidirectional feature가 상당히 중요함
 - pre-train 중요함
 - NSP도 매우 중요함
+- 여기서도 Loss Masking이 중요함
+- CLS Loss와 LM Loss를 따로 떼서 계산해야함
+- gelu, masking scheme 썼을때와 안썼을때 성능차이가 꽤 남
+- segment embedding 처리하는게 은근 귀찮음, 전처리 할때 아예 생성해버리는게 편하긴함
+- CLS acc 올리기보다 LM acc 올리는게 더 쉬움
 
 #### Abstract
 - **BERT**는 **B**idirectional **E**ncoder **R**epresentations from **T**ransformers의 약자임
@@ -137,10 +142,25 @@ Jacob Devlin is a Senior Research Scientist at Google. At Google, his primary re
 - mismatch between pre-training and finetuning
   - [MASK] token은 fine-tuning시에 안나옴
   - 이 문제를 해결하기 위해 마스킹 해야하는 단어를 항상 [MASK]토큰으로 바꾸진 않음
-  - 다음과 같은 방식으로 적용
+  - 다음과 같은 방식으로 적용 (```이게 LM 성능 향상에 효과가 좋음!!```)
     - 80%: Replace the word with the [MASK] token, e.g., ```my dog is hairy -> my do is [MASK]```
     - 10%: Replace thw rod with a random word, e.g., ```my dog is hairy -> my dog is apple```(Noise 주고 정답 맞추게!)
-    - 10%: Keep the word unchange, e.g., ```my dog is hairy -> my dog is hairy```(~~이런 경우는 근데 target을 임의로 설정하는건가~~)
+    - 10%: Keep the word unchange, e.g., ```my dog is hairy -> my dog is hairy```
+    
+  ```python
+  if random.random() < 0.8:  
+    copy_training_ids[mask_LM_position_index_elm] = tokenizer.piece_to_id('[MASK]')
+    masked_training_ids_batch.append(copy_training_ids)
+  else:
+      # 10% of time, keep original
+      if random.random() < 0.5:
+          masked_training_ids_batch.append(copy_training_ids)
+      # 10% of time, replace with random word
+      else:
+          copy_training_ids[mask_LM_position_index_elm] = list(vocab_word2idx.values())[random.randint(0, len(vocab_word2idx) - 1)]
+          masked_training_ids_batch.append(copy_training_ids)
+  ```
+  
 - Transformer의 encoder는 어떤 단어를 예측하게 될지, 어떤 단어가 랜덤하게 대체될지는 모름
   - 그렇기 때문에 distributional contextual representation of every input token을 유지할 수 있음 (모든 토큰의 컨텍스트에 대한 분산 표현)
 - MLM의 단점은, 15%정도만 예측에 사용하기 때문에, 모델이 학습을 통해 분포에 수렴하기 위한 pre-training step이 일반적인 LM보다 더 많이 필요함
@@ -175,7 +195,25 @@ Jacob Devlin is a Senior Research Scientist at Google. At Google, his primary re
     - L2 weight decay = 0.01 
     - learning rate warmup : first 10,000 steps and linear decay of the learning rate
   - Dropout prob: 0.1 on all layers
-  - Activation: ```gelu activation``` (OpenAI GPT 따라함)
+  - Activation: ```gelu(Gaussian Error Linear Units) activation``` (OpenAI GPT 따라함, ```이게 은근 성능 향상에 효과가 좋음!```)
+  
+  ```python 
+  def gelu(x):
+    """Gaussian Error Linear Unit.
+    This is a smoother version of the RELU.
+    Original paper: https://arxiv.org/abs/1606.08415
+    Args:
+      x: float Tensor to perform activation.
+    Returns:
+      `x` with the GELU activation applied.
+    """
+    # ref: https://github.com/google-research/bert/blob/master/modeling.py#L264
+
+    cdf = 0.5 * (1.0 + tf.tanh(
+        (np.sqrt(2 / np.pi) * (x + 0.044715 * tf.pow(x, 3)))))
+    return x * cdf
+  ```
+  
   - Training loss: ```sum of (the mean masked LM likelihood) and (mean next setence prediction likelihood)```
   - GPUs
     - BERT<sub>BASE</sub>: 4 Cloud TPUs in Pod configuration (16 TPU chips total)
