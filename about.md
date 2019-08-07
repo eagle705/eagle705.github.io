@@ -20,8 +20,8 @@ order: 10
 
 *"Better is one day in your court than a thousand elsewhere"*
 
-Email: xelloss705@naver.com / xelloss705@gmail.com
-Presentation slides: https://github.com/eagle705/Presentation
+- Email: xelloss705@naver.com / xelloss705@gmail.com   
+- Presentation slides: [https://github.com/eagle705/Presentation](https://github.com/eagle705/Presentation)
 
 ## 약력
 
