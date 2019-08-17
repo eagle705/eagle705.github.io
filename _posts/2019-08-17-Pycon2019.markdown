@@ -1,0 +1,88 @@
+---
+layout: post
+title:  "Pycon 2019 Logs"
+subtitle:   "pycon 2019"
+categories: cslog
+tags: cslog
+comments: true
+use_math: true
+---
+
+### 정적 타입 검사로 더 나은 Python 코드 작성하기
+- Presenter: 이창희
+
+#### 정적타입 언어 vs 동적 타입언어
+-정적타입: 컴파일시 정해짐
+-동적타입:
+
+#### 배경
+- 프로젝트 커지면 개발자도 많아지고 유지보수 어려움
+- 동적 타입 언어지만 정적 타입 검사기를 도입함
+
+
+#### 장점
+- 코드 가독성 증가
+- 버그 예방
+
+#### Paper: To Type or Not to Type
+- 자바스크립트의 경우 타입스크립트 썼을때 15%의 버그를 미리 예방함
+
+
+#### Python??!
+- Function Annotation (3.0)
+- Tpye Annotation (3.5)
+- Variabble Annotation (3.6)
+
+- 타입 힌팅
+```python
+def is_same_person(x: Person, y: Person):
+  ...
+  
+# Error 발생 -> list는 기본 자료형이기 때문
+x: list[str] = ['A', 'B', 'C']
+
+import typing # python 3.5에서 추가됨
+from typing import List, Tuple, Dict
+my_list: List[str, int] = [] # Error
+
+
+from typing import List, Tuple, Dict, Union, Optional, NewType
+my_list: List[Union[str, int]] = [] 
+my_list2: List[Union[str, None]] = []
+my_list3: List[Optional[str]] = [] 
+
+from typing import TypeVar, Sequence, Generic, Callable
+
+# T = TypeVar('T') # generic!!
+T = TypeVar('T', int, float) # generic!! with 제한
+def first(s: Sequence[T]) -> T:
+  return s[0]
+  
+dwef sum_to_str(x:int, y:int):
+  return x+y
+f: Callable[[int,int], str] = sum_to_str
+f(10,20) #이걸로 쓸수있음
+```
+- 타이핑 모듈은 실제로 제안만하지 코드 실행을 '제한'하진 않음
+- 실제 제한하는건 ```mypy```가 해줌
+- ```$ mypy my_app.py```
+- mypy는 가장 먼저 대입된 변수의 자료형만 보고 판단함
+
+```python
+x = 1
+x = "abc" # mypy에선 에러
+
+from typing import Any
+x: Any = 1 # Any형을 쓰면 에러 안생김
+x = "abc"
+```
+
+- mypy docs: [mypy.readthedocs.io](mypy.readthedocs.io)
+
+---------
+
+
+
+```python
+
+```
