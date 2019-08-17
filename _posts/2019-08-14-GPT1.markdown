@@ -79,10 +79,7 @@ Alec Radford라는 친군데, GPT논문 인용수가 젤 많겠지 했는데 오
 
 ##### 3.1 Unsupervised pre-training
 - unsupervised corpus of token $U = \{u_1, ..., u_n\}$에 대해서 standard LM objective를 최대로 하는 likelihood는 다음과 같음
-
-$L_1(U) = \sum_i logP(u_i|u_{i-k}, ..., u_{i-i} ; \Theta )$   
-
-
+- $L_1(U) = \sum_i logP(u_i|u_{i-k}, ..., u_{i-i} ; \Theta )$   
 - Model backbone: a multi-layer *Transformer decoder* (for LM)   
 
 $h_0 = UW_e+W_p$
@@ -101,20 +98,14 @@ $P(u) = softmax(h_nW_e^T)$
 ##### 3.2 Supervised fine-tuning
 - Standard LM objective로 학습 후에 supervised target task에 대해서 fine-tuning 해야함
 - final transformer block's activation $h_l^m$을 $W_y$ param을 갖는 linear output layer에 한번 더 통과시켜서 $y$ 값을 예측함   
-
-$P(y|x^1, ... , x^m) = softmax(h_l^mW_y)$
-
+- $P(y|x^1, ... , x^m) = softmax(h_l^mW_y)$
 - 새로운 objective는 다음과 같음   
- 
-$L_2(C) = \sum_{(x,y)}logP(y|x^1, ... , x^m)$
-
+- $L_2(C) = \sum_{(x,y)}logP(y|x^1, ... , x^m)$
 - 여기에 auxiliary objective를 추가함
   - fine-tuning할 때 generalization에 도움줌
   - 학습할때 더 빠르게 수렴하게 해줌
 - 최종 objective는 다음과 같음 (with weight $\lambda$)
-
-$L_3(C) = L_2(C) + \lambda * L_1(C)$
-
+- $L_3(C) = L_2(C) + \lambda * L_1(C)$
 - Notations
   - $C$ : a labeled dataset 
 - 최종적으로 fine-tuning때 추가되는 extra param은 $W_y$과 delimiter tokens을 위한 embeddings임
