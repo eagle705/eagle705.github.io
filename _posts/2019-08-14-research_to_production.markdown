@@ -16,9 +16,13 @@ use_math: true
 - 대략적인 시간을 산정해서 보고해야함
 - 논문을 많이 읽으면 읽을수록 좋긴함
 - 갖다 쓸수있는건 빠르게 갖다 써야함
+  - 케글이나 이런데서 빠르게 참조할 필요가 있음
+- 프로토 타이핑은 매우 빠르게~!
 - 개인적으로는 처음부터 좋은 모델보단 baseline부터 서서히 올려가는게 결과를 확인하고 model capacity를 조정하면서 추후 모델 선택할 때 좋음
 - Speed한 프로토타이핑이 생명
 - Hyper Params 에 대한 실험 관리 + feature에 대한 실험 관리 도구가 좀 필요함
+- git 관리를 잘해야함
+  - [gitignore](https://www.gitignore.io/)
 - 안해본 것에 대한 두려움이 없어야함
 
 
@@ -27,7 +31,58 @@ use_math: true
 - 클래스, 플로우 다이어그램: PlantUML (https://meetup.toast.com/posts/117)
 - L4 (Load Balancer)
 - healthcheck
+  - 프로세스 관리
+  - JandiAlert
 - 부하테스트
   - 실서버와 동일한 환경인 Sandbox가 필요함
   - nGrinder
+- 로그 관리
+  - 파이썬 실행 전체 로그 파일로도 남기기~!
+  - python gRPC_server.py > /home/디렉토리/logs/python_logs.log 2>&1 &
 - 안해본 것에 대한 두려움이 없어야함
+
+- Jandi Alert Code
+```python
+import json
+import requests
+import linecache
+import sys
+import os
+
+def jandi_alert(body, server, webhook_url, api="name of API"):
+    """
+    ref: https://drive.google.com/file/d/0B2qOhquiLKk0TVBqc2JkQmRCMGM/view
+
+    ERROR_COLOR = "#FF0000";
+    INFO_COLOR = "#0000FF";
+    WARNING_COLOR = "#FFFF00";
+    DEFAULT_COLOR = "#FAC11B;
+    """
+
+    # ref: https://stackoverflow.com/questions/14519177/python-exception-handling-line-number
+    exc_type, exc_obj, tb = sys.exc_info()
+    f = tb.tb_frame
+    lineno = tb.tb_lineno
+    file_name = f.f_code.co_filename
+    linecache.checkcache(file_name)
+    line = linecache.getline(file_name, lineno, f.f_globals)
+    # print 'EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj)
+    file_name = os.path.basename(file_name)
+
+    payload = {
+        "body": body,
+        "connectColor": "#FF0000",
+        "connectInfo": [{
+            "title": "___ 서버 이상",
+            "description": "server: {}\napi: {}\nfile_name: {}\nLINE {} '{}': {}".format(server, api, file_name, lineno, line.strip(), exc_obj)
+        }]
+    }
+
+    requests.post(
+        webhook_url, data=json.dumps(payload),
+        headers={'Accept': 'application/vnd.tosslab.jandi-v2+json',
+                 'Content-Type': 'application/json'}
+    )
+
+
+```
