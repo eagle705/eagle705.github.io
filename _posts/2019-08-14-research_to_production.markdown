@@ -40,8 +40,8 @@ use_math: true
   - 파이썬 실행 전체 로그 파일로도 남기기~!
   - python gRPC_server.py > /home/디렉토리/logs/python_logs.log 2>&1 &
 - 안해본 것에 대한 두려움이 없어야함
-
 - Jandi Alert Code
+
 ```python
 import json
 import requests
