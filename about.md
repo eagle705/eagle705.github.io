@@ -21,7 +21,26 @@ order: 10
 *"Better is one day in your court than a thousand elsewhere"*
 
 - Email: xelloss705@naver.com / xelloss705@gmail.com   
-- Presentation slides: [https://github.com/eagle705/Presentation](https://github.com/eagle705/Presentation)
+
+
+## Research Domain
+- Semantic Textual Similarity
+- Sentiment Analysis
+- Named Entity Recognition
+- Open-Domain Question Answering
+- Natural Language Generation
+- **Presentation Slides**: [https://github.com/eagle705/Presentation](https://github.com/eagle705/Presentation)
+
+## Current Interest
+- Generative Adversarial Networks
+- Reinforcement Learning
+- Speech Synthesis
+
+## Challenge
+- 2nd Place @ Intent Classification of [AI Starthon 2019](http://aistarthon2019.co.kr/) (NIPA, Naver)
+- 3rd Place @ Query Classification of [AI Starthon 2019](http://aistarthon2019.co.kr/) (NIPA, Naver)
+- 4th Place @ Movie Classification of [AI Starthon 2019](http://aistarthon2019.co.kr/) (NIPA, Naver)
+- 7th Place @ Named Entity Recognition of [NLP Challenge](http://air.changwon.ac.kr/?page_id=10) (NAVER, Changwon univ)
 
 ## 약력
 

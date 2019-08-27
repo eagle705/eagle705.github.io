@@ -30,6 +30,15 @@ use_math: true
 - 환경셋팅 문서화 (한번에 뜨고 설치할 수 있게 ~~도커가 그립다~~)
 - 클래스, 플로우 다이어그램: PlantUML (https://meetup.toast.com/posts/117)
 - L4 (Load Balancer)
+  - L4에서는 1초간 계속 health check를 해서 서버 하나가 꺼지면 떼버리고 다시 살아있으면 붙임
+  - 반응못하면 아마 500에러 낼듯
+- 네트워크 프로토콜
+  - 패킷 찍어보기
+  - HTTP, HTTP2, gRPC(HTTP2+Protocol buf), status code 등등 체크
+  - Timeout 관리 (conn timeout, read timeout)
+  - 서비스로 사용하는 프로토콜의 doc 숙지
+  - [HTTP, HTTP2 관련 문서](https://www.popit.kr/%EB%82%98%EB%A7%8C-%EB%AA%A8%EB%A5%B4%EA%B3%A0-%EC%9E%88%EB%8D%98-http2/)
+  - [HTTP2 관련문서2_구글](https://developers.google.com/web/fundamentals/performance/http2/?hl=ko)
 - healthcheck
   - 프로세스 관리
   - JandiAlert
@@ -39,6 +48,7 @@ use_math: true
 - 로그 관리
   - 파이썬 실행 전체 로그 파일로도 남기기~!
   - python gRPC_server.py > /home/디렉토리/logs/python_logs.log 2>&1 &
+  - [HTTP protocol에 따른 에러 처리](https://hyeonstorage.tistory.com/97)
 - 안해본 것에 대한 두려움이 없어야함
 - Jandi Alert Code
 
