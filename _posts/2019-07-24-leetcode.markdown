@@ -58,3 +58,364 @@ class Solution:
                 else:
                     return [i, num_to_list_of_idx[diff][-1]]
 ```
+
+
+### 2. Add Two Numbers
+- 포인트
+    - 다음 node의 pointer를 넘겨주고, 재귀적으로 호출
+    - None 값 체크해서, 바로 포인터 접근하지말고 변수로 바꿔서 사용
+        - None 값 있는 노드느 새로 잘 만들어주고
+    - None 체크등은 if문 inline에서 끝내는게 보기 편한듯
+    - 경우의 수에 대한 분기 잘 짤라주고
+        - 지금처럼 코드 짰을땐 일반화하기 힘들거같으니 일반화하는 방법 고민해봐야함
+
+```
+You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
+
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+
+Example:
+
+Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
+Output: 7 -> 0 -> 8
+Explanation: 342 + 465 = 807.
+```
+
+- my code
+
+```python
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def addTwoNumbers(self, l1: ListNode, l2: ListNode) -> ListNode:
+        l1_val = 0 if l1 is None else l1.val
+        l2_val = 0 if l2 is None else l2.val
+        val = l1_val + l2_val
+        if val >= 10: # if one of l1, l2 is None, Never come here
+            val = val - 10
+            result_node = ListNode(val)  
+            if l1.next is None and l2.next is None:
+                result_node.next = ListNode(1)
+            elif l1.next is None:
+                result_node.next = self.addTwoNumbers(ListNode(1), l2.next)
+            elif l2.next is None:
+                result_node.next = self.addTwoNumbers(l1.next, ListNode(1))
+            else:            
+                l1.next.val = l1.next.val + 1
+                result_node.next = self.addTwoNumbers(l1.next, l2.next)            
+        else:
+            result_node = ListNode(val)
+
+            if l1.next is None and l2.next is None:
+                return result_node
+            elif l1.next is None:
+                result_node.next = l2.next
+            elif l2.next is None:
+                result_node.next = l1.next
+            else:            
+                result_node.next = self.addTwoNumbers(l1.next, l2.next)
+
+        return result_node
+```
+
+- result
+```
+Success
+Runtime: 72 ms, faster than 92.18% of Python3 online submissions for Add Two Numbers.
+Memory Usage: 13.6 MB, less than 5.67% of Python3 online submissions for Add Two Numbers.
+```
+
+### 3. Longest Substring Without Repeating Characters
+- 포인트
+    - 겹치는게 나왔다고 리스트를 새로 만들면 안됨
+    - 겹치는게 나왔을시 겹치는 index 부분부터 다시 substring개수를 세야함
+    - 이를 위해서 [].index(<elm>) 함수가 필수임!
+
+```
+Given a string, find the length of the longest substring without repeating characters.
+
+Example 1:
+
+Input: "abcabcbb"
+Output: 3
+Explanation: The answer is "abc", with the length of 3.
+Example 2:
+
+Input: "bbbbb"
+Output: 1
+Explanation: The answer is "b", with the length of 1.
+Example 3:
+
+Input: "pwwkew"
+Output: 3
+Explanation: The answer is "wke", with the length of 3.
+             Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
+```
+
+- my code
+
+```python
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        list_of_substring = []
+        max_substr_len = 0
+        for s_elm in s:
+            if len(list_of_substring) == 0:
+                list_of_substring.append(s_elm)
+            else:
+                if s_elm in list_of_substring:
+                    substr_len = len(list_of_substring)
+                    if substr_len > max_substr_len:
+                        max_substr_len = substr_len                    
+                    pre_duplicated_index = list_of_substring.index(s_elm) # 필수
+                    list_of_substring.append(s_elm)
+                    list_of_substring = list_of_substring[pre_duplicated_index+1:]
+                else:
+                    list_of_substring.append(s_elm)
+
+        substr_len = len(list_of_substring)
+        if substr_len > max_substr_len:
+            max_substr_len = substr_len
+        return max_substr_len
+```
+
+- result
+```
+Success
+Runtime: 100 ms, faster than 27.53% of Python3 online submissions for Longest Substring Without Repeating Characters.
+Memory Usage: 13.9 MB, less than 5.10% of Python3 online submissions for Longest Substring Without Repeating Characters.
+```
+
+
+### 5. Longest Palindromic Substring
+- 포인트
+    - 홀수개와 짝수개일때를 나눠야함
+    - 한개씩 증감하면서 찾는거니까 재귀로 해보자
+    - max_len 체크하면서 그때의 index를 저장해서 리턴
+
+```
+Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.
+
+Example 1:
+
+Input: "babad"
+Output: "bab"
+Note: "aba" is also a valid answer.
+Example 2:
+
+Input: "cbbd"
+Output: "bb"
+```
+
+- my code
+
+```python
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        list_of_palindromic_str = []
+        max_len = 0
+        max_str = ""
+        for i in range(len(s)):            
+            # 홀수개
+            _i, _j = self.recursive_str_checker(s, i, i)
+            _len = _j - _i + 1
+            if _len > max_len:
+                max_len = _len
+                max_str = s[_i:_j+1]
+
+            # 짝수개
+            _i, _j = self.recursive_str_checker(s, i+1, i)
+            _len = _j - _i + 1
+            if _len > max_len:
+                max_len = _len
+                max_str = s[_i:_j+1]                
+        return max_str
+
+
+    def recursive_str_checker(self, s, i, j):
+        # length check
+        if i == 0:
+            return i, j        
+        if j == len(s)-1:
+            return i, j
+
+        if s[i-1] == s[j+1]:
+            return self.recursive_str_checker(s, i-1, j+1)
+        else:
+            return i, j
+```
+
+- result
+```
+Success
+Runtime: 1832 ms, faster than 48.98% of Python3 online submissions for Longest Palindromic Substring.
+Memory Usage: 14.1 MB, less than 20.17% of Python3 online submissions for Longest Palindromic Substring.
+```
+
+### 6. ZigZag Conversion
+- 포인트
+    - 각 row가 증가했다가 감소하고 있는걸 이용하자
+    - row에 대응되는 리스트에 넣기 위해 index를 증가하면서 넣다가 양 끝단에 도착하면 다시 감소시키기만 하면됨
+    - 증감을 위한 flag 변수를 넣고 str len에 맞게 입력해주고 나중에 concat해서 뱉어주자
+
+```
+Given a string s, find the longest palindromic The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
+
+P   A   H   N
+A P L S I I G
+Y   I   R
+And then read line by line: "PAHNAPLSIIGYIR"
+
+Write the code that will take a string and make this conversion given a number of rows:
+
+string convert(string s, int numRows);
+Example 1:
+
+Input: s = "PAYPALISHIRING", numRows = 3
+Output: "PAHNAPLSIIGYIR"
+Example 2:
+
+Input: s = "PAYPALISHIRING", numRows = 4
+Output: "PINALSIGYAHRPI"
+Explanation:
+
+P     I    N
+A   L S  I G
+Y A   H R
+P     I
+```
+
+- my code
+
+```python
+class Solution:
+    def convert(self, s: str, numRows: int) -> str:
+        list_of_list_row_chars = ["" for _ in range(numRows)]
+
+        j = 0
+        plus_minus_multiplier = -1
+        for i in range(len(s)):            
+            list_of_list_row_chars[j] += s[i]
+            if j == numRows - 1 or j == 0:
+                plus_minus_multiplier = plus_minus_multiplier * -1                
+            if numRows != 1: # 예외처리..!
+                j = j + 1 * plus_minus_multiplier
+
+        result_str = ""
+        for row in list_of_list_row_chars:
+            result_str += row            
+        return result_str
+```
+
+- result
+```
+Success
+Runtime: 68 ms, faster than 62.89% of Python3 online submissions for ZigZag Conversion.
+Memory Usage: 13.9 MB, less than 10.00% of Python3 online submissions for ZigZag Conversion.
+```
+
+### 8. String to Integer (atoi)
+- 포인트
+    - 정규식으로 처리하면 그냥 한방에 끝..
+    - 숫자들을 리스트에 넣어놓고.. 처리
+    - 예외처리 중요함
+    - 더 나은 풀이 있을 것 -_ -;
+
+```
+String to Integer (atoi)
+Medium
+
+1060
+
+6628
+
+Favorite
+
+Share
+Implement atoi which converts a string to an integer.
+
+The function first discards as many whitespace characters as necessary until the first non-whitespace character is found. Then, starting from this character, takes an optional initial plus or minus sign followed by as many numerical digits as possible, and interprets them as a numerical value.
+
+The string can contain additional characters after those that form the integral number, which are ignored and have no effect on the behavior of this function.
+
+If the first sequence of non-whitespace characters in str is not a valid integral number, or if no such sequence exists because either str is empty or it contains only whitespace characters, no conversion is performed.
+
+If no valid conversion could be performed, a zero value is returned.
+
+Note:
+
+Only the space character ' ' is considered as whitespace character.
+Assume we are dealing with an environment which could only store integers within the 32-bit signed integer range: [−2^31,  2^31 − 1]. If the numerical value is out of the range of representable values, INT_MAX (2^31 − 1) or INT_MIN (−2^31) is returned.
+Example 1:
+
+Input: "42"
+Output: 42
+Example 2:
+
+Input: "   -42"
+Output: -42
+Explanation: The first non-whitespace character is '-', which is the minus sign.
+             Then take as many numerical digits as possible, which gets 42.
+Example 3:
+
+Input: "4193 with words"
+Output: 4193
+Explanation: Conversion stops at digit '3' as the next character is not a numerical digit.
+Example 4:
+
+Input: "words and 987"
+Output: 0
+Explanation: The first non-whitespace character is 'w', which is not a numerical
+             digit or a +/- sign. Therefore no valid conversion could be performed.
+Example 5:
+
+Input: "-91283472332"
+Output: -2147483648
+Explanation: The number "-91283472332" is out of the range of a 32-bit signed integer.
+             Thefore INT_MIN (−2^31) is returned.
+```
+
+- my code
+
+```python
+class Solution:
+    def myAtoi(self, str: str) -> int:
+        INT_MIN = -1 * pow(2, 31)
+        INT_MAX = 1 * pow(2, 31) - 1
+        number_str_list = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        number_and_ops_str_list = number_str_list + ["+", "-"]
+        str = str.strip()
+        if str == "":
+            return 0
+
+        if str[0] not in number_and_ops_str_list or str == "+" or str == "-":
+            return 0
+        else:
+            result_str = ""
+            for i, str_elm in enumerate(str):
+                if i != 0 and str_elm not in number_str_list:
+                    break
+                result_str += str_elm
+            if len(result_str) == 1 and result_str not in number_str_list:
+                return 0
+            else:
+                result_str = int(result_str)
+                if result_str >= INT_MAX:
+                    return INT_MAX
+                elif result_str <= INT_MIN:
+                    return INT_MIN
+                else:
+                    return result_str                
+```
+
+- result
+```
+Success
+Runtime: 40 ms, faster than 74.91% of Python3 online submissions for String to Integer (atoi).
+Memory Usage: 14.1 MB, less than 5.95% of Python3 online submissions for String to Integer (atoi).
+```

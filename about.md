@@ -7,11 +7,11 @@ order: 10
 
 ## 소개
 
-안녕하세요, 글쓰는 머신러닝 개발자 윤주성입니다.
+안녕하세요, 문과처럼(?) 살고 싶은 머신러닝 개발자 윤주성입니다.
 
 자연어처리와 머신러닝을 전공했고 현재는 챗봇쪽 일을 하고 있습니다.
 
-시간이 무한하게 주어진다면, 소설을 읽으면서 인생을 즐기면 좋겠다는 작은 꿈(?)을 갖고 있습니다.
+시간이 무한하게 주어진다면, 소설을 읽으면서 인생을 즐기면 좋겠다는 작은 꿈(?)이 있습니다.
 
 - 자기개발: 글을 읽고 정리하는 것 & "연구/구현/발표" 하는 것 등을 좋아합니다   
 - 출구전략(?): ML & NLP 교육에 관심이 있습니다   
@@ -32,9 +32,10 @@ order: 10
 - **Presentation Slides**: [https://github.com/eagle705/Presentation](https://github.com/eagle705/Presentation)
 
 ## Current Interest
-- Generative Adversarial Networks
-- Reinforcement Learning
+- Natural Language Generation
 - Speech Synthesis
+- Dialog Sytstem
+- Generative Adversarial Networks
 
 ## Challenge
 - 2nd Place @ Intent Classification of [AI Starthon 2019](http://aistarthon2019.co.kr/) (NIPA, Naver)
