@@ -38,10 +38,10 @@ order: 10
 - Generative Adversarial Networks
 
 ## Challenge
-- 2nd Place @ Intent Classification of [AI Starthon 2019](http://aistarthon2019.co.kr/) (NIPA, Naver)
-- 3rd Place @ Query Classification of [AI Starthon 2019](http://aistarthon2019.co.kr/) (NIPA, Naver)
-- 4th Place @ Movie Classification of [AI Starthon 2019](http://aistarthon2019.co.kr/) (NIPA, Naver)
-- 7th Place @ Named Entity Recognition of [NLP Challenge](http://air.changwon.ac.kr/?page_id=10) (NAVER, Changwon univ)
+- 2nd Place @ [Intent Classification of AI Starthon 2019](https://github.com/ai-starthon/AI_Starthon2019) (NIPA, Naver)
+- 3rd Place @ [Query Classification of AI Starthon 2019](https://github.com/ai-starthon/AI_Starthon2019) (NIPA, Naver)
+- 4th Place @ [Movie Classification of AI Starthon 2019](https://github.com/ai-starthon/AI_Starthon2019) (NIPA, Naver)
+- 7th Place @ [Named Entity Recognition of NLP Challenge](http://air.changwon.ac.kr/?page_id=10) (NAVER, Changwon univ)
 
 ## 약력
 
