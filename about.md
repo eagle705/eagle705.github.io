@@ -37,11 +37,12 @@ order: 10
 - Dialog Sytstem
 - Generative Adversarial Networks
 
-## Challenge
+## Challenge & Award
 - 2nd Place @ [Intent Classification of AI Starthon 2019](https://github.com/ai-starthon/AI_Starthon2019) (NIPA, Naver)
 - 3rd Place @ [Query Classification of AI Starthon 2019](https://github.com/ai-starthon/AI_Starthon2019) (NIPA, Naver)
-- 4th Place @ [Movie Classification of AI Starthon 2019](https://github.com/ai-starthon/AI_Starthon2019) (NIPA, Naver)
+- 4th Place @ [Movie Rating Classification of AI Starthon 2019](https://github.com/ai-starthon/AI_Starthon2019) (NIPA, Naver)
 - 7th Place @ [Named Entity Recognition of NLP Challenge](http://air.changwon.ac.kr/?page_id=10) (NAVER, Changwon univ)
+- [Qualcomm Innovation Award 2016](http://www03.zdnet.co.kr/view/?no=20160907180007) (Qualcomm Korea)
 
 ## 약력
 

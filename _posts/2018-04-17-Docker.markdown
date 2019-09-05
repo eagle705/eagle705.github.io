@@ -98,7 +98,7 @@ docker load < oj-redis
 도커 run options: http://pyrasis.com/book/DockerForTheReallyImpatient/Chapter20/28
 
 
-#### NVIDIA Docker Settings
+### NVIDIA Docker Settings
 ![docker_image](https://cloud.githubusercontent.com/assets/3028125/12213714/5b208976-b632-11e5-8406-38d379ec46aa.png)
 - 말 나온김에.. 딥러닝 필수품인 NVIDIA docker를 셋팅해보자
 - nvidia-docker 와 docker 두개를 설치해줘야한다
@@ -158,7 +158,14 @@ docker run --gpus all nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04 nvidia-smi
 docker run --runtime=nvidia -it -p 8888:8888 -p 6006:6006 tensorflow/tensorflow:latest-gpu-py3-jupyter
 ```
 
+- ftp 사용(5000 포트로 접근하는 경우임! 5000포트라는 건 변경가능!) 및 파일 시스템 공유까지 하고 싶으면 아래와 같이 셋팅 (도커의 경우 /tf 으로 경로를 두면 됨)
+
+```
+docker run --runtime=nvidia -it -p 8888:8888 -p 6006:6006 -p 5000:22 -itd -v <호스트의 공유할 디렉토리>:<도커의 공유될 디렉토리> nvidia/cuda:10.0-cudnn7-ubuntu16.04-tf1.4-pytorch1.2
+```
+
 - 잘 동작하는지 확인
+
 ```Python
 from tensorflow.python.client import device_lib
 def get_available_gpus():
@@ -173,11 +180,175 @@ get_available_gpus()
 #  '/device:GPU:1']
 ```
 
-- dependecy Settings
+
+#### ftp setting in docker
+- image -> container를 만들때 포트포워딩을 해준다
+- 만약 못해줬으면 커밋해서 다시 이미지로 만들고 다시 컨테이너로 떠야한다
+
+```docker run -i -t --name sftp -p 50000:22 ubuntu```
+
+- ssh 설치
+```apt-get install ssh ```
+
+- ssh 생성
+
+```
+cd ~/
+ssh-keygen -t rsa -P '' -f ~/.ssh/id_dsa
+
+# docker container 안에서 ssh-key 생성 결과
+Generating public/private rsa key pair.
+Created directory '/root/.ssh'.
+Your identification has been saved in /root/.ssh/id_dsa.
+Your public key has been saved in /root/.ssh/id_dsa.pub.
+The key fingerprint is:
+SHA256:woWqfGuErQHO6/FCmDkpY8oD4UsVNqP3lrACrtc0g0M root@f44bce126400
+The key's randomart image is:
++---[RSA 2048]----+
+|                 |
+|   =   .         |
+|  o + . .        |
+|+.E+ o .         |
+|BBo+= + S        |
+|X@=o*+ .         |
+|X+*Boo           |
+|o*=.o.           |
+|.ooo.            |
++----[SHA256]-----+
+```
+
+- sshd를 위한 폴더 생성
+
+```mkdir /var/run/sshd```
+
+- sshd가 컨테이너 시작시 실행되도록 ~/.bashrc 파일에 다음을 추가
+
+```
+# autorun
+/usr/sbin/sshd
+```
+
+- 변경사항 적용
+
+```source ~/.bashrc```
+
+- User 추가
+
+```adduser eagle705 ```
+
+##### NLP dependecy settings (konlpy)
+  - ref: https://provia.tistory.com/57
+
+- 방법1
+
 ```
 apt-get update
 apt-get install g++ openjdk-8-jdk
 pip install konlpy  
 apt-get install curl
 bash <(curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh)
+```
+
+- 방법2
+
+```
+mkdir mecab_install
+cd mecab_install
+wget mecab-0.996-ko-0.9.2.tar.gz
+tar -zxvf mecab-*-ko-*.tar.gz
+cd mecab-0.996-ko-0.9.2
+./configure
+make
+make check
+make install
+mecab --version
+ldconfig
+mecab --version
+
+```
+
+- 방법3
+
+```
+pip install python-mecab-ko
+```
+
+- 그래도 안될때
+
+```
+mecab-config --libs-only-L | sudo tee /etc/ld.so.conf.d/mecab.conf
+ldconfig
+git clone https://bitbucket.org/eunjeon/mecab-python-0.996.git
+pip install ./mecab-python-0.996
+
+```
+
+```
+#!/bin/sh
+
+OUT_DIR="${1:-./mecab}"
+
+mkdir -v -p $OUT_DIR
+
+sudo yum install git cmake make automake wget
+
+wget https://bitbucket.org/eunjeon/mecab-ko/downloads/mecab-0.996-ko-0.9.2.tar.gz
+wget https://bitbucket.org/eunjeon/mecab-ko-dic/downloads/mecab-ko-dic-2.1.1-20180720.tar.gz
+
+mv mecab-0.996-ko-0.9.2.tar.gz "$OUT_DIR/"
+mv mecab-ko-dic-2.1.1-20180720.tar.gz "$OUT_DIR/"
+
+cd "$OUT_DIR"
+
+tar zxfv mecab-0.996-ko-0.9.2.tar.gz
+cd mecab-0.996-ko-0.9.2
+autoreconf -vi
+#./configure
+./configure --with-mecab-config=./mecab-config --with-charset=utf8
+make
+make check
+sudo make install
+cd ../
+
+sudo ldconfig
+tar zxfv mecab-ko-dic-2.1.1-20180720.tar.gz
+cd mecab-ko-dic-2.1.1-20180720
+autoreconf -vi
+./configure
+make
+sudo make install
+
+cd ../
+git clone https://bitbucket.org/eunjeon/mecab-python-0.996.git
+cd mecab-python-0.996
+python setup.py build
+python setup.py install
+
+mecab-config --libs-only-L | sudo tee /etc/ld.so.conf.d/mecab.conf
+sudo ldconfig
+
+#chmod +x /home/eagle/anaconda3/envs/dl_py3/lib/python3.6/site-packages/*
+
+```
+
+- 사전추가
+
+```
+wget https://bitbucket.org/eunjeon/mecab-ko-dic/downloads/mecab-ko-dic-2.1.1-20180720.tar.gz
+tar -zxvf mecab-ko-dic-2.1.1-20180720.tar.gz
+cd mecab-ko-dic-2.1.1-20180720
+./configure
+make
+make install
+mecab -d /usr/local/lib/mecab/dic/mecab-ko-dic
+```
+
+- 그 외에 설치할 것
+```
+pip install easydict
+pip install sklearn
+pip install pandas
+pip install xlrd
+pip install easydict
+(https://worthpreading.tistory.com/56)
 ```
