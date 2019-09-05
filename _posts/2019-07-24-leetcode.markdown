@@ -13,7 +13,7 @@ use_math: true
 
 ## 19.7.24
 
-- Two Sum, Example (Easy)
+### 1. Two Sum, Example (Easy)
 
 ```
 # 중복되면 안됨, 하지만 중복되는 원소가 순차적으로 2개 이상면 오케이
@@ -418,4 +418,64 @@ class Solution:
 Success
 Runtime: 40 ms, faster than 74.91% of Python3 online submissions for String to Integer (atoi).
 Memory Usage: 14.1 MB, less than 5.95% of Python3 online submissions for String to Integer (atoi).
+```
+
+### 11. Container With Most Water
+- https://leetcode.com/problems/container-with-most-water/
+- 포인트
+    - n^2 이 안되도록 양 옆에서 조여오는 방식으로 코딩
+    - 양 옆에서 조여올때는 특정 조건이 되었을때 index를 이동하도록!
+    - index간의 갭이 1밖에 안되기 때문에 정수 환경에서 height가 1이라도 크면 index를 옮기는게 이득임
+
+```
+Given n non-negative integers a1, a2, ..., an , where each represents a point at coordinate (i, ai). n vertical lines are drawn such that the two endpoints of line i is at (i, ai) and (i, 0). Find two lines, which together with x-axis forms a container, such that the container contains the most water.
+
+Note: You may not slant the container and n is at least 2.
+
+
+The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.
+
+ 
+
+Example:
+
+Input: [1,8,6,2,5,4,8,3,7]
+Output: 49
+```
+
+- my code
+
+```python
+class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        max_cont_size = 0
+        total_len = len(height)
+        i = 0        
+        j = total_len - i - 1
+        
+        # if i+1 == j: #len of height == 2
+        #     if height[i] > height[j]:
+        #         max_cont_size = height[j] * (j - i)
+        #     else:
+        #         max_cont_size = height[i] * (j - i)
+        
+        while(i+1 <= j):                        
+            if height[i] > height[j]:
+                cont_size = height[j] * (j - i)
+                j = j - 1
+            else:
+                cont_size = height[i] * (j - i)
+                i = i + 1
+            if cont_size > max_cont_size:
+                max_cont_size = cont_size
+                
+        return max_cont_size
+                  
+```
+
+- result
+```
+Success
+Runtime: 140 ms
+Memory Usage: 15.5 MB
 ```

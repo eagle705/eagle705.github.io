@@ -96,3 +96,88 @@ docker load < oj-redis
 도커 치트시트 https://gist.github.com/nacyot/8366310
 도커 셋팅 끝판왕: http://raccoonyy.github.io/docker-usages-for-dev-environment-setup/
 도커 run options: http://pyrasis.com/book/DockerForTheReallyImpatient/Chapter20/28
+
+
+#### NVIDIA Docker Settings
+![docker_image](https://cloud.githubusercontent.com/assets/3028125/12213714/5b208976-b632-11e5-8406-38d379ec46aa.png)
+- 말 나온김에.. 딥러닝 필수품인 NVIDIA docker를 셋팅해보자
+- nvidia-docker 와 docker 두개를 설치해줘야한다
+- reference: 
+  - https://hiseon.me/linux/ubuntu/install-docker/
+  - https://github.com/NVIDIA/nvidia-docker
+  - https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(version-2.0)
+  - http://moducon.kr/2018/wp-content/uploads/sites/2/2018/12/leesangsoo_slide.pdf
+  - ftp: https://m.blog.naver.com/PostView.nhn?blogId=alice_k106&logNo=220650722592&proxyReferer=https%3A%2F%2Fwww.google.com%2F
+
+##### Install
+- ubuntu-dirvers devices 명령어로 어떤 Nvidia graphic driver를 설치할지 체크
+```
+root@DeepLearning:/home/eagle# ubuntu-drivers devices
+== /sys/devices/pci0000:00/0000:00:02.0/0000:02:00.0 ==
+vendor   : NVIDIA Corporation
+modalias : pci:v000010DEd00001B06sv00001462sd00003609bc03sc00i00
+driver   : nvidia-410 - third-party non-free
+driver   : nvidia-387 - third-party non-free
+driver   : nvidia-415 - third-party free
+driver   : nvidia-430 - third-party free recommended
+driver   : nvidia-418 - third-party non-free
+driver   : nvidia-390 - third-party non-free
+driver   : nvidia-396 - third-party non-free
+driver   : xserver-xorg-video-nouveau - distro free builtin
+driver   : nvidia-384 - third-party non-free
+```
+
+- Ubuntu 16.04/18.04, Debian Jessie/Stretch/Buster
+```
+# Add the package repositories
+$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+$ curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+$ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+$ sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+$ sudo systemctl restart docker
+```
+
+```
+$ sudo apt-get install nvidia-docker2
+$ sudo pkill -SIGHUP dockerd
+```
+
+- docker hub에서 이미지를 검색: https://hub.docker.com/r/nvidia/cuda
+```
+docker pull nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
+```
+
+- 잘 동작하는지 nvidia-smi 명령어로 테스트
+```
+docker run --gpus all nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04 nvidia-smi
+```
+
+- 딥러닝 프레임워크 이미지 다운 및 설치
+  - 텐서플로우 docker가 jupyter가 깔려있어서 이걸로 설치 후 파이토치도 설치하자: https://hub.docker.com/r/tensorflow/tensorflow/tags?page=2
+```
+docker run --runtime=nvidia -it -p 8888:8888 -p 6006:6006 tensorflow/tensorflow:latest-gpu-py3-jupyter
+```
+
+- 잘 동작하는지 확인
+```Python
+from tensorflow.python.client import device_lib
+def get_available_gpus():
+    return [x.name for x in device_lib.list_local_devices()]
+get_available_gpus()
+
+# ['/device:CPU:0',
+#  '/device:XLA_GPU:0',
+#  '/device:XLA_GPU:1',
+#  '/device:XLA_CPU:0',
+#  '/device:GPU:0',
+#  '/device:GPU:1']
+```
+
+- dependecy Settings
+```
+apt-get update
+apt-get install g++ openjdk-8-jdk
+pip install konlpy  
+apt-get install curl
+bash <(curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh)
+```
