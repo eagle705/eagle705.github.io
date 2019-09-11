@@ -96,7 +96,7 @@ p(피부색)은 세상에 존재하는 모든 이미지 색상들 중에서 피�
     - $P(C \cap X)$ = 2% : C 공장에서 생산하고 불량인 확률
 
 
-이번엔 $P(A|X)$에 대한 값을 구해보도록 하겠다. 
+이번엔 $P(A \mid X)$에 대한 값을 구해보도록 하겠다. 
 
 $P(A \mid X)$ = ${P(X \mid A) P(A) \over P(X)}$ = ${P(X \cap A) \over P(A)}  P(A) \over P(X)$ = $P(X \cap A) \over P(X)$
 
