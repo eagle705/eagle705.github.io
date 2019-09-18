@@ -36,6 +36,7 @@ order: 10
 - Speech Synthesis
 - Dialog Sytstem
 - Generative Adversarial Networks
+- AutoML
 
 ## Challenge & Award
 - 2nd Place @ [Intent Classification of AI Starthon 2019](https://github.com/ai-starthon/AI_Starthon2019) (NIPA, Naver)

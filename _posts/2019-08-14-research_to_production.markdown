@@ -13,6 +13,7 @@ use_math: true
 
 ### Research
 - 개발 기간이 필요함
+- 어떤 데이터를 쓸지 어떤 데이터를 모을 수 있을지 어디까지 라벨링 할 수 있을지, 어떤 데이터로 원하는 데이터를 비슷하게 대체할 수 있을지 등을 생각해야함
 - 대략적인 시간을 산정해서 보고해야함
 - 논문을 많이 읽으면 읽을수록 좋긴함
 - 갖다 쓸수있는건 빠르게 갖다 써야함
@@ -24,6 +25,12 @@ use_math: true
 - git 관리를 잘해야함
   - [gitignore](https://www.gitignore.io/)
 - 안해본 것에 대한 두려움이 없어야함
+- DL Framework
+  - Prototyping: PyTorch
+  - Service: TensorFlow
+    - eager mode로 logit + loss 까지 tensor format & shape 확인
+    - graph mode로 학습시켜서 pb 추출
+  - AutoML: 어떤 오픈소스 쓸지 TBD
 
 
 ### Production
