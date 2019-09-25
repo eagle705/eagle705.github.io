@@ -30,12 +30,13 @@ use_math: true
   - Service: TensorFlow
     - eager mode로 logit + loss 까지 tensor format & shape 확인
     - graph mode로 학습시켜서 pb 추출
-  - AutoML: 어떤 오픈소스 쓸지 TBD
+- AutoML: 어떤 오픈소스 쓸지 TBD
 
 
 ### Production
 - 환경셋팅 문서화 (한번에 뜨고 설치할 수 있게 ~~도커가 그립다~~)
 - 클래스, 플로우 다이어그램: PlantUML (https://meetup.toast.com/posts/117)
+- 다이어그램 & 마인드맵 그리고 개발하면 좋음
 - L4 (Load Balancer)
   - L4에서는 1초간 계속 health check를 해서 서버 하나가 꺼지면 떼버리고 다시 살아있으면 붙임
   - 반응못하면 아마 500에러 낼듯

@@ -30,7 +30,7 @@ ML 기초를 좀 다시 쌓고 정리할 필요를 느껴서 이 기회에 조�
 
 ### MLE & MAP 예시
 - MLE(Maximum Likelihood Estimation) 방법
-  - ML 방법은 남자에게서 그러한 머리카락이 나올 확률 p(z\|남)과 여자에게서 그러한 머리카락이 나올 확률 p(z\|여)을 비교해서 가장 확률이 큰, 즉 likelihood가 가장 큰 클래스(성별)를 선택하는 방법
+  - MLE 방법은 남자에게서 그러한 머리카락이 나올 확률 p(z\|남)과 여자에게서 그러한 머리카락이 나올 확률 p(z\|여)을 비교해서 가장 확률이 큰, 즉 likelihood가 가장 큰 클래스(성별)를 선택하는 방법
 - MAP(Maximum A Posteriori) 방법 
   - MAP 방법은 z라는 머리카락이 발견되었는데 그것이 남자것일 확률 p(남\|z), 그것이 여자것일 확률 p(여\|z)를 비교해서 둘 중 큰 값을 갖는 클래스(성별)를 선택하는 방법
   - 즉, 사후확률(posterior prabability)를 최대화시키는 방법으로서 MAP에서 사후확률을 계산할 때 베이즈 정리가 이용됨
@@ -43,8 +43,12 @@ ML 기초를 좀 다시 쌓고 정리할 필요를 느껴서 이 기회에 조�
 
 ### Maximum a Posteriori Estimation (MAP)
 - https://ko.wikipedia.org/wiki/%EC%B5%9C%EB%8C%80_%EC%82%AC%ED%9B%84_%ED%99%95%EB%A5%A0
+- It is very common to use regularized maximum likelihood.
 
 ### MLE vs MAP 
+
+![](/assets/img/markdown-img-paste-20190925204340821.png)
+
 최대 사후 확률에 대응하는 모수(Parameter)는 최대우도(MLE)와 마찬가지로 모수의 점 추정으로 사용할 수 있지만, 최대우도에서는 어떤 사건이 일어날 확률을 가장 높이는 모수를 찾는 것에 비해, 최대 사후 확률 모수는 모수의 사전 확률(Prior)과 결합된 확률을 고려한다는 점이 다르다.
 
 - 한줄 정리: MAP는 MLE에 비해서 Params(성비로 생각하면 편함)로 인해 발생할 사건의 사전확률(성비를 생각하면 편함)을 고려함!
@@ -80,6 +84,20 @@ p(피부색)은 세상에 존재하는 모든 이미지 색상들 중에서 피�
 
 - Q) MAP나 이런게 Neural Net이나 이런 부분에선 어떻게 적용될 수 있는걸까? DL에서는 거의 MLE 쓰는거 같은데..?! 아무래도 이런건 정보이론을 좀 더 공부해야 할듯..
 
+#### Notation
+- P(A, B): A,B의 Joint Prob
+
+#### Generative vs Discriminative
+
+- Generative: 
+  - P(X|C)P(C) // Bayes rule로 해결
+  - 평균 분산만 두개 구하면 N 분포 쓸수있고 대부분을 N 으로 가정하니까 예전에 데이터 적을땐 Discriminative로 feature만드는것보다 Generative로 분포 가정해서 사용했음
+
+- Discriminative:
+  - P(C|X)
+  - feature등을 통해 class 추측
+
+![gen_vs_dis](http://sanghyukchun.github.io/images/post/61-1.jpg)
 
 #### Examples
 - 가정: 어느 공장이 있다고 가정하자. 공장은 3개가 있다.
@@ -114,3 +132,9 @@ A를 클래스로 해석해서 그렇지 파라미터등으로 해석해서 모�
   - http://www.synapsoft.co.kr/blog/6002
 - 베이즈 정리
   - https://ratsgo.github.io/statistics/2017/07/01/bayes/
+- Generative VS Discriminative
+  - http://sanghyukchun.github.io/61/
+- 옥스포드 자료 (Generative, Discriminative, MLE)
+  - http://www.stats.ox.ac.uk/~flaxman/HT17_lecture5.pdf
+- 이 자료가 최종 정리본 CMU!
+  - http://www.cs.cmu.edu/~epxing/Class/10701-08f/Lecture/lecture5.pdf
