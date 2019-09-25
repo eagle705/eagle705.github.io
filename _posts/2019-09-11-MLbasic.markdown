@@ -90,11 +90,11 @@ p(피부색)은 세상에 존재하는 모든 이미지 색상들 중에서 피�
 #### Generative vs Discriminative
 
 - Generative: 
-  - P(X|C)P(C) // Bayes rule로 해결
+  - P(X\|C)P(C) // Bayes rule로 해결
   - 평균 분산만 두개 구하면 N 분포 쓸수있고 대부분을 N 으로 가정하니까 예전에 데이터 적을땐 Discriminative로 feature만드는것보다 Generative로 분포 가정해서 사용했음
 
 - Discriminative:
-  - P(C|X)
+  - P(C\|X)
   - feature등을 통해 class 추측
 
 ![gen_vs_dis](http://sanghyukchun.github.io/images/post/61-1.jpg)
