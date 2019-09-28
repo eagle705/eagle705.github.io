@@ -90,14 +90,44 @@ p(피부색)은 세상에 존재하는 모든 이미지 색상들 중에서 피�
 #### Generative vs Discriminative
 
 - Generative: 
-  - P(X\|C)P(C) // Bayes rule로 해결
+  - Joint Prob: P(X, C) = P(X\|C)P(C) // Bayes rule로 해결
+    - 여러개의 그래프
+    - 후보 토픽을 정하고 각 토픽의 분포에 따라 단어가 생성될 확률 계산
   - 평균 분산만 두개 구하면 N 분포 쓸수있고 대부분을 N 으로 가정하니까 예전에 데이터 적을땐 Discriminative로 feature만드는것보다 Generative로 분포 가정해서 사용했음
+  - multi feature를 보기 힘듬..!
+  
 
 - Discriminative:
-  - P(C\|X)
+  - Conditional Prob: P(C\|X)
+    - 한개의 그래프
   - feature등을 통해 class 추측
+  
 
 ![gen_vs_dis](http://sanghyukchun.github.io/images/post/61-1.jpg)
+
+
+#### Probability Theory vs Decision Theory vs Information Theory
+- Probability Theory:
+- Decision Theory: 
+- Information Theory:
+  - 획득가능한 정보량 = 불확실성
+  - 비트로 처음에 연구됨 (2진수)
+  - 담아야되는 정보량(로그 밑은 2임) n = -logP(x) = log(1/P(x))
+    - 2진수가 표현가능한 정보량
+  - 정보량이란 그 사상에 대해 모르는 정도에 대한 양
+
+#### etc 
+- Generative: HMM (전이확률 + 생성확률)
+- Discriminative: NB (각 feature는 독립으로 보자~) 
+- Maximum Entropy: 본 데이터에 대한 확률(feature function(있으면 1 없으면 0으로 나타내고 실제 중요도는 그 앞에 곱해지는 가중치인 alpha값을 학습해서 정함) + 유니폼(엔트로피 최대)
+- MEMM: HMM과 비슷하지만 전이확률 대신 엔트로피로..?! 하지만 Label bias라는 문제가 있음 (길이 없으면 가지마라 라는.. 데이터 없으면 방해될 수 있음)
+- CRF: MEMM 저자가 1년 후 만들어낸 모델임.. Linear Chain CRF가 우리가 아는 CRF임
+  - 원래 CRF는 어떠한 클릭(사이클 만족시키지 않는..어떤 조건이 있는데 그걸 만족시키면 클릭임)도 자질로 쓸 수 있다
+  - 이전 상태의 feature function의 가중치도 상태에 따라 달라지고.. 전이 확률이 너무 Label bias 문제를 만드니 이걸 하나의 feature로 보면서 영향을 줄여보겠다는게 CRF의 컨셉이라고 할 수 있음
+
+- Structured SVM:
+  - SVM은 원래 분류만하는데 SVM으로 sequence 라벨링 문제 해결하려고 할때 씀
+
 
 #### Examples
 - 가정: 어느 공장이 있다고 가정하자. 공장은 3개가 있다.
@@ -123,6 +153,12 @@ $P(A \mid X)$ = ${P(X \mid A) P(A) \over P(X)}$ = ${P(X \cap A) \over P(A)}  P(A
 $P(A \mid X)$ = $P(X \mid A) P(A) \over P(X)$ = ${P(X \cap A) \over P(A)}  P(A) \over P(X)$ = $P(X \cap A) \over P(X)$ = $0.01 \over P(X)$ 
 
 A를 클래스로 해석해서 그렇지 파라미터등으로 해석해서 모델을 찾는걸로 바꾼다면, 위의 값을 Maximize하는것이 중요하기 때문에, $P(X)$ 의 값은 사실상 고려하지 않아도 된다. 저 형태의 값의 크기가 가장 크게 나오는 theta만 찾으면 된다.
+
+#### 기타
+1. Forward 
+2. Viterbi(Dynamic으로 해결하는데, forwad일때 이전 상태에서 최대값의 확률을 갖는 path를 저장해놓고 나중에 backward할때 다시 계산하지 않고 저장한 path를 사용하면서 해결하는 방식음)
+    - N-Best하면 계산량 너무 많으니 계산량 줄이기 위해 beam search 같은거 하는 것..!
+3. Shortest path
 
 ### Reference
 - MLE & MAP 
