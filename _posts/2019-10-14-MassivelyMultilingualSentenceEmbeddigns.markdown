@@ -219,7 +219,9 @@ Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 �
 - ```score sentence pairs``` by taking the ```cosine similarity``` of their respective embeddings
 - parallel sentence는 threshold를 넘는 cosine similarity를 스코어로해서 nearest neighbor retrieval 로 찾아냄 (~~어려울듯~~)
    - 이러한 방법이 scale inconsistency issues (Guo et al., 2018) 때문에 문제가 있다고 해서 Artetxe and Schwenk (2018) 논문에서 새로운 score 방법이 제안됨
-   - $$ \begin{aligned} \operatorname{score}(x, y) &=\operatorname{margin}(\cos (x, y), \sum_{z \in \mathrm{NN}_{k}(x)} &\left.\frac{\cos (x, z)}{2 k}+\sum_{z \in \mathrm{NN}_{k}(y)} \frac{\cos (y, z)}{2 k }) \right. \end{aligned} $$
+   - $$
+\begin{aligned} \operatorname{score}(x, y) &=\operatorname{margin}(\cos (x, y)\\ \sum_{z \in \mathrm{NN}_{k}(x)} &\left.\frac{\cos (x, z)}{2 k}+\sum_{z \in \mathrm{NN}_{k}(y)} \frac{\cos (y, z)}{2 k})\right. \end{aligned}
+$$
    - $ \begin{array}{l}{ \mathrm{NN}_{k}(x) \text { denotes the } k \text { nearest neighbors of } x} {\text { in the other language. }}\end{array} $
    - margin functions에 대해서 여러개를 테스트 해봤는데 ratio가 젤 결과가 좋았음 *ratio*: $ \operatorname{margin}(a, b)=\frac{a}{b} $
    - 본 논문에서는 위의 metric으로 평가했음
