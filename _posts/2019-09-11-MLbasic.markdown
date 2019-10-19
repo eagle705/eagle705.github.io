@@ -160,6 +160,27 @@ A를 클래스로 해석해서 그렇지 파라미터등으로 해석해서 모�
     - N-Best하면 계산량 너무 많으니 계산량 줄이기 위해 beam search 같은거 하는 것..!
 3. Shortest path
 
+#### loss function 정리
+- 용어정리:
+  - multi-class vs multi-label
+  - == 여러 클래스중 1개 맞추기 혹은.. 그냥 클래스가 여러개일 때를 의미 vs 여러 클래스중 N개 맞추기
+
+- categorical_crossentropy: one-hot encoding 을 label로 하는 multi-class용 Loss
+- sparse_categorical_crossentropy: class index를 label로 하는 multi-class용 Loss (1개의 클래스에 대해서만 계산하면 되는 sparse한 상황이니까 이걸쓰면 계산상의 이득이 있다로 이해하면 될듯..)
+- binary_crossentropy: multi-hot encoding 을 label로 하는 multi-label에도 사용 가능한 Loss
+(Sigmoid Cross-Entropy라고도 불리움, Activation이 Softmax가 아닌 Sigmoid기 때문에 다른 확률값에 영향 받지 않아서 multi-label 문제)
+: 0,1 을 갖는 index로 하고 싶으면 마지막 차원의 크기를 1로 셋팅하면 됨 (MLP for binary classification참고: https://keras.io/getting-started/sequential-model-guide/)
+
+
+- 추가:
+  - Multi-hot Sparse Categorical Cross Entropy라는 것도 있다(?)
+https://cwiki.apache.org/confluence/display/MXNET/Multi-hot+Sparse+Categorical+Cross-entropy
+
+- 참고: 
+  - Loss function 설명: https://gombru.github.io/2018/05/23/cross_entropy_loss/
+  - Multi-label image cf 예제: https://github.com/suraj-deshmukh/Keras-Multi-Label-Image-Classification/blob/master/miml.ipynb
+  - Eras BCE: https://www.tensorflow.org/api_docs/python/tf/keras/losses/BinaryCrossentropy
+
 ### Reference
 - MLE & MAP 
   - https://darkpgmr.tistory.com/62

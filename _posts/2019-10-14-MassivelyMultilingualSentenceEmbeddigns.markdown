@@ -25,6 +25,7 @@ Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 �
 - 결국 이 논문도 parallel corpus가 필요하다고함. 이걸 통해 multilingual sentence embedding을 얻는 것임
 - Translation이 되게 학습시켜서 encoder를 훈련함
 - 대신에 그 양이 좀 적어도 다양한 언어에 대해서 얻을 수 있게 하는 것
+- 영어로만 transfer learning 시켰는데도 다른언어도 적용된다는 점은 의미있음
 - encoder가 BPE를 통해 language independent하게 모델링했다는게 좀 의미가 있긴한데 한편으로는 universal한 구조다보니 좀 개별언어에 대해서 성능이 최적화되진 않겠다는 생각(~~이지만 논문에선 결과가 괜찮음~~)
 - language ID로 decoder에 언어정보를 주는건 꽤 괜찮은 아이디어였다고 생각
 - parallel corpus alignment하는거 어떻게하니.. 고생이 눈에 훤함 (꼭 다할 필요가 없다고 했지만서도)
@@ -151,7 +152,7 @@ Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 �
 - 대부분의 데이터를 위 두가지 언어에 대해서 aligned 처리함
    - ```Note that it is not necessary that all input languages are systematically aligned with both target languages. Once we have several languages with both alignments, the joint embedding is well conditioned, and we can add more languages with one alignment only, usually English.```
 - 93개 언어에 대한 학습데이터는 ``` the Europarl, United Nations, OpenSubtitles2018, Global Voices, Tanzil and Tatoeba corpus ``` 를 조합해서 만듬
-- 학습을 위해 총 223 mullion parallel sentences를 구성함
+- 학습을 위해 총 223 million parallel sentences를 구성함
 - 전처리:
    - Moses tools 사용 (대부분의 언어)
       - punctuation normalization
@@ -178,7 +179,7 @@ Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 �
 ![](https://camo.githubusercontent.com/b897558046365450b4b49fd23f2bc72adbd3b0bd/68747470733a2f2f646c2e666261697075626c696366696c65732e636f6d2f584e4c492f786e6c695f6578616d706c65732e706e67)
 
 - 결과
-   - Notation중에 EN -> XX가 있는데, multilingual이라서 어차피 그 언어 그대로 넣어도 될텐데, 왜 굳이 영어에서 transfer되었다는 표현을 쓰는지 아직 잘 모르겠음 XNLI 자체가 번역셋이라 그런거 같기도함
+   - Notation중에 EN -> XX가 있는데, 이것 때문임. ```we train a classifier on top of our multilingual encoder using the English training data```
 ![](/assets/img/markdown-img-paste-20191016140026843.png)
 - Given two sentences, ```a premise and a hypothesis```, the task consists in deciding whether there is an ```entailment, contradiction or neutral``` relationship between them
 - Dataset
@@ -187,6 +188,8 @@ Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 �
    - translated from English into 14 languages by professional translators
    
 - multilingual encoder위에 classifier하나 놓고 two sentence embedding에 대해  ($p, h, p \cdot h$,\|$p-h$\|) 와 같이 feature로 바꿔서 분류함
+- ```All hyperparameters were optimized on the English XNLI development corpus only```
+- ```the same classifier was applied to all languages of the XNLI test set```
 - two hidden layer 사용: concat_sent_dim -> 512 -> 384 -> 3
 - Swahili 같은 자원이 적은 언어에 대해서 잘나옴
 - BERT 는 영어에 대해서는 매우 훌륭한 점수를 냄 (transfer는 약함)
@@ -208,6 +211,7 @@ Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 �
    - development: 1,000 
    - test: 4,000 
 - encoder의 top layer에 10 units 갖는 hidden layer 한개 쌓아서 사용
+- ```we train a classifier on top of our multilingual encoder using the English training data```
 
 ##### 4.3 BUCC: bitext mining
 ![](/assets/img/markdown-img-paste-20191016145258214.png)
@@ -219,7 +223,7 @@ Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 �
 - ```score sentence pairs``` by taking the ```cosine similarity``` of their respective embeddings
 - parallel sentence는 threshold를 넘는 cosine similarity를 스코어로해서 nearest neighbor retrieval 로 찾아냄 (~~어려울듯~~)
    - 이러한 방법이 scale inconsistency issues (Guo et al., 2018) 때문에 문제가 있다고 해서 Artetxe and Schwenk (2018) 논문에서 새로운 score 방법이 제안됨
-   - $ \begin{aligned} \operatorname{score}(x, y) &=\operatorname{margin}(\cos (x, y)\\ \sum_{z \in \mathrm{NN}_{k}(x)} &\left.\frac{\cos (x, z)}{2 k}+\sum_{z \in \mathrm{NN}_{k}(y)} \frac{\cos (y, z)}{2 k})\right. \end{aligned} $
+   - $score(x, y) = margin(\cos (x, y), \sum_{z \in \mathrm{NN}_{k}(x)} \frac{\cos (x, z)}{2 k}+\sum_{z \in \mathrm{NN}_{k}(y)} \frac{\cos (y, z)}{2 k})$
    - $ \begin{array}{l}{ \mathrm{NN}_{k}(x) \text { denotes the } k \text { nearest neighbors of } x} {\text { in the other language. }}\end{array} $
    - margin functions에 대해서 여러개를 테스트 해봤는데 ratio가 젤 결과가 좋았음 *ratio*: $ \operatorname{margin}(a, b)=\frac{a}{b} $
    - 본 논문에서는 위의 metric으로 평가했음
@@ -232,15 +236,15 @@ Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 �
 - 평가는 다른언어에서 가장 비슷한 문장(nearest neighbor)을 cosine similarity로 찾고 error rate를 계산하는 것으로 함 (~~4.3이랑 비슷한듯~~)
 ![](/assets/img/markdown-img-paste-20191016150710706.png)
 
-#### 5 Ablation experiments
-- ~~요즘 유행하고있는 것중 하나인 Ablation experiments..필요하지만 논문 정리하는 입장에서는..~~
+#### 5. Ablation experiments
+- ~~요즘 유행(?)하고있는 것중 하나인 Ablation experiments..필요하지만 논문 정리하는 입장에서는..~~
 - 요약
    - 인코더 깊이 쌓으면 잘됨
    - multitask learning으로 NLI loss를 추가하면 가중치에 따라서 더 잘 되기도함
    - 18개보다 93개 언어에 대해서 학습할때 결과가 더 좋았음 (~~많은 언어에 대해서 하는데도 결과가 좋은거 보면 모델 capa가 괜찮은듯~~)
 ![](/assets/img/markdown-img-paste-20191016151215723.png)
 
-#### 6 Conclusion
+#### 6. Conclusion
 - 93개의 언어에 대해서 multilingual fixed-length sentence embeddings을 학습하는 모델을 제안함
 - Single language-agnostic BiLSTM encoder로 모든 언어를 커버함
 - fine-tuning 없어도 되는 모델임
@@ -254,3 +258,8 @@ Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 �
 #### Reference
 - [본 논문](https://arxiv.org/abs/1812.10464)
 - [XNLI 데이터셋 논문](https://www.aclweb.org/anthology/D18-1269.pdf)
+
+
+#### Note
+- latex 문법중 \operatorname, \\ 이거 두개가 latex에서 안될때가 있군..
+
