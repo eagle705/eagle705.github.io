@@ -31,6 +31,8 @@ use_math: true
     - eager mode로 logit + loss 까지 tensor format & shape 확인
     - graph mode로 학습시켜서 pb 추출
 - AutoML: 어떤 오픈소스 쓸지 TBD
+- 앙상블까지 고려해야함
+- 처음 모델짤때는 파이프라인+간단한 구조부터해서 구조를 업데이트하는 쪽으로
 
 
 ### Production
