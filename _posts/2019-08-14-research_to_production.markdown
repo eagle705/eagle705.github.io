@@ -20,19 +20,22 @@ use_math: true
   - 케글이나 이런데서 빠르게 참조할 필요가 있음
 - 프로토 타이핑은 매우 빠르게~!
 - 개인적으로는 처음부터 좋은 모델보단 baseline부터 서서히 올려가는게 결과를 확인하고 model capacity를 조정하면서 추후 모델 선택할 때 좋음
-- Speed한 프로토타이핑이 생명
+- Speed한 프로토타이핑이 생명 (빠르게 짜는게 중요함, gpu로 학습한다고 노는것도 별로 안좋음)
 - Hyper Params 에 대한 실험 관리 + feature에 대한 실험 관리 도구가 좀 필요함
 - git 관리를 잘해야함
   - [gitignore](https://www.gitignore.io/)
 - 안해본 것에 대한 두려움이 없어야함
 - DL Framework
   - Prototyping: PyTorch
-  - Service: TensorFlow
+  - Service: TensorFlow or PyTorch 
     - eager mode로 logit + loss 까지 tensor format & shape 확인
     - graph mode로 학습시켜서 pb 추출
 - AutoML: 어떤 오픈소스 쓸지 TBD
 - 앙상블까지 고려해야함
-- 처음 모델짤때는 파이프라인+간단한 구조부터해서 구조를 업데이트하는 쪽으로
+  - Model 관리하는 configuration 부분이 매우 귀찮아질 수 있음 (여러개의 모델을 사용하기 때문에)
+  - Data driven Software 될 수 있게 코드단이 아니라 configuration으로 모델의 구조를 변경 할 수 있어야함 (caffe나 claf 처럼)
+- 처음 모델 짤때는 파이프라인+간단한 구조부터해서 구조를 업데이트하는 쪽으로 방향을 잡고 짜야함
+- 모델평가를 쉽게 돌리고 비교할 수 있는 파이프라인..!이 필요함
 
 
 ### Production
@@ -55,6 +58,9 @@ use_math: true
 - 부하테스트
   - 실서버와 동일한 환경인 Sandbox가 필요함
   - nGrinder
+- 프로파일링
+  - Network Distillation
+- pylint등으로 개발스타일 통일
 - 로그 관리
   - 파이썬 실행 전체 로그 파일로도 남기기~!
   - python gRPC_server.py > /home/디렉토리/logs/python_logs.log 2>&1 &
