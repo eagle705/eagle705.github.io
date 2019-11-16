@@ -20,7 +20,7 @@ order: 10
 
 *"Better is one day in your court than a thousand elsewhere"*
 
-- Email: xelloss705@naver.com / xelloss705@gmail.com   
+- Email: xelloss705@naver.com / xelloss705@gmail.com / eagle705@korea.ac.kr   
 
 
 ## Research Domain

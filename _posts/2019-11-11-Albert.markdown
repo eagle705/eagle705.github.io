@@ -28,6 +28,10 @@ http://www.cs.cmu.edu/~lanzhzh/
 - 간단한 아이디어도 사실 예전부터 적용되어야 했음 (weight sharing, decomposition)
 - transformer 논문이 처음에 pretraining용이 아니다보니 당시 그 논문에서 빼먹었지만 당연히 앞으론 적용되었어야할 아이디어가 2년이 지나서야 적용된 느낌
 - SOP가 NSP보단 Good이다
+- SOP 할때 문장 단위가 아니라 textual segments로 한거 괜찮았음 (SEP도 그러면 segment단위로 넣겠네)
+- MLM 을 n-gram masking 한건 좀 신기하네 나쁘지 않음
+- transformer에서 dropout을 없애는게 pretraining할 때 진짜 좋은지는 좀 더 검증해봐야할 듯
+- 이 논문은 모델 그림이 없다(?)
 
 
 #### Abstract
@@ -78,7 +82,7 @@ http://www.cs.cmu.edu/~lanzhzh/
    - the F1 score of SQuAD 2.0 to 92.2   
 
 #### 2. Related work
-##### 2.1 SCALING UP REPRESENTATION LEARNING FOR NATURAL LANGUAGE
+##### 2.1 Scaling Up Representation Learning For Natural Language
 - natural langauge에서 representation을 학습하는 것이 매우 유용하다는건 다양하게 보여져 왔음 (e.g. word2vec) (Mikolov et al., 2013; Le & Mikolov, 2014; Dai & Le, 2015; Pe- ters et al., 2018; Devlin et al., 2019; Radford et al., 2018; 2019)
 - 지난 2년간 가장 큰 변화는 pre-training word embeddings이나 contextualized embedding 패러다임에서 full-network pre-training 을 통해 task-specific fine-tuning하는 패러다임으로 넘어갔다는 것임
 - 이러한 연구의 연장선에서, 모델의 크기가 크면 성능이 향상된다는 것들도 보여져왔음
@@ -90,13 +94,13 @@ http://www.cs.cmu.edu/~lanzhzh/
    - 두 방법 모두 메모리 사용은 감소시켰지만 속도가 느림
    - 제안하는 방법은 속도도 빠르게하고 paramter-reduction으로 메모리 사용도 줄임
    
-##### 2.2 CROSS-LAYER PARAMETER SHARING
+##### 2.2 Cross-Layer Parameter Sharing
 - Transformer 구조 자체는 standard encoder-decoder task를 다뤘지 pretraining/finetuniong setting을 염두해둔건 아님
 - 기존의 연구들은 corss-layer parameter sharing (Universal Transformer, UT)이 LM과 subject-verb agreement에 도움이 됨을 보여줌 (Dehghani et al. (2018))
 - 최근 Bai et al. (2019) 가 제안한 Deep Equilibrium Model (DQE) 모델에서는 input embedding과 output embedding이 특정 layer에서 equilibrium point에 도달할 수 있다는걸 보여줌 (~~무슨 말이죠..~~)
 - 본 논문에서 발견한 것은 이와 다름 (```Our observations show that our embeddings are oscillating rather than converging```)
 
-##### 2.3 SENTENCE ORDERING OBJECTIVES
+##### 2.3 Sentence Ordering Objectives
 - ALBERT는 pretraining loss중 하나로 두개의 연속된 text 세그먼트의 순서를 맞추는걸 사용함
 - 담화의 coherence와 coheision은 이전에도 많은 연구가 이뤄졌었음 (```Coherence and cohesion in discourse have been widely studied and many phenomena have been identified that connect neighboring text segments (Hobbs, 1979; Halliday & Hasan, 1976; Grosz et al., 1995)```)
 - Skip-thought (Kiros et al., 2015) and FastSent (Hill et al., 2016) 처럼 sentence embeddings들은 문장 주변의 단어들을 예측하도록 sentence를 인코딩하는 방식을 사용했음
@@ -107,7 +111,7 @@ http://www.cs.cmu.edu/~lanzhzh/
 - 본 논문과 거의 동시에 Wang et al. (2019) 논문도 SOP를 다뤘는데 차이점은 본논문에서는 binary classificaiton인데 저기서는 three-way classification임 (~~어떤 종류로 클래스를 나눴을까~~)
 
 #### 3. The Elements of ALBERT
-##### 3.1 MODEL ARCHITECTURE CHOICES
+##### 3.1 Model Architecture Choices
 - ALBERT의 backbone은 BERT와 비슷함 (transformer encoder with GELU nonlinearities) 
 - 구조에 있어 3가지의 contribution은 다음과 같음 
 
@@ -159,7 +163,7 @@ $$
 - 결과적으로 ALBERT는 multi-sentence encoding task에 대한 downstream task performance를 개선할 수 있었음
 
 
-##### 3.2 MODEL SETUP
+##### 3.2 Model Setup
 - BERT와 ALBERT의 모델을 hyperparameter setting으로 비교해봄
 
 ![](/assets/img/markdown-img-paste-20191111175447714.png)
