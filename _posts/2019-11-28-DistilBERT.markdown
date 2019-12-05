@@ -150,3 +150,5 @@ environmental cost of exponentially scaling these models’ computational requir
 - general-purpose language model이 distillation을 통해서도 성공적으로 학습이 됨을 밝히면서 각 components를 ablation study로 분석함
 - edge applications에서도 설득력있는 옵션이라는걸 입증함 (~~약간 더 개선이 필요해보이는데..~~)
 
+#### Code
+https://github.com/huggingface/transformers/blob/7edb51f3a516ca533797fb2bb2f2b7ce86e0df70/examples/distillation/distiller.py#L366

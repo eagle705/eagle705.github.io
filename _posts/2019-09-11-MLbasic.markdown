@@ -183,6 +183,7 @@ https://cwiki.apache.org/confluence/display/MXNET/Multi-hot+Sparse+Categorical+C
 
 ### Reference
 - MLE & MAP 
+  - https://hwiyong.tistory.com/27
   - https://darkpgmr.tistory.com/62
   - http://sanghyukchun.github.io/58/
   - https://m.blog.naver.com/PostView.nhn?blogId=ynca333&logNo=221314899811&proxyReferer=https%3A%2F%2Fwww.google.com%2F
@@ -197,3 +198,10 @@ https://cwiki.apache.org/confluence/display/MXNET/Multi-hot+Sparse+Categorical+C
   - http://www.cs.cmu.edu/~epxing/Class/10701-08f/Lecture/lecture5.pdf
 - 비슷한글 정리한 블로그
   - https://devkihyun.github.io/study/Machine-learining-and-Probability/
+- ROC, AUC, True/False Pos/Neg 정리 (매우 잘됨)
+  - https://www.waytoliah.com/1222
+  - https://nittaku.tistory.com/297
+  - https://m.blog.naver.com/PostView.nhn?blogId=sw4r&logNo=221015817276&proxyReferer=https%3A%2F%2Fwww.google.com%2F
+  
+- Normal Equation을 풀기 어려운 이유
+  - https://daeson.tistory.com/172
