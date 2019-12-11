@@ -295,7 +295,15 @@ for i in range(10):
 
 ```
 
+### Note 
+- vocab_size 이슈를 해결하기 위해 hard_vocab_limit 옵션쪽을 확인해볼 것!
+```
+templates = "--input={} --model_prefix={} --vocab_size={} --model_type={} --user_defined_symbols={} --hard_vocab_limit=false"
+
+```
+
 #### Reference
 - https://lovit.github.io/nlp/2018/04/02/wpm/
 - https://github.com/google/sentencepiece#redefine-special-meta-tokens
 - https://github.com/google/sentencepiece/blob/master/doc/special_symbols.md
+- https://coffeedjimmy.github.io/sentencepiece/
