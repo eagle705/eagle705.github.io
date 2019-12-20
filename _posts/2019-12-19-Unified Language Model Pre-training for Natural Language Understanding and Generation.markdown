@@ -110,7 +110,7 @@ $$
 \begin{aligned} \mathbf{Q} &=\mathbf{H}^{l-1} \mathbf{W}_{l}^{Q}, \quad \mathbf{K}=\mathbf{H}^{l-1} \mathbf{W}_{l}^{K}, \quad \mathbf{V}=\mathbf{H}^{l-1} \mathbf{W}_{l}^{V} \\ \mathbf{M}_{i j} &=\left\{\begin{array}{ll}{0,} & {\text { allow to attend }} \\ {-\infty,} & {\text { prevent from attending }}\end{array}\right.\\ \mathbf{A}_{l} &=\operatorname{softmax}\left(\frac{\mathbf{Q K}^{\top}}{\sqrt{d_{k}}}+\mathbf{M}\right) \mathbf{V}_{l} \end{aligned}
 $$
 
-- 이전 layer의 output인 ${ \mathbf{H}^{l-1} \in \mathbb{R}^{n \times d_{h}} }$ 은 parameter matrices ${ \mathbf{W}_{l}^{Q}, \mathbf{W}_{l}^{K}, \mathbf{W}_{l}^{V} \in \mathbb{R}^{d_{h} \times d_{k}} }$에 의해 queries, keys, vlaues로 linearly projected 됨
+- 이전 layer의 output인 ${ H^{l-1} \in R^{n \times d_{h}} }$ 은 parameter matrices ${ W_{l}^{Q}, W_{l}^{K}, W_{l}^{V} \in R^{d_{h} \times d_{k}} }$에 의해 queries, keys, vlaues로 linearly projected 됨
 - mask matrix $ \mathbf{M} \in \mathbb{R}^{n \times n} $ 는 token의 contextualized representation을 계산하기 위해 어떤 token들에 attention할지를 결정하기 위해 사용됨
 
 ##### 2.3 Pre-training Objectives
@@ -160,7 +160,7 @@ $$
 ##### 2.5 Fine-tuning on Downstream NLU and NLG Tasks
 - NLU task에 대해서는 BERT처럼 fine-tuning하면 됨
   - [SOS] 토큰에 대한 vector $ \mathbf{h}_{1}^{L} $에 randomly initialized softmax classifier를 붙임 
-  - $ softmax(\mathbf{h}_{1}^{L} \mathbf{W}^{C}), \text { where } \mathbf{W}^{C} \in \mathbb{R}^{d_{h} \times C} $ (C는 카테고리 개수(클래스 개수)임)
+  - ${ softmax(h_{1}^{L} W^{C}), \text { where } W^{C} \in R^{d_{h} \times C} }$ (C는 카테고리 개수(클래스 개수)임)
 - NLG task에 대해서는 seq2seq task와 비슷함
   - Notation
     - S1: source sequence
