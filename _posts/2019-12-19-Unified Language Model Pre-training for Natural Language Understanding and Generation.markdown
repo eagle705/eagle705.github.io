@@ -102,9 +102,9 @@ use_math: true
 - LM 종류에 따라 segment가 달라짐 (Figure 1 참고)
 
 ##### 2.2 Backbone Network: Multi-Layer Transformer
-- input vectors $ \left\{\mathbf{x}_{i}\right\}_{i=1}^{n} $ 를 $ \mathbf{H}^{0}=\left[\mathbf{x}_{1}, \cdots, \mathbf{x}_{n}\right]
- $ 로 나타낼 수 있고 L-layer의 Transformer를 통해 different levels에서의 contextual representation으로 인코딩하면 $\mathbf{H}^{l}=\left[\mathbf{h}_{1}^{l}, \cdots, \mathbf{h}_{n}^{l}\right]$ 으로 나타낼 수 있음
-- $\mathbf{H}^{l}=\operatorname{Transformer}_{l}\left(\mathbf{H}^{l-1}\right), l \in[1, L]$ 로 표현 가능함
+- input vectors $ \{{\mathbf{x}_{i}\}}_{i=1}^{n} $ 를 $ \mathbf{H}^{0}=[\mathbf{x}_{1}, \cdots, \mathbf{x}_{n}]
+ $ 로 나타낼 수 있고 L-layer의 Transformer를 통해 different levels에서의 contextual representation으로 인코딩하면 $\mathbf{H}^{l}=[\mathbf{h}_{1}^{l}, \cdots, \mathbf{h}_{n}^{l}]$ 으로 나타낼 수 있음
+- $\mathbf{H}^{l}=\operatorname{Transformer}_{l}(\mathbf{H}^{l-1}), l \in[1, L]$ 로 표현 가능함
 - $l$ 번째 layer에서 self-attention Head $\mathbf{A}_{l}$ 의 output은 다음과 같이 계산됨
 
 $$
@@ -161,7 +161,7 @@ $$
 ##### 2.5 Fine-tuning on Downstream NLU and NLG Tasks
 - NLU task에 대해서는 BERT처럼 fine-tuning하면 됨
   - [SOS] 토큰에 대한 vector $ \mathbf{h}_{1}^{L} $에 randomly initialized softmax classifier를 붙임 
-  - $ softmax\left(\mathbf{h}_{1}^{L} \mathbf{W}^{C}\right), \text { where } \mathbf{W}^{C} \in \mathbb{R}^{d_{h} \times C} $ (C는 카테고리 개수(클래스 개수)임)
+  - $ softmax(\mathbf{h}_{1}^{L} \mathbf{W}^{C}), \text { where } \mathbf{W}^{C} \in \mathbb{R}^{d_{h} \times C} $ (C는 카테고리 개수(클래스 개수)임)
 - NLG task에 대해서는 seq2seq task와 비슷함
   - Notation
     - S1: source sequence
