@@ -85,7 +85,7 @@ use_math: true
 
 
 #### 2. Unified Language Model Pre-training
-- 주어진 input sequence ${ x=x_{1} \cdot \cdot \cdot x_{|x|} }$에 대해서 UNILM은 각 token에 대해서 contextualized vector representation을 얻음
+- 주어진 input sequence ${ x=x_{1} ... x_{|x|} }$에 대해서 UNILM은 각 token에 대해서 contextualized vector representation을 얻음
 - pre-training 단계에서 shared Transformer network를 ```unidirectional LM, bidirectional LM, and sequence-to-sequence LM``` 라는 LM objectives로 학습함 
 - 이를 위해서 self-attention에 대해 different masks 를 도입함 (```use masking to control how much context the token should attend ```)
 - pre-training 끝나면 downstream task를 위해 task-specific data로 fine-tuning해서 쓸 수 있음
