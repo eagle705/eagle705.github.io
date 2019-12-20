@@ -102,9 +102,9 @@ use_math: true
 - LM 종류에 따라 segment가 달라짐 (Figure 1 참고)
 
 ##### 2.2 Backbone Network: Multi-Layer Transformer
-- input vectors ${\left\{\mathbf{x}_{i}\right\}_{i=1}^{n}}$ 를 ${\mathbf{H}^{0}=\left[\mathbf{x}_{1}, \cdots, \mathbf{x}_{n}\right]
-}$ 로 나타낼 수 있고 L-layer의 Transformer를 통해 different levels에서의 contextual representation으로 인코딩하면 ${\mathbf{H}^{l}=\left[\mathbf{h}_{1}^{l}, \cdots, \mathbf{h}_{n}^{l}\right]}$ 으로 나타낼 수 있음
-- ${\mathbf{H}^{l}=\operatorname{Transformer}_{l}\left(\mathbf{H}^{l-1}\right), l \in[1, L]}$ 로 표현 가능함
+- input vectors $\left\{\mathbf{x}_{i}\right\}_{i=1}^{n}$ 를 ${\mathbf{H}^{0}=\left[\mathbf{x}_{1}, \cdots, \mathbf{x}_{n}\right]
+}$ 로 나타낼 수 있고 L-layer의 Transformer를 통해 different levels에서의 contextual representation으로 인코딩하면 $\mathbf{H}^{l}=\left[\mathbf{h}_{1}^{l}, \cdots, \mathbf{h}_{n}^{l}\right]$ 으로 나타낼 수 있음
+- $\mathbf{H}^{l}=\operatorname{Transformer}_{l}\left(\mathbf{H}^{l-1}\right), l \in[1, L]$ 로 표현 가능함
 - $l$ 번째 layer에서 self-attention Head $\mathbf{A}_{l}$ 의 output은 다음과 같이 계산됨
 
 $$
