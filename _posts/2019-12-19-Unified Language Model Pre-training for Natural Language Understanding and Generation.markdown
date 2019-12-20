@@ -102,8 +102,8 @@ use_math: true
 - LM 종류에 따라 segment가 달라짐 (Figure 1 참고)
 
 ##### 2.2 Backbone Network: Multi-Layer Transformer
-- input vectors $\left\{\mathbf{x}_{i}\right\}_{i=1}^{n}$ 를 ${\mathbf{H}^{0}=\left[\mathbf{x}_{1}, \cdots, \mathbf{x}_{n}\right]
-}$ 로 나타낼 수 있고 L-layer의 Transformer를 통해 different levels에서의 contextual representation으로 인코딩하면 $\mathbf{H}^{l}=\left[\mathbf{h}_{1}^{l}, \cdots, \mathbf{h}_{n}^{l}\right]$ 으로 나타낼 수 있음
+- input vectors $ \left\{\mathbf{x}_{i}\right\}_{i=1}^{n} $ 를 $ \mathbf{H}^{0}=\left[\mathbf{x}_{1}, \cdots, \mathbf{x}_{n}\right]
+ $ 로 나타낼 수 있고 L-layer의 Transformer를 통해 different levels에서의 contextual representation으로 인코딩하면 $\mathbf{H}^{l}=\left[\mathbf{h}_{1}^{l}, \cdots, \mathbf{h}_{n}^{l}\right]$ 으로 나타낼 수 있음
 - $\mathbf{H}^{l}=\operatorname{Transformer}_{l}\left(\mathbf{H}^{l-1}\right), l \in[1, L]$ 로 표현 가능함
 - $l$ 번째 layer에서 self-attention Head $\mathbf{A}_{l}$ 의 output은 다음과 같이 계산됨
 
@@ -111,8 +111,8 @@ $$
 \begin{aligned} \mathbf{Q} &=\mathbf{H}^{l-1} \mathbf{W}_{l}^{Q}, \quad \mathbf{K}=\mathbf{H}^{l-1} \mathbf{W}_{l}^{K}, \quad \mathbf{V}=\mathbf{H}^{l-1} \mathbf{W}_{l}^{V} \\ \mathbf{M}_{i j} &=\left\{\begin{array}{ll}{0,} & {\text { allow to attend }} \\ {-\infty,} & {\text { prevent from attending }}\end{array}\right.\\ \mathbf{A}_{l} &=\operatorname{softmax}\left(\frac{\mathbf{Q K}^{\top}}{\sqrt{d_{k}}}+\mathbf{M}\right) \mathbf{V}_{l} \end{aligned}
 $$
 
-- 이전 layer의 output인 ${\mathbf{H}^{l-1} \in \mathbb{R}^{n \times d_{h}}}$ 은 parameter matrices ${\mathbf{W}_{l}^{Q}, \mathbf{W}_{l}^{K}, \mathbf{W}_{l}^{V} \in \mathbb{R}^{d_{h} \times d_{k}}}$에 의해 queries, keys, vlaues로 linearly projected 됨
-- mask matrix ${\mathbf{M} \in \mathbb{R}^{n \times n}}$ 는 token의 contextualized representation을 계산하기 위해 어떤 token들에 attention할지를 결정하기 위해 사용됨
+- 이전 layer의 output인 $\mathbf{H}^{l-1} \in \mathbb{R}^{n \times d_{h}}$ 은 parameter matrices $ \mathbf{W}_{l}^{Q}, \mathbf{W}_{l}^{K}, \mathbf{W}_{l}^{V} \in \mathbb{R}^{d_{h} \times d_{k}} $에 의해 queries, keys, vlaues로 linearly projected 됨
+- mask matrix $ \mathbf{M} \in \mathbb{R}^{n \times n} $ 는 token의 contextualized representation을 계산하기 위해 어떤 token들에 attention할지를 결정하기 위해 사용됨
 
 ##### 2.3 Pre-training Objectives
 - The parameters of UNILM are learned to minimize the cross-entropy loss computed using the predicted tokens and the original tokens
@@ -160,8 +160,8 @@ $$
 
 ##### 2.5 Fine-tuning on Downstream NLU and NLG Tasks
 - NLU task에 대해서는 BERT처럼 fine-tuning하면 됨
-  - [SOS] 토큰에 대한 vector ${\mathbf{h}_{1}^{L}}$에 randomly initialized softmax classifier를 붙임 
-  - ${\operatorname{softmax}\left(\mathbf{h}_{1}^{L} \mathbf{W}^{C}\right), \text { where } \mathbf{W}^{C} \in \mathbb{R}^{d_{h} \times C}}$ (C는 카테고리 개수(클래스 개수)임)
+  - [SOS] 토큰에 대한 vector $ \mathbf{h}_{1}^{L} $에 randomly initialized softmax classifier를 붙임 
+  - $ softmax\left(\mathbf{h}_{1}^{L} \mathbf{W}^{C}\right), \text { where } \mathbf{W}^{C} \in \mathbb{R}^{d_{h} \times C} $ (C는 카테고리 개수(클래스 개수)임)
 - NLG task에 대해서는 seq2seq task와 비슷함
   - Notation
     - S1: source sequence
