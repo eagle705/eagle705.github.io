@@ -60,6 +60,8 @@ use_math: true
   - nGrinder
 - 프로파일링
   - Network Distillation
+- TC 작성 (testcase)
+- DB 연결 부분은 local에서도 테스트 할 수 있게끔 default value를 하나 만들어줘서 debug할 수 있게 해야함
 - pylint등으로 개발스타일 통일
 - 로그 관리
   - 파이썬 실행 전체 로그 파일로도 남기기~!

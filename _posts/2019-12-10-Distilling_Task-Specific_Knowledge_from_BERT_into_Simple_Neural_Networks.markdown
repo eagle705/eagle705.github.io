@@ -71,11 +71,11 @@ use_math: true
     - last step의 값을 concat 후 fc layer with ReLU 에 feed해서 softmax layer로 분류함
     ![](/assets/img/markdown-img-paste-20191211110706719.png)
   
-- For Sentence-pair tasks
-    - BiLSTM encoder weights를 share해서 siamese architecture로 사용 ${ \text { sentence vectors } \boldsymbol{h}_{s 1} \text { and } \boldsymbol{h}_{s 2} }$ 를 만들어냄
-    - ${ \begin{array}{l}{f\left(\boldsymbol{h}_{s 1}, \boldsymbol{h}_{s 2}\right)=\left[\boldsymbol{h}_{s 1}, \boldsymbol{h}_{s 2}, \boldsymbol{h}_{s 1} \odot\right.}  {\left.\boldsymbol{h}_{s 2},\left|\boldsymbol{h}_{s 1}-\boldsymbol{h}_{s 2}\right|\right], \text { where } \odot \text { denotes elementwise multiplication}}\end{array} }$
-  ![](/assets/img/markdown-img-paste-20191211112320170.png)
-  - attenion이나, layer norm 같은 스킬은 최대한 제외하고 BiLSTM의 representation Power에만 국한하는 설계를 함
+  - For Sentence-pair tasks
+      - BiLSTM encoder weights를 share해서 siamese architecture로 사용 ${ \text { sentence vectors } \boldsymbol{h}_{s 1} \text { and } \boldsymbol{h}_{s 2} }$ 를 만들어냄
+      - ${ \begin{array}{l}{f\left(\boldsymbol{h}_{s 1}, \boldsymbol{h}_{s 2}\right)=\left[\boldsymbol{h}_{s 1}, \boldsymbol{h}_{s 2}, \boldsymbol{h}_{s 1} \odot\right.}  {\left.\boldsymbol{h}_{s 2},\left|\boldsymbol{h}_{s 1}-\boldsymbol{h}_{s 2}\right|\right], \text { where } \odot \text { denotes elementwise multiplication}}\end{array} }$
+    ![](/assets/img/markdown-img-paste-20191211112320170.png)
+    - attenion이나, layer norm 같은 스킬은 최대한 제외하고 BiLSTM의 representation Power에만 국한하는 설계를 함
 
 ##### 3.2 Distillation Objective
 - In addition to a one-hot predicted label, the teacher’s predicted probability is also important. In binary sentiment classifica- tion, for example, some sentences have a strong sentiment polarity, whereas others appear neutral. 
@@ -185,3 +185,7 @@ $$
 
 
 #### Code
+ref: https://github.com/qiangsiwei/bert_distill
+
+#### Note:
+- marp syntax 변경: https://marpit.marp.app/image-syntax
