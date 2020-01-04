@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Regex #1"
-subtitle:   "손에 잡히는 정규표현식"
+excerpt:   "손에 잡히는 정규표현식"
 categories: cslog
 tags: regex
 comments: true

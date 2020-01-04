@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Unix부터"
-subtitle:   "from Stanford cs1U"
+excerpt:   "from Stanford cs1U"
 categories: cslog
 tags: linux
 comments: true

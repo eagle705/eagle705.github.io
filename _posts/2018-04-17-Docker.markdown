@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Docker 입문"
-subtitle:   "이젠 쓸수밖에 없는"
+excerpt:   "이젠 쓸수밖에 없는"
 categories: cslog
 tags: linux
 comments: true

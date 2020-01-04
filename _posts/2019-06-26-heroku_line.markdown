@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Line Message API Setting with Heroku"
-subtitle:   "개발환경셋팅"
+excerpt:   "개발환경셋팅"
 categories: cslog
 tags: deeplearning
 comments: true

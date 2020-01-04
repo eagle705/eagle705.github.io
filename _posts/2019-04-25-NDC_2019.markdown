@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "2019 NDC"
-subtitle:   "AI Track"
+excerpt:   "AI Track"
 categories: cslog
 tags: cslog
 comments: true

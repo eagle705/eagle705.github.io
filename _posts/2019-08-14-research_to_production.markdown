@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Research to Production"
-subtitle:   "Logs"
+excerpt:   "Logs"
 categories: cslog
 tags: algorithm
 comments: true

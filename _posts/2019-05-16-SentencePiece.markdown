@@ -2,7 +2,7 @@
 layout: post
 title:  "SentencePiece: A simple and language independent subword tokenizer
 and detokenizer for Neural Text Processing"
-subtitle:   "embedding"
+excerpt:   "embedding"
 categories: paper
 tags: deeplearning
 comments: true
@@ -19,7 +19,7 @@ BERT에서는 input을 WordPiece로 짤라서 주는데, 이걸 더 일반화 �
 
 ### Who is an Author?
 
-![](/assets/img/markdown-img-paste-20190516010154436.png)
+![](/_site/img/markdown-img-paste-20190516010154436.png)
 
 #### 장점
 - 언어에 상관없이 적용 가능
@@ -43,7 +43,7 @@ pip install tf_sentencepiece
 ### Usage
 #### Training
 - 전체적인 arg는 아래 그림 참조
-![](/assets/img/markdown-img-paste-20190516012243358.png)
+![](/_site/img/markdown-img-paste-20190516012243358.png)
 - input은 String이 아니라 문서 파일을 사용함
 - vocab_size 때문에 에러가 날때가 있음, 실행할 때 에러메세지에서 적합한 vocab_size 알려주니 거기에 맞추면됨
 - 아래와 같이 코드를 실행해주면 sentencepiece tokenizer가 학습이 됨

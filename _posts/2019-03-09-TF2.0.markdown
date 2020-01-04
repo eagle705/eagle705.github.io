@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "TF 2.0 dev summit 2019"
-subtitle:   "tf2.0"
+excerpt:   "tf2.0"
 categories: cslog
 tags: deeplearning
 comments: true
@@ -25,7 +25,7 @@ TF가 어느새 벌써 2.0 버전이 되었다. 이 프레임워크를 처음엔
 - ```tf.feature_column``` -> keras, estimator 둘다 적용 가능
 - TensorBaord 적용이 쉬움, 게다가 프로파일링도 제공
 
-![](https://eagle705.github.io/assets/img/markdown-img-paste-20190309145930883.png)
+![](https://eagle705.github.io/_site/img/markdown-img-paste-20190309145930883.png)
 
 
 ```python

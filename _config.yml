@@ -1,129 +1,71 @@
-# -----------------------------------------------------------------------------
-#  User configuration
-# -----------------------------------------------------------------------------
+#
+###################################
+# Site wide configuration
+####################################
+#
+title: eagle705's Note
+email: xelloss705@naver.com
+description: Better is one day in your court than a thousand elsewhere.
+url: https://eagle705.github.io/Note/ # the base hostname & protocol for your site
+keywords: ["Blog", "Note"]
 
-title:               Adullam
-
-# The unique resource location of your page.
-# Set to `https://<username>.github.io` when hosting on GitHub Pages
-url:                 https://eagle705.github.io
-
-# Set to '' when hosting a blog on GitHub Pages, ie on `//<username>.github.io`
-# Set to '/<reponame>' when using the `gh-pages` branch of a repository
-baseurl:             ""
-
-# A very short description of your page
-tagline:             There is no best choice, but only a choice not to regret
-
-# A short description of the page, used in the sidebar and as fallback for the meta description tag.
-# Markdown enabled, but don't use more than one paragraph (enforced by `>`)
-description:         >
-  Try your best rather than be the best
-
-# This should be the same author as first entry in `_data/authors.yml`
-author:
-  name:              Joosung Yoon
-  email:             xelloss705@naver.com
-
-# Fallback image and color
-image:               /assets/img/sidebar_img.jpg
-color:               '#a2393a' # #4f86aa
-
-# The font used for headings. Expects a string that is a valid CSS font-family value.
-font_heading:        "'Lato', 'Sans-serif'"
-
-# The text font. Expects a string that is a valid CSS font-family value.
-font:                "'Lato', 'Sans-serif'"
-
-# The string encoding what fonts to fetch from Google Fonts.
-# See: https://qwtel.com/hydejack/docs/configuration/
-google_fonts:        Lato
-
-# If you do not use a Google Fonts, uncomment the line below
-# no_google_fonts:     true
-
-# Set your Google Analytics id to receive `pageview` events.
-# To remove Google Anaylics from your page, remove the line below.
-google_analytics:    UA-110980734-1
-
-# Setting a disqus shortname will enable the comment section on pages with `comments: true` in the front matter
-disqus_shortname:    eagle705-github-io
-
-# This text will appear in the footer of every page. Markdown enabled.
-copyright:           '&copy; 2018. by eagle705'
-
-# Format of the permalinks
-permalink:           pretty
-
-# Pagination configuration (used by the `blog` layout)
-paginate:            8
-paginate_path:       '/page-:num/'
-
-# If you are upgrading form a v5 verison of Hydejack, uncomment the two lines below,
-# so that the location of the feed XML stays the same.
-# feed:
-#   path:              atom.xml
-
-# Set to true when building with the `--lsi` option
-# See: https://jekyllrb.com/docs/variables/#site-variables
-# use_lsi:             true
-
-# Set to `true` if you don't want to show an icon after each link that opens to an external site
-# no_mark_external:    true
-
-# Uncomment this line if third party plugins fail to work with dynimically loaded pages
-# disable_push_state:  true
-
-# Uncomment this line if want to disable the touch drawer on mobile
-# disable_drawer: true
-
-# -----------------------------------------------------------------------------
-#  Collections
-# -----------------------------------------------------------------------------
-
-collections:
-  featured_categories:
-    permalink:       /category/:name/
-    output:          true
-  featured_tags:
-    permalink:       /tag/:name/
-    output:          true
-  projects:
-    permalink:       /projects/:path/
-    output:          true
-
-# -----------------------------------------------------------------------------
-#  Advanced configuration
-# -----------------------------------------------------------------------------
-
-gems:
-  - jekyll-feed
-  - jekyll-sitemap
-  - jekyll-paginate
-  - jekyll-redirect-from
-
-exclude:
-  - README.md
-  - LICENSE.md
-  - node_modules
-  - package.json
-  - package-lock.json
-  - Gemfile
-  - Gemfile.lock
+#
+###################################
+# Jekyll configuration
+####################################
+#
+timezone:          Asia/Seoul
+markdown:          kramdown
+highlighter:       rouge
+excerpt_separator: <!--more-->
+permalink:         /articles/:year-:month/:title
 
 kramdown:
-  footnote_backlink: '&#x21a9;&#xfe0e;'
-  math_engine:       mathjax
-  math_engine_opts:
-    preview:         true
-    preview_as_code: true
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  enable_coderay: false
 
-compress_html:
-  comments:          ["<!-- ", " -->"]
-  clippings:         all
-  endings:           all
-  ignore:
-    envs:            [development]
-
-sass:
-  style:             compressed
+#
+###################################
+# Site Owner configuration
+####################################
+#
+owner:
+  name: eagle705
+  avatar: leonids-logo.png
+  job: "문과처럼(?) 살고 싶은 머신러닝 개발자"
+  bio: "Better is one day in your court than a thousand elsewhere."
+  email: xelloss705@naver.com
+  disqus-shortname:
+  twitter: #username
+  facebook: #username
+  google:
+    plus: #username
+    analytics:
+    verify:
+    ad-client:
+    ad-slot:
+  bing-verify:
+  github: eagle705
+  gitlab: #username
+  stackoverflow: #123456/username   from a "http://stackoverflow.com/users/123456/username" link
+  linkedin: #username
+  skype: #username
+  xing: #username
+  instagram: #username
+  lastfm: #username
+  tumblr: #username
+  pinterest: #username
+  foursquare: #username
+  steam: #username
+  dribbble: #username
+  youtube: #username
+  soundcloud: #username
+  weibo: #username
+  flickr: #username
+  500px: #username
+  codepen: #username
+  reddit: #username
+  telegram: #username

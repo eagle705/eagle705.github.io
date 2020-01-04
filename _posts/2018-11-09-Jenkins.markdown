@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Jenkins 설치"
-subtitle:   "CI"
+excerpt:   "CI"
 categories: cslog
 tags: deeplearning
 comments: true

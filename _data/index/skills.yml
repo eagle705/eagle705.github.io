@@ -1,0 +1,6 @@
+# skills section data
+
+label: Ability
+id : cs
+aspects: Motivation, ML, Python, HTML/CSS, Docker, NLP
+percentage: 100, 85, 85, 60, 70, 90

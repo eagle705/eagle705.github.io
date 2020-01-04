@@ -2,7 +2,7 @@
 layout: post
 title:  "Improving Language Understanding
 by Generative Pre-Training (GPT)"
-subtitle:   "GPT"
+excerpt:   "GPT"
 categories: paper
 tags: deeplearning
 comments: true
@@ -18,7 +18,7 @@ use_math: true
 
 Alec Radford라는 친군데, GPT논문 인용수가 젤 많겠지 했는데 오히려 Vision쪽에서 한 Generative model 인용수가 넘사임.. 원래 유명한 친구였음
 
-![](/assets/img/markdown-img-paste-20190814104818828.png)
+![](/_site/img/markdown-img-paste-20190814104818828.png)
 
 
 #### 느낀점
@@ -110,7 +110,7 @@ $P(u) = softmax(h_nW_e^T)$
   - $C$ : a labeled dataset 
 - 최종적으로 fine-tuning때 추가되는 extra param은 $W_y$과 delimiter tokens을 위한 embeddings임
 
-![](/assets/img/markdown-img-paste-20190814142108114.png)
+![](/_site/img/markdown-img-paste-20190814142108114.png)
 
 ##### 3.3 Task-specific input transformations
 - text classification 같은건 바로 fine-tune되지만, qa, text entailment 같은건 input format 바꿔줘야함 (input transformation)
@@ -173,7 +173,7 @@ $P(u) = softmax(h_nW_e^T)$
   - Question answering and commonsense reasoning
     - RACE, Story Cloze 등 여러 데이터셋에서 평가
 
-![](/assets/img/markdown-img-paste-20190816143527570.png)
+![](/_site/img/markdown-img-paste-20190816143527570.png)
 
   - Semantic Similarity
     - Recognizing rephrasing of concepts, understanding negation and handling syntactic ambiguity
@@ -182,7 +182,7 @@ $P(u) = softmax(h_nW_e^T)$
     - CoLa (Corpus of Linguistic Acceptability): 문법적으로 맞는지 판단
     - SST-2: 감성분석
 
-![](/assets/img/markdown-img-paste-20190816160501429.png)
+![](/_site/img/markdown-img-paste-20190816160501429.png)
 
 - 결과적으로 12개 데이터셋 중에서 9개가 SOTA 찍음
 
@@ -198,7 +198,7 @@ $P(u) = softmax(h_nW_e^T)$
 - 일단 transformer가 다른 애들보다 더 LM을 잘 학습하고 있음 
 - the performance of these heuristics is stable and steadily increases over training suggesting that generative pretraining supports the learning of a wide variety of task relevant functionality
 
-![](/assets/img/markdown-img-paste-20190816172158400.png)
+![](/_site/img/markdown-img-paste-20190816172158400.png)
 
 ##### Ablation studies
 - w/o pre-training: 성능이 14.8%까지 떨어짐.. ptre-training 매우 중요함
@@ -207,7 +207,7 @@ $P(u) = softmax(h_nW_e^T)$
 - 결론: pre-training도 aux objective(보조적인 목표함수)도 중요하다
 
 
-![](/assets/img/markdown-img-paste-20190816173713950.png)
+![](/_site/img/markdown-img-paste-20190816173713950.png)
 
 
 #### 6. Conclusion

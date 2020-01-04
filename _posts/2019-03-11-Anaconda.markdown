@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Anaconda 정리"
-subtitle:   "상용배포까지"
+excerpt:   "상용배포까지"
 categories: cslog
 tags: deeplearning
 comments: true

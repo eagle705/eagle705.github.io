@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Leetcode 스터디"
-subtitle:   "Logs"
+excerpt:   "Logs"
 categories: cslog
 tags: algorithm
 comments: true

@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "PyTorch 0.4 version up 정리"
-subtitle:   "Towards v1.0"
+excerpt:   "Towards v1.0"
 categories: cslog
 tags: deeplearning
 comments: true

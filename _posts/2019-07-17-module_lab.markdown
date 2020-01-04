@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "모두의 연구소 DeepNLP Lab"
-subtitle:   "Logs"
+excerpt:   "Logs"
 categories: paper
 tags: deeplearning
 comments: true

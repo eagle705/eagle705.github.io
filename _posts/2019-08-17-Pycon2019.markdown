@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Pycon 2019 Logs"
-subtitle:   "pycon 2019"
+excerpt:   "pycon 2019"
 categories: cslog
 tags: cslog
 comments: true

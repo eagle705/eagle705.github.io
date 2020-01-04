@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "온톨로지와 RDF에 대한 개념설명 및 생성방법 "
-subtitle:   "Knowledge base(KB) 사용을 위해"
+excerpt:   "Knowledge base(KB) 사용을 위해"
 categories: cslog
 tags: deeplearning
 comments: true

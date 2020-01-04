@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "PlantUML"
-subtitle:   "다이어그램그리기"
+excerpt:   "다이어그램그리기"
 categories: cslog
 tags: deeplearning
 comments: true

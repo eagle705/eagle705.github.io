@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "BERT- Pre-training of Deep Bidirectional Transformers for Language Understanding"
-subtitle:   "Bert"
+excerpt:   "Bert"
 categories: paper
 tags: deeplearning
 comments: true
@@ -17,7 +17,7 @@ use_math: true
 
 Jacob Devlin is a Senior Research Scientist at Google. At Google, his primary research interest is developing fast, powerful, and scalable deep learning models for information retrieval, question answering, and other language understanding tasks. From 2014 to 2017, he worked as a Principle Research Scientist at Microsoft Research, where he led Microsoft Translate's transition from phrase-based translation to neural machine translation (NMT). He also developed state-of-the-art on-device models for mobile NMT. Mr. Devlin was the recipient of the ACL 2014 Best Long Paper award and the NAACL 2012 Best Short Paper award. He received his Master's in Computer Science from the University of Maryland in 2009, advised by Dr. Bonnie Dorr.
 
-![](/assets/img/markdown-img-paste-20190509155558988.png)
+![](/_site/img/markdown-img-paste-20190509155558988.png)
 
 
 #### 느낀점
@@ -109,7 +109,7 @@ Jacob Devlin is a Senior Research Scientist at Google. At Google, his primary re
 - Transformer Decoder: the left-context-only version Transformer
   
   
-![](/assets/img/markdown-img-paste-20190513184541935.png)
+![](/_site/img/markdown-img-paste-20190513184541935.png)
 
 ##### 3.2 Input Representation
 - BERT의 Input Reresentation은 sigle text sentence와 pair of text sentences([Qeustion, Answer])을 모두 하나의 토큰 시퀀스(one token sequence)에 담아서 처리함
@@ -122,7 +122,7 @@ Jacob Devlin is a Senior Research Scientist at Google. At Google, his primary re
     - 첫번째 sentence에는 every tokens마다 learned sentence A embedding을 더함
     - 두번째 sentence에는 every tokens마다 learned sentence B embedding을 더함
 - Single-sentence inputs에 대해서는 sentence A embeddings만 사용함
-![](/assets/img/markdown-img-paste-20190510154828348.png)
+![](/_site/img/markdown-img-paste-20190510154828348.png)
 
 ##### 3.3 Pre-training Tasks
 - traditional left-to-right or right-to-left language model 방식으로 BERT를 pre-train 하지 않음
@@ -171,7 +171,7 @@ Jacob Devlin is a Senior Research Scientist at Google. At Google, his primary re
 - 이런 것들은 LM에서는 배울 수 없는 것임
 - 이러한 문장간의 관계를 배우기 위해, ```binarized next sentence prediction```task를 pre-train 시켜봄
 - corpus에서 랜덤으로 50%는 임의의 문장, 나머지 50%는 다음문장으로 구성되도록 학습셋을 만듬
-![](/assets/img/markdown-img-paste-20190513151046718.png)
+![](/_site/img/markdown-img-paste-20190513151046718.png)
 - pre-trained model은 97~98% Accuracy를 기록함
 
 ##### 3.4 Pre-training Procedure
@@ -266,7 +266,7 @@ BERT를 fine-tuning해서 11개의 NLP Task에 적용함
   - RTE: ```Recognizing Textual Entailment```MNLI의 binary 분류 버전
   - WNLI: ```Winograd NLI```는 natural language inference dataset임
 
-![](/assets/img/markdown-img-paste-20190513185008832.png)
+![](/_site/img/markdown-img-paste-20190513185008832.png)
 
 ##### 4.1.1 GLUE Results
 - [GLUE Leaderboard가 궁금한다면 클릭](https://gluebenchmark.com/leaderboard)
@@ -277,13 +277,13 @@ BERT를 fine-tuning해서 11개의 NLP Task에 적용함
   - lr: 5e-5, 4e-5, 3e-5, 2e-5
 - BERT<sub>LARGE</sub>의 경우 small dataset에서 finetune 할 경우 unstable한 현상이 있음
 - BERT는 4.4~6.7% 정도의 견고한 차이로 SOTA보다 높은 결과를 얻음
-![](/assets/img/markdown-img-paste-20190514140956159.png)
+![](/_site/img/markdown-img-paste-20190514140956159.png)
 
 
 ##### 4.2 SQuAD v1.1
 - Wikipedia로부터 만든 100k의 question/answer pairs
 - Input paragraph에서 Input Question에 대한 정답찾기
-![center 50%](/assets/img/markdown-img-paste-20190514143432222.png)
+![center 50%](/_site/img/markdown-img-paste-20190514143432222.png)
 - Classification Task와는 좀 달리, Start Token $S \in \mathbb{R}^{H}$, End Token $E \in \mathbb{R}^{H}$찾기임
 - fine-tuning때는 새로 도입되는 param은 Start, End token뿐임
 - input token $i$에 대한 Final hidden vector를 $T_{i} \in \mathbb{R}^{H}$라 할 때, word $i$가 Start token이 될 확률은 $T_{i}$와 $S$의 dot-product의 softmax로 계산함
@@ -294,7 +294,7 @@ BERT를 fine-tuning해서 11개의 NLP Task에 적용함
 - ~~START, END token에 대한 vector를 새로 생성해서 따로 갖고 있다가 기존 seq token과 Attention 만 비교하는건가..이러면 self-attention은 아니고 기존에 알고 있던 attention vector를 쓰는 해석인데.. 체크해봐야겠음~~
 - SQuAD는 testing procedure가 매우 까다로워서 submitter가 직접 SQuAD organizers에게 컨택해서 hidden test set에 대해 테스트해야함. 본 논문에서는 자체 평가기준으로 best system만 제출함
 - 결과는 **TOP**을 갱신함. Public data인 TriviaQA도 학습시켰더니 점수 더 높아짐
-![](/assets/img/markdown-img-paste-20190514150300422.png)
+![](/_site/img/markdown-img-paste-20190514150300422.png)
 
 
 ##### 4.3 Named Entity Recognition
@@ -304,10 +304,10 @@ BERT를 fine-tuning해서 11개의 NLP Task에 적용함
 - CRF 없음, non-autoregressive임 (~~이런 상황에서 NER은 사실 굉장히 어려움~~)
 - BERT는 WordPeiece tokenizer쓰기 때문에 특성상 NER 라벨과 align이 틀어질 수 있음
 - 이를 해결하기 위해 CoNLL-tokenized input word를 WordPiece tokenizer로 다시 tokenization함
-![center 50%](/assets/img/markdown-img-paste-20190514154340513.png)
+![center 50%](/_site/img/markdown-img-paste-20190514154340513.png)
 - X 라고 표시된 곳은 prediction하지 않음 (~~loss를 계산하지 않는건가?~~)
 - 결과는 ELMo+BiLSTM+CRF 같이 기존의 LSTM 계열의 NER 끝판왕 모델을 이기고 SOTA 찍음
-![](/assets/img/markdown-img-paste-20190514154745775.png)
+![](/_site/img/markdown-img-paste-20190514154745775.png)
 
 ##### 4.4 SWAG
 - 생략
@@ -324,15 +324,15 @@ BERT를 fine-tuning해서 11개의 NLP Task에 적용함
   - QA 같은 태스크에서 직관적이지 않고 (RTL이 적합하지 않음)
   - Deep bidirectional model에 비해서 less powerful함 (deep 에서는 left or right context 쓰는 것에 대해서 선택이 가능하기 때문)
 
-![](/assets/img/markdown-img-paste-20190514161210252.png)
+![](/_site/img/markdown-img-paste-20190514161210252.png)
 
 ##### 5.2 Effect of Model Size
 - Deep하고 params 많은게 좋음
-![](/assets/img/markdown-img-paste-20190514161749947.png)
+![](/_site/img/markdown-img-paste-20190514161749947.png)
 
 ##### 5.3 Effect of Number of Training Steps
 - 정말 100만 스텝이나 필요한가요? Yes!
-![](/assets/img/markdown-img-paste-20190514162210101.png)
+![](/_site/img/markdown-img-paste-20190514162210101.png)
 
 ##### 5.4 Feature-based Approach with BERT
 - 모든 NLP task를 Transformer Encoder architecture로 표현하는게 쉬운건 아님
@@ -341,7 +341,7 @@ BERT를 fine-tuning해서 11개의 NLP Task에 적용함
 - BERT의 어떤 param도 fine-tuning하지 않고 two-layer 768-dim BiLSTM을 추가해서 테스트함
 - BERT 전체를 fine-tune한게 96.4인데 BERT는 건드리지 않고 마지막 Layer 4개를 concat한게 96.1이 나옴
 - BERT는 fine-tuning해서도 잘 쓰이지만, feature-based approach에서도 효과적임이 입증됨
-![](/assets/img/markdown-img-paste-20190514163030887.png)
+![](/_site/img/markdown-img-paste-20190514163030887.png)
 
 
 #### 6. Conclusion

@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "유니티 정리"
-subtitle:   "유니티 Get Started"
+excerpt:   "유니티 Get Started"
 categories: cslog
 tags: 회사생활
 comments: true

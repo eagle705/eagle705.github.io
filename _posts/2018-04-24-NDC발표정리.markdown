@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "NDC 정리"
-subtitle:   "NEXON DEVELOPER CONFERENCE 18/4/24~25"
+excerpt:   "NEXON DEVELOPER CONFERENCE 18/4/24~25"
 categories: cslog
 tags: web
 comments: true

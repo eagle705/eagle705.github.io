@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "ML Basic - 머신러닝과 확률"
-subtitle:   "ML Basic"
+excerpt:   "ML Basic"
 categories: cslog
 tags: deeplearning
 comments: true
@@ -47,7 +47,7 @@ ML 기초를 좀 다시 쌓고 정리할 필요를 느껴서 이 기회에 조�
 
 ### MLE vs MAP 
 
-![](/assets/img/markdown-img-paste-20190925204340821.png)
+![](/_site/img/markdown-img-paste-20190925204340821.png)
 
 최대 사후 확률에 대응하는 모수(Parameter)는 최대우도(MLE)와 마찬가지로 모수의 점 추정으로 사용할 수 있지만, 최대우도에서는 어떤 사건이 일어날 확률을 가장 높이는 모수를 찾는 것에 비해, 최대 사후 확률 모수는 모수의 사전 확률(Prior)과 결합된 확률을 고려한다는 점이 다르다.
 

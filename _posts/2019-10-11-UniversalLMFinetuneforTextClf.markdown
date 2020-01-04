@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Universal Language Model Fine-tuning for Text Classification"
-subtitle:   "풀잎스쿨 #day1"
+excerpt:   "풀잎스쿨 #day1"
 categories: paper
 tags: deeplearning
 comments: true
@@ -54,7 +54,7 @@ use_math: true
 - Fine-tuning
 
 #### 3. Universal Language Model Fine-tuning
-![](/assets/img/markdown-img-paste-20191011222956536.png)
+![](/_site/img/markdown-img-paste-20191011222956536.png)
 
 - Given static source task  $ \mathcal{T}_{S} $ 가 있고 any target task $ \mathcal{T}_{T} $ 가 있다고 할 때, $ \mathcal{T}_{S} \neq \mathcal{T}_{T} $ 라고 정의
 - 이때 우리의 목표는 $ \mathcal{T}_{T} $의 성능을 높이는 것이다.(도메인 다르다고 생각하면 됨, 언어모델 태스크 -> 텍스트분류 태스크)
@@ -110,7 +110,7 @@ $$
    \begin{aligned} c u t &=\left\lfloor T \cdot c u t_{-} f r a c\right\rfloor \\ p &=\left\{\begin{array}{ll}{t / c u t,} & {\text { if } t<c u t} \\ {1-\frac{t-c u t}{c u t \cdot(1 / 1 c u t-f r a c-1)},} & {\text { otherwise }} \end{array} \right. \\ {\eta_{t}} & {=\eta_{\max } \cdot \frac{1+p \cdot(\text {ratio }-1)}{\text {ratio}}} \end{aligned}
    $$
 
-![](/assets/img/markdown-img-paste-20191014140750231.png)
+![](/_site/img/markdown-img-paste-20191014140750231.png)
 
 ----
 

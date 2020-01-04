@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "gPRC + Healthcheck 뽀개기"
-subtitle:   "프로토콜"
+excerpt:   "프로토콜"
 categories: cslog
 tags: deeplearning
 comments: true

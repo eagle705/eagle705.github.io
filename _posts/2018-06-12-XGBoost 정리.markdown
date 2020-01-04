@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "XGBoost 정리"
-subtitle:   "요즘 Kaggle에서 가장 핫하다는"
+excerpt:   "요즘 Kaggle에서 가장 핫하다는"
 categories: cslog
 tags: deeplearning
 comments: true

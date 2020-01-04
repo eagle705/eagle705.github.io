@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "DBpedia 셋팅"
-subtitle:   "Knowledge base 셋팅을 위하여.."
+excerpt:   "Knowledge base 셋팅을 위하여.."
 categories: cslog
 tags: deeplearning
 comments: true

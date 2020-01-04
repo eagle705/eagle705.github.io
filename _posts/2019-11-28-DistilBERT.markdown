@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter"
-subtitle:   "모두연발표"
+excerpt:   "모두연발표"
 categories: paper
 tags: deeplearning
 comments: true
@@ -17,7 +17,7 @@ use_math: true
 ### Who is an Author?
 - AAAI를 들고 있는 NLP 하던 분인 듯
 - Thomas Wolf(huggingface)와 주로 작업하는 듯함
-![](/assets/img/markdown-img-paste-20191128112449864.png)
+![](/_site/img/markdown-img-paste-20191128112449864.png)
 
 #### 느낀점
 - 일단 논문이 짧다. 좋아.
@@ -40,7 +40,7 @@ use_math: true
 
 
 #### 1. Introduction
-![](/assets/img/markdown-img-paste-20191128114914422.png)
+![](/_site/img/markdown-img-paste-20191128114914422.png)
 - 지난 몇년간 NLP에서는 Transfer Learning이 아주 핫했고 large-scale pre-trained LM을 쓰는건 NLP Tasks에서 하나의 기본적인 tool이 되어버림 (Devlin et al., 2018, Radford et al., 2019, Liu et al., 2019)
 - 모델 성능은 좋아졌지만 빈번하게 수백만의 파라미터를 갖게되었고 현재까지의 연구로는 더 모델크기를 키우면 downstream task에서 더 높은 성능이 나오고 있음
 - 모델이 커지는건 몇가지 우려를 낳고 있음
@@ -99,7 +99,7 @@ environmental cost of exponentially scaling these models’ computational requir
 
 
 #### 4. Experiments
-![](/assets/img/markdown-img-paste-20191128150702207.png)
+![](/_site/img/markdown-img-paste-20191128150702207.png)
 
 ##### General Language Understanding
 - DistilBERT의 language understanding과 generalization capabilities 를 확인하기 위해 General Language Understanding Evaluation (GLUE) benchmark 로 평가함
@@ -126,7 +126,7 @@ environmental cost of exponentially scaling these models’ computational requir
 
 ##### 4.2 Ablation study
 - Table 4 presents the deltas with the full triple loss: removing the Masked Language Modeling loss has little impact while the two distillation losses account for a large portion of the performance.
-![](/assets/img/markdown-img-paste-20191128153317851.png)
+![](/_site/img/markdown-img-paste-20191128153317851.png)
 
 
 #### 5. Related work

@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Vue.js 입문"
-subtitle:   "한번 써보자고"
+excerpt:   "한번 써보자고"
 categories: cslog
 tags: web
 comments: true

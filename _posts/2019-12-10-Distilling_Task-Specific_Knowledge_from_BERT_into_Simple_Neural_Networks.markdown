@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Distilling Task-Specific Knowledge from BERT into Simple Neural Networks"
-subtitle:   "모두연발표"
+excerpt:   "모두연발표"
 categories: paper
 tags: deeplearning
 comments: true
@@ -18,7 +18,7 @@ use_math: true
 - ICASSP를 들고 있는 NLP 하던 분인 듯
 - 보통은 문서분류쪽 많이 한듯
 
-![](/assets/img/markdown-img-paste-20191210174547954.png)
+![](/_site/img/markdown-img-paste-20191210174547954.png)
 
 #### 느낀점
 - 아이디어는 간단함
@@ -69,12 +69,12 @@ use_math: true
 - Student model: single-layer BiLSTM with a non-linear classifier
   - For classification
     - last step의 값을 concat 후 fc layer with ReLU 에 feed해서 softmax layer로 분류함
-    ![](/assets/img/markdown-img-paste-20191211110706719.png)
+    ![](/_site/img/markdown-img-paste-20191211110706719.png)
   
   - For Sentence-pair tasks
       - BiLSTM encoder weights를 share해서 siamese architecture로 사용 ${ \text { sentence vectors } \boldsymbol{h}_{s 1} \text { and } \boldsymbol{h}_{s 2} }$ 를 만들어냄
       - ${ \begin{array}{l}{f\left(\boldsymbol{h}_{s 1}, \boldsymbol{h}_{s 2}\right)=\left[\boldsymbol{h}_{s 1}, \boldsymbol{h}_{s 2}, \boldsymbol{h}_{s 1} \odot\right.}  {\left.\boldsymbol{h}_{s 2},\left|\boldsymbol{h}_{s 1}-\boldsymbol{h}_{s 2}\right|\right], \text { where } \odot \text { denotes elementwise multiplication}}\end{array} }$
-    ![](/assets/img/markdown-img-paste-20191211112320170.png)
+    ![](/_site/img/markdown-img-paste-20191211112320170.png)
     - attenion이나, layer norm 같은 스킬은 최대한 제외하고 BiLSTM의 representation Power에만 국한하는 설계를 함
 
 ##### 3.2 Distillation Objective
@@ -165,7 +165,7 @@ $$
 #### 5. Results and Discussion
 ##### 5.1 Model Quality
 
-![](/assets/img/markdown-img-paste-20191211144319362.png)
+![](/_site/img/markdown-img-paste-20191211144319362.png)
 - our distillation approach of matching logits using the augmented training dataset, and achieve an absolute improvement of 1.9– 4.5 points against our base BiLSTM.
 - ~~data augmentation 없이 distillation한 것도 보여줘야.. 설득력이 더 있을텐데 음..~~
 
@@ -175,7 +175,7 @@ $$
 - our single-sentence model uses 98 and 349 times fewer parameters than ELMo and BERTLARGE, respectively
 - **15 and 434 times faster**
 
-![](/assets/img/markdown-img-paste-20191211144754536.png)
+![](/_site/img/markdown-img-paste-20191211144754536.png)
 
 
 #### 6. Conclusion and Future Work
