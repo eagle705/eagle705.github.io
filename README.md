@@ -5,7 +5,8 @@
   - https://youduk.netlify.com/
   - https://blog.rajephon.dev/archive/
   - http://jaekwangkim.com/
-  
+
+- 로고변경 & 파비콘변경: https://www.favicon-generator.org/  
 
 # Update 07/09/2018
 
