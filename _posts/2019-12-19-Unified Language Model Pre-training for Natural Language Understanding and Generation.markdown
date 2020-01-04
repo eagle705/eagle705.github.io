@@ -1,14 +1,12 @@
 ---
 layout: post
 title:  "Unified Language Model Pre-training for Natural Language Understanding and Generation"
-excerpt:   "모두연발표"
+excerpt:   "19.12.21 모두연 발표 논문임. 생성 모델이라니.. 너무 오랜만에 읽는거라 재밌을듯"
 categories: paper
 tags: deeplearning
 comments: true
 use_math: true
 ---
-
-19.12.21 모두연 발표 논문임. 생성 모델이라니.. 너무 오랜만에 읽는거라 재밌을듯
 
 ### Unified Language Model Pre-training for Natural Language Understanding and Generation
 - 저자:

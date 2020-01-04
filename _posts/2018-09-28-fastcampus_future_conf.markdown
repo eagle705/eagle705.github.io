@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "2018 패캠퓨처컨퍼런스"
-excerpt:   "AI Track"
+excerpt:   "FastCampus Future Conference 2018 - AI Tracks"
 categories: cslog
 tags: linux
 comments: true

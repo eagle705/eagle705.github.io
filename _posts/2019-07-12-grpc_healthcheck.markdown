@@ -1,13 +1,13 @@
 ---
 layout: post
 title:  "gPRC + Healthcheck 뽀개기"
-excerpt:   "프로토콜"
+excerpt:   "본 문서에서는 gRPC에 대해서 가볍게 다루고자한다. 마침 healthcheck 관련 내용도 다룰 일이 생겨서 이참에 정리겸 남겨둔다."
 categories: cslog
 tags: deeplearning
 comments: true
 use_math: true
 ---
-본 문서에서는 gRPC에 대해서 가볍게 다루고자한다. 마침 healthcheck 관련 내용도 다룰 일이 생겨서 이참에 정리겸 남겨둔다.
+
 
 #### gRPC 개념 설명
 - [Microservices with gRPC](https://medium.com/@goinhacker/microservices-with-grpc-d504133d191d)

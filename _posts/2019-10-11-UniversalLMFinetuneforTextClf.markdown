@@ -1,14 +1,14 @@
 ---
 layout: post
 title:  "Universal Language Model Fine-tuning for Text Classification"
-excerpt:   "풀잎스쿨 #day1"
+excerpt:   "풀잎스쿨하면서 보는 첫번째 논문!"
 categories: paper
 tags: deeplearning
 comments: true
 use_math: true
 ---
 
-풀잎스쿨하면서 보는 첫번째 논문! 2018년 논문인제 함 보자 어떤 내용인지..!
+
 
 ### Universal Language Model Fine-tuning (ULMFiT)
 - 저자:Jeremy Howard, Sebastian Ruder (**fast.ai** University of San Francisco)

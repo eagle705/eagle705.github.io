@@ -1,13 +1,13 @@
 ---
 layout: post
 title:  "Neural Machine Translation in Linear Time"
-excerpt:   "2016"
+excerpt:   "오늘은 2016년도의 NMT 모델에 대해서 알아보고자한다. 발표를 갑작스레 맡게되었는데 음.. 오랜만에 NMT논문도 읽어보고 좋은 것 같다."
 categories: paper
 tags: deeplearning
 comments: true
 ---
 
-오늘은 2016년도의 NMT 모델에 대해서 알아보고자한다. 발표를 갑작스레 맡게되었는데 음.. 오랜만에 NMT논문도 읽어보고 좋은 것 같다. (포스팅도 하고)
+
 
 ### Neural Machine Translation in Linear Time
 - 저자:Nal Kalchbrenner, Lasse Espeholt, Karen Simonyan, Aaron van den Oord, Alex Graves, Koray Kavukcuoglu (Google Deepmind, London UK)   

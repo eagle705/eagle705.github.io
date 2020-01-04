@@ -1,14 +1,14 @@
 ---
 layout: post
-title:  "Pycon 2019 Logs"
-excerpt:   "pycon 2019"
+title:  "Pycon 2019 Summary"
+excerpt:   "이번에 처음으로 파이콘에 참여해봤는데, 생각보다(?) 너무 재밌었음"
 categories: cslog
 tags: cslog
 comments: true
 use_math: true
 ---
 
-이번에 처음으로 파이콘에 참여해봤는데, 생각보다(?) 너무 재밌었다. 비록 일요일 행사는 못갔지만 토요일 행사때 갔던거만이라도 정리해보자. 두줄 요약하자면 다음과 같은데 ```typing```모듈과 ```vpython```모듈이라는걸 써보자(?)
+ 비록 일요일 행사는 못갔지만 토요일 행사때 갔던거만이라도 정리해보자. 두줄 요약하자면 다음과 같은데 ```typing```모듈과 ```vpython```모듈이라는걸 써보자(?)
 
 ### 정적 타입 검사로 더 나은 Python 코드 작성하기
 - Presenter: 이창희

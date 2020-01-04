@@ -1,14 +1,14 @@
 ---
 layout: post
 title:  "Massively Multilingual Sentence Embeddings for Zero-Shot Cross-Lingual Transfer and Beyond"
-excerpt:   "모두연발표"
+excerpt:   "이번주(19.10.16) 모두연 발표 논문. 페북에서 나옴. 저자가 페북 인턴할때 씀"
 categories: paper
 tags: deeplearning
 comments: true
 use_math: true
 ---
 
-이번주(19.10.16) 모두연 발표 논문임. 페북에서 나옴. 저자가 페북 인턴할때 씀. 
+
 
 ### Massively Multilingual Sentence Embeddings for Zero-Shot Cross-Lingual Transfer and Beyond
 - 저자:

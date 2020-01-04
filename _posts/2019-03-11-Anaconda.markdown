@@ -1,13 +1,13 @@
 ---
 layout: post
 title:  "Anaconda 정리"
-excerpt:   "상용배포까지"
+excerpt:   "[상용배포까지] - Anaconda야 뭐 파이썬을 쓰는 사람이라면 이미 다 알고있는 필수템이지만, 실제로 아나콘다 환영을 배포를 위해 써본적은 없어서 이 기회에 한 번 정리해보고자 한다."
 categories: cslog
 tags: deeplearning
 comments: true
 ---
 
-Anaconda야 뭐 파이썬을 쓰는 사람이라면 이미 다 알고있는 필수템이지만, 실제로 아나콘다 환영을 배포를 위해 써본적은 없어서 이 기회에 한 번 정리해보고자 한다.
+
 
 #### View
 ```bash

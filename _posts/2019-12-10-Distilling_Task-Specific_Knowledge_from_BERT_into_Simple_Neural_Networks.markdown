@@ -1,14 +1,14 @@
 ---
 layout: post
 title:  "Distilling Task-Specific Knowledge from BERT into Simple Neural Networks"
-excerpt:   "모두연발표"
+excerpt:   "19.12.11 모두연 발표 논문. 버트 경량화에 대한 논문 몇개씩은 읽어봐야..:)"
 categories: paper
 tags: deeplearning
 comments: true
 use_math: true
 ---
 
-19.12.11 모두연 발표 논문임. 버트 경량화에 대한 논문 몇개씩은 읽어봐야..:)
+
 
 ### Distilling Task-Specific Knowledge from BERT into Simple Neural Networks
 - 저자:

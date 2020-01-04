@@ -1,3 +1,8 @@
+# Update 04/01/2020 by JS
+- MathJax 추가: https://mkkim85.github.io/blog-apply-mathjax-to-jekyll-and-github-pages/
+- About 수정시 markdown->html convert 이용: https://markdowntohtml.com/
+
+
 # Update 07/09/2018
 
 I'm planning to refactor Leonids theme!!!

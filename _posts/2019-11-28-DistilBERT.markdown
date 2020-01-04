@@ -1,14 +1,14 @@
 ---
 layout: post
 title:  "DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter"
-excerpt:   "모두연발표"
+excerpt:   "19.12.04 모두연 발표 논문. NLP계에서 표준이 되어버린 huggingface에서 NeurIPS workshop paper로 제출함 (https://github.com/huggingface/transformers/tree/master/examples/distillation)"
 categories: paper
 tags: deeplearning
 comments: true
 use_math: true
 ---
 
-19.12.04 모두연 발표 논문임. NLP계에서 표준이 되어버린 huggingface에서 NeurIPS workshop paper로 제출함 (https://github.com/huggingface/transformers/tree/master/examples/distillation)
+
 
 ### DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter
 - 저자:

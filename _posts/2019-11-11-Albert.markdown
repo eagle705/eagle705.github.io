@@ -1,14 +1,14 @@
 ---
 layout: post
 title:  "ALBERT: A Lite BERT for Self-supervised Learning of Language Representations"
-excerpt:   "모두연발표"
+excerpt:   "이번주(19.11.13) 모두연 발표 논문. BERT가 나온지 1년정도 되었고 이제 서비스 해야하니 경량화 하는 방법들 위주로 논문이 나오기 시작함."
 categories: paper
 tags: deeplearning
 comments: true
 use_math: true
 ---
 
-이번주(19.11.13) 모두연 발표 논문임. BERT가 나온지 1년정도 되었고 이제 서비스 해야하니 경량화 하는 방법들 위주로 논문이 나오기 시작함.
+
 
 ### ALBERT: A Lite BERT for Self-supervised Learning of Language Representations
 - 저자:

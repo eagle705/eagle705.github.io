@@ -1,14 +1,14 @@
 ---
 layout: post
 title:  "BERT- Pre-training of Deep Bidirectional Transformers for Language Understanding"
-excerpt:   "Bert"
+excerpt:   "요즘 NLP의 발전이 빨라졌는데, 그 중싱엔 Self-Attention -> Transformer -> BERT 가 있다. NLP계의 ImageNet 시대가 열렸다 라고 말할정도로 큰 발전을 이루어졌는데, 그 중심에는 BERT가 있다. 오늘 그 핫하다는 BERT에 대해서 한번 알아보자."
 categories: paper
 tags: deeplearning
 comments: true
 use_math: true
 ---
 
-요즘 NLP의 발전이 빨라졌는데, 그 중싱엔 Self-Attention -> Transformer -> BERT 가 있다. NLP계의 ImageNet 시대가 열렸다 라고 말할정도로 큰 발전을 이루어졌는데, 그 중심에는 BERT가 있다. 오늘 그 핫하다는 BERT에 대해서 한번 알아보자.
+
 
 ### BERT- Pre-training of Deep Bidirectional Transformers for Language Understanding
 - 저자:Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova (**Google AI Language**, ~~Google AI니 말다했지~~)

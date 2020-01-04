@@ -2,14 +2,14 @@
 layout: post
 title:  "Improving Language Understanding
 by Generative Pre-Training (GPT)"
-excerpt:   "GPT"
+excerpt:   "요즘 간단한 Generative Pre-Training model을 볼 필요가 생겼다. 그냥 대충 이렇게 하면 되겠지 해서 구현해보려다가 그냥 이왕하는거 GPT 논문을 읽고 넘어가기로 결정했다. 사실 이미 GPT2도 나오고 더 좋은 모델이 많이 나온 상태지만.. 뭐 논문 볼때 이전 History를 보는게 뭐가 나쁘랴. 암튼 이 과도기적(?)인 논문 한번 읽고 정리해보고자한다."
 categories: paper
 tags: deeplearning
 comments: true
 use_math: true
 ---
 
-요즘 간단한 Generative Pre-Training model을 볼 필요가 생겼다. 그냥 대충 이렇게 하면 되겠지 해서 구현해보려다가 그냥 이왕하는거 GPT 논문을 읽고 넘어가기로 결정했다. 사실 이미 GPT2도 나오고 더 좋은 모델이 많이 나온 상태지만.. 뭐 논문 볼때 이전 History를 보는게 뭐가 나쁘랴. 암튼 이 과도기적(?)인 논문 한번 읽고 정리해보고자한다.
+
 
 ### GPT - Improving Language Understanding by Generative Pre-Training
 - 저자:Alec Radford, Karthik Narasimhan, Tim Salimans, Ilya Sutskever (**Open AI**, ~~Open AI다! 부럽(?)다~~)

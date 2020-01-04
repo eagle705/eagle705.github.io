@@ -2,14 +2,14 @@
 layout: post
 title:  "SentencePiece: A simple and language independent subword tokenizer
 and detokenizer for Neural Text Processing"
-excerpt:   "embedding"
+excerpt:   "BERT에서는 input을 WordPiece로 짤라서 주는데, 이걸 더 일반화 시킨 라이브러리가 SentencePiece다. 웹상에 사용법이 좀 부족하게 나와있는 것 같아서, 공부한거 정리할겸 남겨본다."
 categories: paper
 tags: deeplearning
 comments: true
 use_math: true
 ---
 
-BERT에서는 input을 WordPiece로 짤라서 주는데, 이걸 더 일반화 시킨 라이브러리가 SentencePiece다. 웹상에 사용법이 좀 부족하게 나와있는 것 같아서, 공부한거 정리할겸 남겨본다.
+
 
 ### SentencePiece
 - 저자:Taku Kudo, John Richardson (Google, Inc)

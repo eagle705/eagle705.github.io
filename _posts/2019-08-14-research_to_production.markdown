@@ -1,15 +1,12 @@
 ---
 layout: post
 title:  "Research to Production"
-excerpt:   "Logs"
+excerpt:   "회사에서 제품을 개발하면서, Research To Production을 하기 위한 프로세스 및 노트들에 대해서 한번 정리를 해야함을 느꼈다. 이런 프로세스에 좀 익숙해져야 언젠가 프로젝트로 잘 리딩 할 수 있을 것 같아서 지금부터 한개씩 정리해보고자한다."
 categories: cslog
 tags: algorithm
 comments: true
 use_math: true
 ---
-
-회사에서 제품을 개발하면서, Research To Production을 하기 위한 프로세스 및 노트들에 대해서 한번 정리를 해야함을 느꼈다. 이런 프로세스에 좀 익숙해져야 언젠가 프로젝트로 잘 리딩 할 수 있을 것 같아서 지금부터 한개씩 정리해보고자한다.
-
 
 ### Research
 - 개발 기간이 필요함

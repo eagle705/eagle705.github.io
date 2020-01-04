@@ -1,14 +1,14 @@
 ---
 layout: post
 title:  "Stochastic Answer Networks for Natural Language Inference (SAN)"
-excerpt:   "SAN"
+excerpt:   "오랜만에 논문 구현할겸.. 논문 하나를 읽고 정리해보고자 한다. Self-Attention Network와 이름이 비슷한 이번 논문의 네트워크 이름은 Stochastic Answer Network다. 2019년 3월에 올라왔다"
 categories: paper
 tags: deeplearning
 comments: true
 use_math: true
 ---
 
-오랜만에 논문 구현할겸.. 논문 하나를 읽고 정리해보고자 한다. Self-Attention Network와 이름이 비슷한 이번 논문의 네트워크 이름은 Stochastic Answer Network다. 2019년 3월에 올라왔다
+
 
 ### Stochastic Answer Networks for Natural Language Inference (SAN)
 - 저자:Xiaodong Liu†, Kevin Duh and Jianfeng Gao (**Microsoft Research, Johns Hopkins University**)

@@ -1,13 +1,13 @@
 ---
 layout: post
 title:  "2019 NDC"
-excerpt:   "AI Track"
+excerpt:   "AI Track, 2019년 NDC 참관 리뷰"
 categories: cslog
 tags: cslog
 comments: true
 ---
 
-2019년 NDC 참관 리뷰
+
 
 #### 게임디자이너 & 확률 통계
 

@@ -1,13 +1,13 @@
 ---
 layout: post
 title:  "PlantUML"
-excerpt:   "다이어그램그리기"
+excerpt:   "PlantUML은 흔히 사용하는 UML을 language를 통해 코딩하듯 그릴 수 있는걸 의미한다. 이번에 프로젝트를하면서 처음 사용해보게되었는데 생각보다 진짜 와.. 너무 편해서 이 기회에 한번 정리하고자한다."
 categories: cslog
 tags: deeplearning
 comments: true
 ---
 
-PlantUML은 흔히 사용하는 UML을 language를 통해 코딩하듯 그릴 수 있는걸 의미한다. 이번에 프로젝트를하면서 처음 사용해보게되었는데 생각보다 진짜 와.. 너무 편해서 이 기회에 한번 정리하고자한다.
+
 #### Reference
 - 사실상 아래 레퍼를 따라하는 것만으로도 마스터할 수 있음
 - http://plantuml.com/ko/sequence-diagram

@@ -1,14 +1,14 @@
 ---
 layout: post
 title:  "Line Message API Setting with Heroku"
-excerpt:   "개발환경셋팅"
+excerpt:   "본 문서에서는 Line Message API 활용을 위한 Heroku 셋팅 방법에 대해서 알아보고자한다. (Mac 기준)"
 categories: cslog
 tags: deeplearning
 comments: true
 use_math: true
 ---
 
-본 문서에서는 Line Message API 활용을 위한 Heroku 셋팅 방법에 대해서 알아보고자한다. (Mac 기준)
+
 
 #### Reference
 Line: https://developers.line.biz/en/docs/messaging-api/building-sample-bot-with-heroku/
