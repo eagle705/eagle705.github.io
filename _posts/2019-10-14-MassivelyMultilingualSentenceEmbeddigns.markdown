@@ -18,7 +18,7 @@ use_math: true
 ### Who is an Author?
 Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 같고 조경현 교수님하고도 co-author 이력이 있음. 페북에서 인턴할때 쓴 논문임.
 
-![author](/_site/img/markdown-img-paste-20191014145614237.png)
+![author](/img/markdown-img-paste-20191014145614237.png)
 
 
 #### 느낀점
@@ -94,7 +94,7 @@ Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 �
    - ```제안하는 방법은 task-specific fine-tuning이 필요없음```
 
 #### 3. Proposed method
-![](/_site/img/markdown-img-paste-20191016105021495.png)
+![](/img/markdown-img-paste-20191016105021495.png)
 - langauge agnostic BiLSTM encoder 사용 (to build sentence embeddings)
 - auxiliary decoder와 묶어서 parallel corpora에 대해 학습함
    - 우리가 결국 사용하려는건 인코더고 디코더는 인코더 학습을 위한 보조적인 용도로만 쓰겠다는 것
@@ -146,7 +146,7 @@ Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 �
    
 
 ##### 3.3 Training data and pre-processing
-![](/_site/img/markdown-img-paste-2019101612003189.png)
+![](/img/markdown-img-paste-2019101612003189.png)
 
 - 3.2에서 2개의 target languages를 정하자고 했으니 English와 Spanish로 해보겠음
 - 대부분의 데이터를 위 두가지 언어에 대해서 aligned 처리함
@@ -180,7 +180,7 @@ Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 �
 
 - 결과
    - Notation중에 EN -> XX가 있는데, 이것 때문임. ```we train a classifier on top of our multilingual encoder using the English training data```
-![](/_site/img/markdown-img-paste-20191016140026843.png)
+![](/img/markdown-img-paste-20191016140026843.png)
 - Given two sentences, ```a premise and a hypothesis```, the task consists in deciding whether there is an ```entailment, contradiction or neutral``` relationship between them
 - Dataset
    - development: 2,500
@@ -199,10 +199,10 @@ Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 �
    - 이건 multilingual embedding 테스트가아니라 MT system과 monolingual model 퀄리티 평가하는 것임 (```Note that we are not evaluating multilingual sentence embeddings anymore, but rather the quality of the MT system and a monolingual model```) (~~굳이 왜 넣었나 싶긴한데 그냥 번역해서 쓰는것보다 적은 데이터에 대해선 multilingual embedding이 성능이 좋다는걸 비교해서 나타내고 싶었던게 아닐까함~~)
 
 
-![](/_site/img/markdown-img-paste-20191016150630714.png)
+![](/img/markdown-img-paste-20191016150630714.png)
 
 ##### 4.2 MLDoc: cross-lingual classification
-![](/_site/img/markdown-img-paste-20191016143025472.png)
+![](/img/markdown-img-paste-20191016143025472.png)
 
 -  Schwenk and Li (2018) 논문에서 제안되었는데 Reuters benchmark의 개선된 버전이라고함
 - Dataset
@@ -214,7 +214,7 @@ Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 �
 - ```we train a classifier on top of our multilingual encoder using the English training data```
 
 ##### 4.3 BUCC: bitext mining
-![](/_site/img/markdown-img-paste-20191016145258214.png)
+![](/img/markdown-img-paste-20191016145258214.png)
 
 - Dataset:
    - 150K to 1.2M sentences for each langauges
@@ -234,7 +234,7 @@ Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 �
 - 112개 언어 대응
 - 1,000 English-aligned sentence pairs for each langauge
 - 평가는 다른언어에서 가장 비슷한 문장(nearest neighbor)을 cosine similarity로 찾고 error rate를 계산하는 것으로 함 (~~4.3이랑 비슷한듯~~)
-![](/_site/img/markdown-img-paste-20191016150710706.png)
+![](/img/markdown-img-paste-20191016150710706.png)
 
 #### 5. Ablation experiments
 - ~~요즘 유행(?)하고있는 것중 하나인 Ablation experiments..필요하지만 논문 정리하는 입장에서는..~~
@@ -242,7 +242,7 @@ Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 �
    - 인코더 깊이 쌓으면 잘됨
    - multitask learning으로 NLI loss를 추가하면 가중치에 따라서 더 잘 되기도함
    - 18개보다 93개 언어에 대해서 학습할때 결과가 더 좋았음 (~~많은 언어에 대해서 하는데도 결과가 좋은거 보면 모델 capa가 괜찮은듯~~)
-![](/_site/img/markdown-img-paste-20191016151215723.png)
+![](/img/markdown-img-paste-20191016151215723.png)
 
 #### 6. Conclusion
 - 93개의 언어에 대해서 multilingual fixed-length sentence embeddings을 학습하는 모델을 제안함

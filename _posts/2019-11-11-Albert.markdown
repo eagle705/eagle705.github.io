@@ -19,7 +19,7 @@ use_math: true
 - 원래는 CV를 위주로 하던 친구인데 이번에 NLP꺼도 해본듯 (CVPR도 들고 있고..)
 - 논문 인용수도 꽤 됨
 - Google VR팀에서도 인턴했었음
-![](/_site/img/markdown-img-paste-2019111214553733.png)
+![](/img/markdown-img-paste-2019111214553733.png)
 http://www.cs.cmu.edu/~lanzhzh/
 
 #### 느낀점
@@ -57,9 +57,9 @@ http://www.cs.cmu.edu/~lanzhzh/
    - 모델의 hidden size를 BERT-large 처럼 단순히 늘려버리면 성능도 안좋아지는것 또한 발견함 (Figure 1, Table 1 참고)
    - 이러한 문제들은 모델 병렬화와 메모리 관리로 어느정도 해결가능하지만 communication overhead와 model degradation 문제는 해결할 수 없음
 
-![](/_site/img/markdown-img-paste-20191111112603203.png)
+![](/img/markdown-img-paste-20191111112603203.png)
 
-![](/_site/img/markdown-img-paste-20191111113004913.png)
+![](/img/markdown-img-paste-20191111113004913.png)
 
 - 본 논문에서는 이러한 문제 해결을 위한 A Lite BERT (ALBERT) 구조를 디자인했음 (훨씬 적은 param을 사용)
 - ALBERT는 two parameter reduction techniques을 사용함
@@ -145,7 +145,7 @@ $$
 - layer를 올라갈 수록 ALBERT가 BERT보다 더 smooth하게 값이 바뀌는걸 볼 수 있는데 이건 weighty-sharing이 network parameters의 stabilizing에 효과가 있음을 보여줌
 - DQE와는 다르게 절대 0으로 수렴하는 현상이 보여지지 않는걸로 봐서 ALBERT의 solution space가 DQE와 매우 다르다는걸 알 수 있음
 
-![](/_site/img/markdown-img-paste-2019111115453932.png)
+![](/img/markdown-img-paste-2019111115453932.png)
 
 ###### Inter-sentence coherence loss
 - MLM loss에 추가해서 BERT에서는 NSP loss를 사용했음
@@ -166,7 +166,7 @@ $$
 ##### 3.2 Model Setup
 - BERT와 ALBERT의 모델을 hyperparameter setting으로 비교해봄
 
-![](/_site/img/markdown-img-paste-20191111175447714.png)
+![](/img/markdown-img-paste-20191111175447714.png)
 
 - ALBERT-large는 BERT-large에 비해 18배 적은 params을 가짐 (18M vs 334M)
 - Hidden size를 2048까지 하면 BERT-xlarge는 1.27 billion params을 가짐
@@ -217,7 +217,7 @@ $$
 - We also observe that BERT-xlarge gets significantly worse results than BERT-base on all metrics. This indicates that a model like BERT-xlarge is more difficult to train than those that have smaller parameter sizes.
 -  Because of less communication and fewer computations, ALBERT models have higher data throughput compared to their corresponding BERT models.
 
-![](/_site/img/markdown-img-paste-20191112115816716.png)
+![](/img/markdown-img-paste-20191112115816716.png)
 
 ##### 4.4 Factorized Embedding Parameterization
 - the effect of changing the vocabulary embedding size E using an ALBERT-base configuration setting
@@ -226,7 +226,7 @@ $$
 - Under the all-shared condition (ALBERT-style):
    - an embedding of size 128 appears to be the best
 
-![](/_site/img/markdown-img-paste-20191112120120393.png)
+![](/img/markdown-img-paste-20191112120120393.png)
 
 ##### 4.5 Cross-Layer Parameter Sharing
 - experiments for various cross-layer parameter-sharing strategies, using an ALBERT-base configuration (Table 2) with two embedding sizes (E = 768 and E = 128)
@@ -244,7 +244,7 @@ $$
    - divide the L layers into N groups of size M , and each size-M group shares parameters
       - the smaller the group size M is, the better the performance we get. However, decreasing group size M also dramatically increase the number of overall parameters. We choose all-shared strategy as our default choice
 
-![](/_site/img/markdown-img-paste-20191112120723931.png)
+![](/img/markdown-img-paste-20191112120723931.png)
 
 ##### 4.6 Sentence Order Prediction (SOP)
 - compare head-to-head three experimental conditions for the additional inter-sentence loss
@@ -253,15 +253,15 @@ $$
    - SOP (ALBERT-style) (base config)
 - the NSP loss brings no discriminative power to the SOP task (52.0% accuracy, similar to the random-guess performance for the “None” condition)
    - NSP ends up modeling only topic shift
-![](/_site/img/markdown-img-paste-20191112121058671.png)
+![](/img/markdown-img-paste-20191112121058671.png)
 
 ##### 4.7 Effect of Network Depth and Width
 - check how depth (number of layers) and width (hidden size) affect the performance of ALBERT
 - the performance of an ALBERT-large configuration
    - Layer 개수로 실험: 12 layer 이상부터는 큰 성능차이 없음
-![](/_site/img/markdown-img-paste-2019111213351073.png)
+![](/img/markdown-img-paste-2019111213351073.png)
    - Hidden size로 실험: 4096 정도가 괜찮았음 (~~왜 3-layer로 한거지..~~)
-![](/_site/img/markdown-img-paste-20191112134323631.png)
+![](/img/markdown-img-paste-20191112134323631.png)
 
 ##### 4.8 What if we train for the same amount of time?
 - Table 3에서는 BERT-large 가 ALBERT-xxlarge 보다 3.17배 빠름
@@ -270,14 +270,14 @@ $$
 - BERT로 34시간동안 400k step돌린 것과 ALBERT로 32시간동안 125k 돌린것이 얼추 시간이 비슷하니 성능을 비교해보기로함 (the performance of a BERT-large model after 400k training steps (after 34h of training), roughly equivalent with the amount of time needed to train an ALBERT-xxlarge model with 125k training steps (32h of training))
 - 결과는 ALBERT-xxlarge가 BERT-large보다 확실히 좋음 (ALBERT-xxlarge is significantly better than BERT-large: +1.5% better on Avg, with the difference on RACE as high as +5.2%)
 
-![](/_site/img/markdown-img-paste-20191112135024847.png)
+![](/img/markdown-img-paste-20191112135024847.png)
 
 ##### 4.9 Do very wide ALBERT models need to be deep(er) too?
 - Hidden size가 크면 네트워크도 더 깊게 쌓아야되는지 실험함
 - H=1024인 경우에 12-layer와 24-layer차이가 크지 않았음 (sec 4.7)
 - H=4096인 경우는 또 다를수 있으니 테스트해봤는데 결과는 큰 차이가 없게 나옴
 
-![](/_site/img/markdown-img-paste-20191112135257813.png)
+![](/img/markdown-img-paste-20191112135257813.png)
 
 ##### 4.10 Additional training data and dropout effects
 - pretraining data는 Wikipedia와 BookCORPUS만 썼는데, XLNet이나 RoBERTa에서 썼던것 처럼 추가 데이터를 쓰면 어떤 효과가 있는지 알아보고자함
@@ -289,12 +289,12 @@ $$
 - dropout 없애니 MLM이 더 잘됨
 - As a result, we decide to remove dropout to further increase our model capacity. (~~왜 드랍아웃 없앤게 model capacity를 올리는거지.. 약간 다른개념 아닌가.. 학습이 더 잘되서 저렇게 말한건가 -> 학습 잘되면 오버핏도 잘되고 == model capa 높으면 오버핏도 잘되고 == 드랍아웃 없으면 오버핏도 잘되고~~)
 
-![](/_site/img/markdown-img-paste-20191112135823400.png)
+![](/img/markdown-img-paste-20191112135823400.png)
 
 - dropout을 빼니 downstream 결과도 더 좋아짐
    - 실험적으로 (Szegedy et al., 2017) 그리고 이론적으로 (Li et al., 2019) batchnorm과 dropout을 CNN에 쓰면 성능이 더 떨어진다는 결과도 있음 (combination of batch normalization and dropout in Convolutional Neural Networks may have harmful results)
    - 예측하기로는 transformer 구조에서 dropout이 performance를 떨어뜨리는거 같은데 다른 transformer based model에서도 검증이 필요할 것 같다고함
-![](/_site/img/markdown-img-paste-20191112140551726.png)
+![](/img/markdown-img-paste-20191112140551726.png)
 
 ##### 4.11 Current state-of-te-art on NLU tasks
 - dev set 성능 기준으로 선택함
@@ -308,9 +308,9 @@ $$
    - RACE test accuracy of 89.4
       - RACE test의 경우 크게 좋아짐 (jump of +17.4% absolute points over BERT (Devlin et al., 2019), +7.6% over XLNet (Yang et al., 2019), +6.2% over RoBERTa (Liu et al., 2019), and 5.3% over DCMI+ (Zhang et al., 2019))
 - single model의 기존 SOTA의 ensemble보다 좋다고 어필
-![](/_site/img/markdown-img-paste-20191112142949229.png)
+![](/img/markdown-img-paste-20191112142949229.png)
 
-![](/_site/img/markdown-img-paste-20191112143016109.png)
+![](/img/markdown-img-paste-20191112143016109.png)
 
 #### 5. Discussion
 - ALBERT-xxlarge 모델이 BERT-large보다 params이 적고 성능도 더 좋지만 computationally more expensive함
