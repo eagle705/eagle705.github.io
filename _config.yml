@@ -34,7 +34,7 @@ kramdown:
 #
 owner:
   name: eagle705
-  avatar: leonids-logo.png
+  avatar: eagle705-logo.png  # leonids-logo.png
   job: "문과처럼(?) 살고 싶은 머신러닝 개발자"
   bio: "Better is one day in your court than a thousand elsewhere."
   email: xelloss705@naver.com
@@ -43,7 +43,7 @@ owner:
   facebook: hisdevelopers #username
   google:
     plus: #username
-    analytics:
+    analytics: UA-110980734-1
     verify:
     ad-client:
     ad-slot:

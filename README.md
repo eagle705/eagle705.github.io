@@ -1,7 +1,11 @@
 # Update 04/01/2020 by JS
 - MathJax 추가: https://mkkim85.github.io/blog-apply-mathjax-to-jekyll-and-github-pages/
 - About 수정시 markdown->html convert 이용: https://markdowntohtml.com/
-
+- 참고할만한 같은 테마 블로그:
+  - https://youduk.netlify.com/
+  - https://blog.rajephon.dev/archive/
+  - http://jaekwangkim.com/
+  
 
 # Update 07/09/2018
 
