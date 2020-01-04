@@ -53,4 +53,10 @@
   <link rel="shortcut icon" href="{{ site.url }}/favicon.ico">
   <!-- 32x32 -->
   <link rel="shortcut icon" href="{{ site.url }}/favicon.png">
+  
+  <!-- latex을 위한 삽입 -->
+  {% if page.use_math %}
+    {% include mathjax_support.html %}
+  {% endif %}
+  
 </head>
