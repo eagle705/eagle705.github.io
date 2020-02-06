@@ -1,3 +1,4 @@
+
 ---
 layout: post
 title:  "온톨로지와 RDF에 대한 개념설명 및 생성방법 "

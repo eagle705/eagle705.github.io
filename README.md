@@ -7,6 +7,8 @@
   - http://jaekwangkim.com/
 
 - 로고변경 & 파비콘변경: https://www.icoconverter.com/
+- Jekyll installation on Mac: https://junhobaik.github.io/start-jekyll-blog/
+- Latex 캡쳐, 최고의 툴(?) Mathpix: https://mathpix.com/
 
 # Update 07/09/2018
 
