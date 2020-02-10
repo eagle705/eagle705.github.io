@@ -171,13 +171,13 @@ use_math: true
 - 이런식으로 하면 대화할때 각 메세지의 conversation turn을 알 수 있음
 - 대화속의 각 턴을 답변으로 하고 이전 턴들을 context로 하면 (*context, response*) pair training dataset을 만들 수 있음
 - generation quality를 높이기 위해, 다음과 같은 조건을 만족하면 메세지를 삭제함
-  - 1. subword의 개수가 2개보다 적거나 128개보다 많은 경우
-  - 2. alphabetic characters의 percentage가 70% 이하인 경우
-  - 3. message가 URL을 갖고 있는 경우
-  - 4. author's username에 "bot"이 포함된 경우
-  - 5. 메세지가 100번 이상 반복된 경우
-  - 6. parent's text와 high n-gram이 겹치는 경우
-  - 7. commercial text classifier가 메세지가 안전하지 않거나 공격적이라고 분류한 경우
+  - subword의 개수가 2개보다 적거나 128개보다 많은 경우
+  - alphabetic characters의 percentage가 70% 이하인 경우
+  - message가 URL을 갖고 있는 경우
+  - author's username에 "bot"이 포함된 경우
+  - 메세지가 100번 이상 반복된 경우
+  - parent's text와 high n-gram이 겹치는 경우
+  - commercial text classifier가 메세지가 안전하지 않거나 공격적이라고 분류한 경우
 - 추가로 메세지 내에서 parent's text를 인용한건 따로 제거했음
 - 메세지가 제거된 경우 그 메세지 기준 sub-tree는 다 drop시킴
 - 필터링 후에 남은 (*context, response*) pair의 개수: 867M
@@ -237,13 +237,13 @@ $$
 - ```“Why do you like the ocean?”``` 이라는 질문이 input으로 있을 때 결과
   - beam search는 반복적인 답변, uninteresting 답변이 많지만 sample-and-rank의 경우 다양한 답변 및 context-rich 답변이 가능
   - 예시
-    - ![](/img/markdown-img-paste-20200206172821805.png){: height="50%" width="50%"}
-    - ![](/img/markdown-img-paste-20200206173112900.png){: height="50%" width="50%"}
+    ![](/img/markdown-img-paste-20200206172821805.png){: height="50%" width="50%"}
+    ![](/img/markdown-img-paste-20200206173112900.png){: height="50%" width="50%"}
 - Key point!
   - ```with low perplexity so samples can be taken at high temperature to produce human-like content```
 - sample-and-rank에서 *N* = 20, *T* = 0.88로 셋팅
 - Figure 1을 보면, decoding strategy를 고정했을때 perplexity를 개선하면 SSA가 높아지는걸 볼 수 있음
-- ![](/img/markdown-img-paste-20200206173741526.png){: height="50%" width="50%"}
+![](/img/markdown-img-paste-20200206173741526.png){: height="50%" width="50%"}
 
 
 ##### 3.5 Sample conversations
