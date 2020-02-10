@@ -108,13 +108,13 @@ use_math: true
 - 평가할떄 들어가는 주관의 정도는 crowd worker의 agreement로 정량화 할수 있음 (```The degree of subjectivity is somewhat quantified in the crowd worker agreement```)
 - 모든 모델 성능평가에 대한 crowd worker의 consistency를 측정하기 위해 agreement와 Krippendorff's alpha (Krippendorff, 2011)를 사용함 (https://en.wikipedia.org/wiki/Krippendorff%27s_alpha)
 
-![](/img/markdown-img-paste-20200205191123735.png)
+![](/img/markdown-img-paste-20200205191123735.png){: height="50%" width="50%"}
 
 - Sensibleness와 Specificity를 하나의 metric으로 사용하기 위해 간단히 두 값을 평균냈고 이를 SSA (Sensibleness and Specificity Average)라 표현
 - 점수:
   - GenericBot: 35%
   - DialoGPT: 51%
-![](/img/markdown-img-paste-20200206001401575.png)
+![](/img/markdown-img-paste-20200206001401575.png){: height="50%" width="50%"}
 
 ##### 2.2 Static Evaluation
 - 모델 비교를 편하게 하기 위한 common benchmark가 필요했음
@@ -187,7 +187,7 @@ use_math: true
 
 ##### 3.2 Model Architecture
 
-![](/img/markdown-img-paste-20200206184512464.png)
+![](/img/markdown-img-paste-20200206184512464.png){: height="50%" width="50%"}
 
 - Meena model에서 가장 성능이 좋았던건, Evolved Transforemr (ET) (So et al., 2019) seq2seq model임 (with 2.6B parameters)
 - 1 ET encoder block + 13 ET decoder blocks 사용
@@ -237,13 +237,13 @@ $$
 - ```“Why do you like the ocean?”``` 이라는 질문이 input으로 있을 때 결과
   - beam search는 반복적인 답변, uninteresting 답변이 많지만 sample-and-rank의 경우 다양한 답변 및 context-rich 답변이 가능
   - 예시
-    - ![](/img/markdown-img-paste-20200206172821805.png)
-    - ![](/img/markdown-img-paste-20200206173112900.png)
+    - ![](/img/markdown-img-paste-20200206172821805.png){: height="50%" width="50%"}
+    - ![](/img/markdown-img-paste-20200206173112900.png){: height="50%" width="50%"}
 - Key point!
   - ```with low perplexity so samples can be taken at high temperature to produce human-like content```
 - sample-and-rank에서 *N* = 20, *T* = 0.88로 셋팅
 - Figure 1을 보면, decoding strategy를 고정했을때 perplexity를 개선하면 SSA가 높아지는걸 볼 수 있음
-- ![](/img/markdown-img-paste-20200206173741526.png)
+- ![](/img/markdown-img-paste-20200206173741526.png){: height="50%" width="50%"}
 
 
 ##### 3.5 Sample conversations
@@ -288,7 +288,7 @@ $$
 - perplexities가 안좋은 Meena 버전에서 잘 발견되는 현상임 (base 모델에서는 잘 안보이는 현상이긴 함)
 - 이를 해결하기 위해 rule을 도입했고 대화 중 2개의 턴에서 long comon sub-sequences를 갖고 있으면 해당 candidates를 제거하게 함
 - 이를 통해 SSA 성능이 74% -> 79%로 올라감
-- ![](/img/markdown-img-paste-20200206182100400.png)
+- ![](/img/markdown-img-paste-20200206182100400.png){: height="50%" width="50%"}
 
 ##### 5.3 Safty Layer
 - full Meena 버전의 경우, 내용적으로 민감한 내용들은 filtering mechanism을 적용한 classifier layer를 추가해서 걸렀음 (evaluation 및 실제 대화할 때)
