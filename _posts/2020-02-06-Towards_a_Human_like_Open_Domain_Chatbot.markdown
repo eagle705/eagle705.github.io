@@ -17,7 +17,7 @@ use_math: true
 - 그의 행적은 트위터에.. https://twitter.com/xpearhead
 - 미디엄도.. https://medium.com/@dmail07
 
-![](/img/markdown-img-paste-20200204110046703.png)
+![](/img/markdown-img-paste-20200204110046703.png){: height="50%" width="50%"}
 
 
 #### 느낀점
