@@ -251,13 +251,13 @@ $$
 - 대화 생성때는 sample-and-rank를 사용했음
 - Meena가 open-domain에서 대화를 그럭저럭 잘하지만 "Is it indoors or outdoors?"라고 묻는 부분을 보면 not sensible한 부분도 있음을 확인할 수 있음
 - 첫번째 예제:
-  - ![](/img/markdown-img-paste-20200206175349870.png){: height="50%" width="50%"}
+  ![](/img/markdown-img-paste-20200206175349870.png){: height="50%" width="50%"}
 - 두번째 예시: context 를 사용해서 대화하기도함 (내용이 실제로 맞음..)
-  - ![](/img/markdown-img-paste-20200206175413116.png){: height="50%" width="50%"}
+  ![](/img/markdown-img-paste-20200206175413116.png){: height="50%" width="50%"}
 - 세번째 예시: 철학얘기하는 챗봇
-  - ![](/img/markdown-img-paste-20200206175435154.png){: height="50%" width="50%"}
+  ![](/img/markdown-img-paste-20200206175435154.png){: height="50%" width="50%"}
 - 네번째 예시: 멀티턴 환경에서 농담하는 챗봇
-  - ![](/img/markdown-img-paste-20200206175752805.png){: height="50%" width="50%"}
+  ![](/img/markdown-img-paste-20200206175752805.png){: height="50%" width="50%"}
 - 자세한 대화 데이터셋은 Github 참고: https://github.com/google-research/google-research/tree/master/meena/
 
 
@@ -267,8 +267,8 @@ $$
 ##### 4.1 SSA-perplexity correlation
 - the number of layers, attention heads, total training steps 등을 바꾸기도 하고 ET쓸지 regular Transformer 쓸지, hard labels 쓸지 soft labels 등등 고민하며 실험했음
 - static eval에서 correlation이 거의 선형으로 보였지만 lower values of perplexity에서도 잘되는지 확인하고 싶어서 interactive eval도 수행했고 잘나온걸 확인 (dataset으로 인한 bias 문제는 없다고 주장할 수 있게 됨)
-- ![](/img/markdown-img-paste-20200206180455314.png){: height="50%" width="50%"}
-- ![](/img/markdown-img-paste-20200206180338161.png){: height="50%" width="50%"}
+![](/img/markdown-img-paste-20200206180455314.png){: height="100%" width="100%"}
+![](/img/markdown-img-paste-20200206180338161.png){: height="50%" width="50%"}
 - ```the lowest perplexity model was evaluated 7 times with static evaluations and also 7 times with interactive evaluations.```
 
 #### 5. Further Advancing SSA
@@ -288,7 +288,7 @@ $$
 - perplexities가 안좋은 Meena 버전에서 잘 발견되는 현상임 (base 모델에서는 잘 안보이는 현상이긴 함)
 - 이를 해결하기 위해 rule을 도입했고 대화 중 2개의 턴에서 long comon sub-sequences를 갖고 있으면 해당 candidates를 제거하게 함
 - 이를 통해 SSA 성능이 74% -> 79%로 올라감
-- ![](/img/markdown-img-paste-20200206182100400.png){: height="50%" width="50%"}
+![](/img/markdown-img-paste-20200206182100400.png){: height="50%" width="50%"}
 
 ##### 5.3 Safty Layer
 - full Meena 버전의 경우, 내용적으로 민감한 내용들은 filtering mechanism을 적용한 classifier layer를 추가해서 걸렀음 (evaluation 및 실제 대화할 때)
