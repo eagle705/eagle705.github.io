@@ -10,7 +10,7 @@ comments: true
 본 문서는 2018 Google I/O에서 소개된 Google Home, Duplex 등에 대해서 소개하는 문서입니다.   
 Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 
-![googleIO](https://eagle705.github.io/img/2018google.png)
+![googleIO](https://eagle705.github.io/img/2018google.png){: height="50%" width="50%"}
 
 ### 2018 Google I/O란?
 - 정의: 구글 I/O는 구글이 미국 캘리포니아 주 샌프란시스코에서 한 해에 한 번 개최하는 개발자 지향 콘퍼런스
@@ -41,7 +41,7 @@ Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 - 핸드폰에 탑재된 Assistant 기능을 시간, 장소, 최신 로그 등을 기반으로 최근에 redesign함
 - 네비게이션, 음식 배달, 예약 (Google Duplex) 기능 등도 제공할 예정
 - 올해 안에 한국에도 Google Home & Google Home mini 출시 예정   
-![googlehome](https://eagle705.github.io/img/googlehome.png)
+![googlehome](https://eagle705.github.io/img/googlehome.png){: height="50%" width="50%"}
 
 ### Google Duplex
 단언컨데, 이번 Google I/O의 하이라이트는 Google Duplex다. 최신 딥러닝 기술을 ~~(갈아넣었다)~~ 잘 적용시켰다.
@@ -52,9 +52,9 @@ Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 - 전화로 예약을 잡아주는 시스템
 - Demo Video at 1:07 https://youtu.be/bd1mEm2Fy08?t=1m7s   
 - 자연스러운 대화를 위해  ”Ummm” 같은 추임새와  Latency (0~10초)를 추가함
-![googleconversation](https://eagle705.github.io/img/googleconversation.png)   
+![googleconversation](https://eagle705.github.io/img/googleconversation.png){: height="50%" width="50%"}   
 
-![googleduplex](https://eagle705.github.io/img/googleduplex.png)
+![googleduplex](https://eagle705.github.io/img/googleduplex.png){: height="50%" width="50%"}
 
 
 ### Google Duplex에 적용된 기술
@@ -65,14 +65,14 @@ Duplex Demo: https://www.youtube.com/watch?v=bd1mEm2Fy08
 - Model: RNN 기반 모델 (RNN, CNN, Attention, ..., 많을듯) 
 - Output: Text -> TTS -> Audio   
 
-![Duplex](https://eagle705.github.io/img/duplex.png)
+![Duplex](https://eagle705.github.io/img/duplex.png){: height="50%" width="50%"}
 
 전체적인 메커니즘은 음성인식 -> 챗봇 -> 음성합성 구조라고 할 수 있다
 
 ### 딥러닝 (Deep Learning) 
 - 왜 딥러닝으로 하면 잘 될까?   
 ->  Neural Network은 “어떤” 함수도 근사가 가능!   
-![universalApprox](https://eagle705.github.io/img/universalApprox.png)   
+![universalApprox](https://eagle705.github.io/img/universalApprox.png){: height="50%" width="50%"}   
  
 ![MLP_playground](https://eagle705.github.io/img/MLP_playground.gif)
 
@@ -94,7 +94,7 @@ Parametric model만으론 정보성 서비스를 할 수 없음, KB를 활용하
 - 도메인 선정:   
 기본적으로 챗봇에서 Open domain은 Hardest한 문제임..!   
 -> ```도메인을 적절하게 좁히는게``` 높은 수준의 서비스 만드는 관건!!
-![chatbotframework](https://eagle705.github.io/img/chatbotframework.png)
+![chatbotframework](https://eagle705.github.io/img/chatbotframework.png){: height="50%" width="50%"}
 
 
 ### 느낀 점

@@ -17,7 +17,7 @@ use_math: true
 
 ### Who is an Author?
 
-![](/img/markdown-img-paste-20190501115722701.png)
+![](/img/markdown-img-paste-20190501115722701.png){: height="50%" width="50%"}
 
 #### 느낀점
 - Multi-Head-Attention을 빠르게 구현하기 위해 Matrix 연산으로 처리하되, Embedding Tensor를 쪼갠 후 합치는게 아닌 reshape & transpose operator로 shape을 변경 후 한꺼번에 행렬곱으로 계산해서 다시 reshape 함으로써 병렬처리가 가능하게끔 구현하는게 인상적이었음
@@ -64,7 +64,7 @@ use_math: true
 - decoder는 주어진 **z**로 부터 output sequence (y<sub>1</sub>, ..., y<sub>m</sub>)를 생성함
 - 각 스텝에서 모델은 auto-regressive함(previously generated symbol을 addtional input으로 사용)
 
-![center](/img/markdown-img-paste-20190501125708512.png)
+![center](/img/markdown-img-paste-20190501125708512.png){: height="50%" width="50%"}
 
 
 ##### 3.1. Encoder and Decoder Stacks
@@ -125,7 +125,7 @@ use_math: true
   - key는 weight 뽑는 용
   - value는 weight를 적용할때 실제 곱해지는 용
 
-![center](/img/markdown-img-paste-20190501205859980.png)
+![center](/img/markdown-img-paste-20190501205859980.png){: height="50%" width="50%"}
 
 ##### 3.2.1. Scaled Dot-Product Attention
 - 본 논문에서 쓰는 어텐션을 "Scaled Dot-Product Attention"이라 칭함
@@ -135,7 +135,7 @@ use_math: true
 3. softmax function으로 value에 적용할 weight를 얻음
 - 실제로 쓸 땐, A set of queries에 대한 Attention은 동시에 계산하기 때문에 Matrix 형태로 사용함
 
-![center](/img/markdown-img-paste-20190501213624239.png)
+![center](/img/markdown-img-paste-20190501213624239.png){: height="50%" width="50%"}
 
 - 많이 쓰이는 Attention은 주로 additive attention & dot-product attention인데 본 논문에서 쓴건 dot-product쪽임, 1/$\sqrt{d_k}$로 스케일링 해줬다는 차이가 있긴 함
 - 이론적으론 둘 다 복잡도는 비슷하나, dot-product attention이 훨씬 빠르고 space-efficient한 이유는 highly optimized matrix multiplication code로 구현되어있기 때문임
@@ -162,7 +162,7 @@ def scaled_dot_product_attention(self, Q, K, V, mask=None, flag=None):
 - 한 마디로하면, 그냥 한번만 Attention function쓰는게 아니라, 기존 Dim을 쪼개서 여러개로 나누고 거기에 여러번 Attention funcion 적용하면 더 다양한 Attention이 적용되고(여기엔 살짝 랜덤한..부분이 있겠지) 더 다양한 representation을 얻을 수 있게 된다는 말임
 - 차원을 나눈 상태에서 Attention function은 병렬적으로 계산되고 $d_v$ 차원의 output vectors가 생성됨
 
-![](/img/markdown-img-paste-20190502112126665.png)
+![](/img/markdown-img-paste-20190502112126665.png){: height="50%" width="50%"}
 - Q, K, V는 문장 내에서 sequence정보를 포함하고 있는 Notation인듯
 - dim of Q == num of tokens X $d_{model}$ 로 생각하면 될 듯
 - 본 논문에서는 mutli-head를 8개로 나눠서, 전체 512 차원을 64 차원의 8개 유닛으로 만듬
@@ -262,7 +262,7 @@ def create_masks(inp, tar):
 ##### 3.3. Position-wise Feed-Forward Networks
 - Attention sub-layers 다음엔 FC(Fully connected feed-forward network)가 붙게 됨
 - two linear transformation with ReLU가 적용됨
-![](/img/markdown-img-paste-2019050211494879.png)
+![](/img/markdown-img-paste-2019050211494879.png){: height="50%" width="50%"}
 - input and output dim,  $dim_{model}$ = 512
 - inner-layer dim, $dim_{ff}$ = 2048
 
@@ -282,7 +282,7 @@ x = self.add_positional_encoding(x)
 - 그렇기 때문에 position information을 inject해줘야함
 - "positional encodings"를 input embedding에 더하겠음 (```input embedding + positional encodings```)
 
-![](/img/markdown-img-paste-20190502141136158.png)
+![](/img/markdown-img-paste-20190502141136158.png){: height="50%" width="50%"}
 
 ```python
 def add_positional_encoding(self, embed):
@@ -314,7 +314,7 @@ def add_positional_encoding(self, embed):
 - self-attention과 다른 알고리즘 비교하겠음
 - 대부분은 Self-Attention이 좋음 Complexity빼고! 이 부분은 주변의 r개만 보는 restricted self-attention 버전으로 해결할수 있을듯
 
-![](/img/markdown-img-paste-20190502141746932.png)
+![](/img/markdown-img-paste-20190502141746932.png){: height="50%" width="50%"}
 
 #### 5. Training
 ##### 5.1. Training Data and Batching
@@ -343,7 +343,7 @@ def add_positional_encoding(self, embed):
 - *warmup_steps* 에서는 lr이 linearly 증가함
 - 그 후에는 inverse square root of the step number 비율로 감소함
 - *warmup_steps* = 4,000으로 셋팅함
-![](/img/markdown-img-paste-20190502143435933.png)
+![](/img/markdown-img-paste-20190502143435933.png){: height="50%" width="50%"}
 
 ##### 5.4. Regularization
 - 3가지 기법 적용함 (~~왜 논문에는 근데 레벨이 2개밖에 없지..~~)
@@ -364,16 +364,16 @@ def add_positional_encoding(self, embed):
   - length penalty $\alpha = 0.6$
 - Hyper params는 Development set 기준으로 실험적으로 선택함
 - Maximum output length = input length + 50
-![](/img/markdown-img-paste-20190502145647294.png)
+![](/img/markdown-img-paste-20190502145647294.png){: height="50%" width="50%"}
 
 ##### 6.2. Model Variations
 - 모델 컴포넌트들의 중요도를 평가하기 위해 varied model에 대해서 평가함
-![](/img/markdown-img-paste-20190502150720901.png)
+![](/img/markdown-img-paste-20190502150720901.png){: height="50%" width="50%"}
 
 ##### 6.3. English Constituency Parsing
 - Transformer가 generalize 잘 되는지 평가함
 - 생각보다 잘 됨
-![](/img/markdown-img-paste-20190502150945337.png)
+![](/img/markdown-img-paste-20190502150945337.png){: height="50%" width="50%"}
 
 #### 7. Conclusion
 - Attention만 의존하는 모델 처음으로 발표함
@@ -387,8 +387,8 @@ def add_positional_encoding(self, embed):
 
 ##### Attention 시각화
 
-![](/img/markdown-img-paste-20190502152720420.png)
+![](/img/markdown-img-paste-20190502152720420.png){: height="50%" width="50%"}
 
-![](/img/markdown-img-paste-20190502152731359.png)
+![](/img/markdown-img-paste-20190502152731359.png){: height="50%" width="50%"}
 
-![](/img/markdown-img-paste-20190502152738233.png)
+![](/img/markdown-img-paste-20190502152738233.png){: height="50%" width="50%"}

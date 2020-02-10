@@ -99,7 +99,7 @@ docker load < oj-redis
 
 
 ### NVIDIA Docker Settings
-![docker_image](https://cloud.githubusercontent.com/assets/3028125/12213714/5b208976-b632-11e5-8406-38d379ec46aa.png)
+![docker_image](https://cloud.githubusercontent.com/assets/3028125/12213714/5b208976-b632-11e5-8406-38d379ec46aa.png){: height="50%" width="50%"}
 - 말 나온김에.. 딥러닝 필수품인 NVIDIA docker를 셋팅해보자
 - nvidia-docker 와 docker 두개를 설치해줘야한다
 - reference: 

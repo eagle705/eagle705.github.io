@@ -16,7 +16,7 @@ use_math: true
 ### Who is an Author?
 Xiaodong Liu 라는 친구인데 꽤 꾸준히 연구활동을 하는 친구인것 같다.
 
-![author](/img/markdown-img-paste-20191007162823137.png)
+![author](/img/markdown-img-paste-20191007162823137.png){: height="50%" width="50%"}
 
 
 #### 느낀점
@@ -38,7 +38,7 @@ Xiaodong Liu 라는 친구인데 꽤 꾸준히 연구활동을 하는 친구인�
 
 #### 2. Multi-step inference with SAN
 
-![](/img/markdown-img-paste-20191007175046829.png)
+![](/img/markdown-img-paste-20191007175046829.png){: height="50%" width="50%"}
 
 - NLI task는 P, H의 관계 R을 찾는게 목표임
 - 관계 R은 ``` entailment, neutral and contradiction``` 이거 3개로 이루어짐 (연관, 중립, 모순)
@@ -131,11 +131,11 @@ SNLI
 ##### 3.3 Results
 - Single-step과 multi-step (SAN) 비교
 - multi-step 비교한 모델이 더 잘함
-![](/img/markdown-img-paste-20191008134932951.png)
+![](/img/markdown-img-paste-20191008134932951.png){: height="50%" width="50%"}
 - 대부분 잘나왔고 BERT랑 GPT에 좀 밀리는 감이 있지만 적은 파라미터로 잘했다고 저자는 어필함
 - BERT위에 SAN answer module 얹어서 해봤는데 잘나옴
 - infernece step은 2보다 5, 6등이 더 잘나옴.. 실험에서는 5로 fix하고 실험함
-![](/img/markdown-img-paste-20191008135900559.png)
+![](/img/markdown-img-paste-20191008135900559.png){: height="50%" width="50%"}
 
 
 #### 4. Conclusion

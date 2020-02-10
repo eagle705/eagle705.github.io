@@ -18,7 +18,7 @@ use_math: true
 - 이 논문은 NeurIPS 2019
 - 191219 기준으로 인용수 26회
 
-![](/img/markdown-img-paste-20191219150255284.png)
+![](/img/markdown-img-paste-20191219150255284.png){: height="50%" width="50%"}
 
 #### 느낀점
 - NLG에서 SOTA를 꽤 찍었는데 방식이 좀 신기
