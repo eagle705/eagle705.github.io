@@ -56,13 +56,13 @@ use_math: true
   - GPT의 경우엔 left-to-right 임
   - BERT의 경우는 bidrectional LM임
 
-![](/img/markdown-img-paste-20191219180921489.png)
+![](/img/markdown-img-paste-20191219180921489.png){: height="50%" width="50%"}
 
 - BERT가 성능이 매우 좋은 모델이지만 특성상 NLG task에 적용이 어려움
 - 본 연구에서는 UNIfied pre-trained Language Model (UNILM)을 제안하면서 모델을 NLU와 NLG task에 모두 적용하고자함
 - UNILM은 multi-layer Transformer network이고 pre-train을 하면서 동시에 3가지 타입의 unsupervised language modeling objectives에 대해 학습함
 
-![](/img/markdown-img-paste-20191219181148913.png)
+![](/img/markdown-img-paste-20191219181148913.png){: height="50%" width="50%"}
 
 - 특별히 몇가지의 cloze tasks(빈칸 채우기)를 디자인했고 거기서 보는 context는 다음같음
   - unidirectional LM
@@ -88,7 +88,7 @@ use_math: true
 - 이를 위해서 self-attention에 대해 different masks 를 도입함 (```use masking to control how much context the token should attend ```)
 - pre-training 끝나면 downstream task를 위해 task-specific data로 fine-tuning해서 쓸 수 있음
 
-![](/img/markdown-img-paste-20191220121421557.png)
+![](/img/markdown-img-paste-20191220121421557.png){: height="50%" width="50%"}
 
 
 ##### 2.1 Input Representation
@@ -197,7 +197,7 @@ $$
   - first 640 for CNN/DailyMail 
   - first 192 tokens for Gigaword
 
-![](/img/markdown-img-paste-20191220225600149.png)
+![](/img/markdown-img-paste-20191220225600149.png){: height="50%" width="50%"}
 
 - Evaluation
   - Metric:
@@ -211,7 +211,7 @@ $$
 
 ##### 3.2 Question Answering (QA)
 
-![](/img/markdown-img-paste-20191220230538529.png)
+![](/img/markdown-img-paste-20191220230538529.png){: height="50%" width="50%"}
 
 - Extractive QA: 답이 passage안의 text span라고 가정
   - bidrectional encoder를 사용해서 접근함
@@ -249,7 +249,7 @@ $$
 
 ##### 3.3 Question Generation
 
-![](/img/markdown-img-paste-20191220235643261.png)
+![](/img/markdown-img-paste-20191220235643261.png){: height="50%" width="50%"}
 
 - passage와 answer가 주어졌을 때, question을 생성하는 것
 - seq2seq 문제로 보고 풀겠음
@@ -266,14 +266,14 @@ $$
 
 ###### Generated Questions Improve QA
 
-![](/img/markdown-img-paste-20191221000237591.png)
+![](/img/markdown-img-paste-20191221000237591.png){: height="50%" width="50%"}
 
 - Question generation model로 질문을 만들어서(data augmentation) 다시 학습시키면 기존의 question answering model의 성능이 올라감
 
 
 ##### 3.4 Response Generation
 
-![](/img/markdown-img-paste-20191221000853984.png)
+![](/img/markdown-img-paste-20191221000853984.png){: height="50%" width="50%"}
 
 - document-grounded dialog response generation task로 UNILM을 평가해봄
 - multi-turn conversation history와 a web document as the knowledge source가 주어진 상태에서 시스템은 대화에도 알맞고, web document contents도 반영하는 답변을 해야함
@@ -290,7 +290,7 @@ $$
 
 ##### 3.5 GLUE Benchmark
 
-![](/img/markdown-img-paste-20191221001042434.png)
+![](/img/markdown-img-paste-20191221001042434.png){: height="50%" width="50%"}
 
 - (~~버트보다 좋은 성능 가진 모델이 많이 나왔는데 버트랑만 비교하는건 좀 아쉽다~~)
 
