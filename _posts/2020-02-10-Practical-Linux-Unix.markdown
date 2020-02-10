@@ -1,11 +1,35 @@
 ---
 layout: post
-title:  "Unix부터"
-excerpt:   "from Stanford cs1U"
+title:  "Linux, Unix 정리"
+excerpt:   "from Stanford CS1U"
 categories: cslog
 tags: linux
 comments: true
 ---
+
+## Shorcut
+자주 쓰는 명령어 모음
+- lshw: 하드웨어 스펙보기
+- 예약변수: ```HOME``, ```PATH```, ```PWD```, ```LANG```, 등등
+
+
+### 위치 매개 변수(Positional Parameters)
+| 문자 |	설명 |
+| --- | --- |
+|$0 |	실행된 스크립트 이름 |
+|$1 |	$1 $2 $3...${10}인자 순서대로 번호가 부여된다. 10번째부터는 "{}"감싸줘야 함 |
+|$* |	전체 인자 값 |
+|$@ |	전체 인자 값($* 동일하지만 쌍따옴표로 변수를 감싸면 다른 결과 나옴) |
+|$# |	매개 변수의 총 개수 |
+
+### 특수 매개 변수(Special Parameters)
+| 문자 |	설명 |
+| --- | --- |
+|$$	| 현재 스크립트의 PID |
+|$? |	최근에 실행된 명령어, 함수, 스크립트 자식의 종료 상태 |
+|$!	| 최근에 실행한 백그라운드(비동기) 명령의 PID |
+|$-	| 현재 옵션 플래그 |
+|$_	| 지난 명령의 마지막 인자로 설정된 특수 변수 |
 
 ### Practical Unix
 프로젝트를 하다보니 얼추 쓸수는 있게 되었는데 뭔가 디테일이 부족하다고 느끼던 차, 스탠포드에서 강의가 있는걸 알게되서 한번 빠르게 정주행해야곘다 생각했습니다. 아래에 간단하게 정리했습니다.
@@ -72,3 +96,6 @@ http://eunguru.tistory.com/89
 https://practicalunix.org/content/week-3-pipelines
 
 #### week 4: Grep and Regular Expressions
+
+## Reference
+- https://blog.gaerae.com/2015/01/bash-hello-world.html

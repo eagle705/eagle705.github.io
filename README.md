@@ -9,6 +9,7 @@
 - 로고변경 & 파비콘변경: https://www.icoconverter.com/
 - Jekyll installation on Mac: https://junhobaik.github.io/start-jekyll-blog/
 - Latex 캡쳐, 최고의 툴(?) Mathpix: https://mathpix.com/
+- web font 바꾸기: https://amaze9001.tistory.com/95
 
 # Update 07/09/2018
 
