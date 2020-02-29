@@ -1,12 +1,17 @@
 # careers section data
 # if you don't have language feature(language.yml is empty), ignore "i18n" items
+
+- name: NAVER
+  link: https://www.naver.com/
+  date: Feb 2020 - <i class="fa fa-clock-o" aria-hidden="true" title="Until Now"></i>
+  job: Search & Document Analysis Engineer
+
 - name: Com2uS
   link: https://com2us.com/
-  date: Feb 2018 - <i class="fa fa-clock-o" aria-hidden="true" title="Until Now"></i>
+  date: Feb 2018 - Feb 2020
   job: AI Research Engineer (Chabot & NLP)
 
 - name: NAVER
   link: https://www.naver.com/
   date: July 2017 - August 2017
   job: Research Intern
-

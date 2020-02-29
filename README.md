@@ -10,6 +10,7 @@
 - Jekyll installation on Mac: https://junhobaik.github.io/start-jekyll-blog/
 - Latex 캡쳐, 최고의 툴(?) Mathpix: https://mathpix.com/
 - web font 바꾸기: https://amaze9001.tistory.com/95
+- ```CRLF will be replaced by LF in… ``` 에러 해결 :https://blog.jaeyoon.io/2018/01/git-crlf.html
 
 # Update 07/09/2018
 
