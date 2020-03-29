@@ -5,8 +5,9 @@
 
 // Font 
 @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
-@import url('https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.min.css');
-@import url('https://fonts.googleapis.com/css?family=Do+Hyeon|Jua&display=swap');
+// @import url('https://cdn.rawgit.com/innks/NanumSquareRound/master/nanumsquareround.min.css');
+// @import url('https://fonts.googleapis.com/css?family=Do+Hyeon|Jua&display=swap');
+@import url(//fonts.googleapis.com/earlyaccess/jejugothic.css); .jejugothic * { font-family: 'Jeju Gothic', sans-serif; }
 
 // Mixins
 @import "components/mixins";
