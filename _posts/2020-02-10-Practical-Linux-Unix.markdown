@@ -158,6 +158,7 @@ cat part-000 part_blog_normal_doc_20030317 > part_blog_normal_concat
   - rev 두번쓰는건 좀 느림..
   - parameter expansion을 쓰자
     - 참고: https://blog.gaerae.com/2015/01/bash-hello-world.html
+    
 ```
 # 뒤에꺼만 짜르기
 last=${data%,*}
@@ -171,6 +172,7 @@ last=${data##*,}
 
 # 결과: qux
 ```
+
 - 문자열 중간 짜르기
   - ref: https://stackoverflow.com/questions/5683367/how-to-cropcut-text-files-based-on-starting-and-ending-line-numbers-in-cygwin
 
@@ -178,6 +180,7 @@ last=${data##*,}
 - 큰 파일 짜르기
   - ref: https://linoxide.com/linux-how-to/split-large-text-file-smaller-files-linux/
   - https://askubuntu.com/questions/54579/how-to-split-larger-files-into-smaller-parts
+  
 ```bash
 split -l 라인수 파일 (옵션은 추후 참고)
 ```
@@ -196,6 +199,7 @@ wc -l 파일명
 ```
 
 - 큰 파일 label 기준으로 짜르기
+
 ```bash
 # label 2 기준으로 몇라인인지 숫자세기
 cat _blog_all_title_total.txt | grep -w $'\t2' | wc -l
