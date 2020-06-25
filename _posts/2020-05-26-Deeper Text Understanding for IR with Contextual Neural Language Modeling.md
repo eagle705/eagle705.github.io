@@ -24,7 +24,7 @@ comments: true
 - IR에 적용하는 Language Understanding쪽 연구
 - ```Three papers in deep retrieval and conversational search got accepted into SIGIR 2020!```
 
-![bg right 100%](img/2020-05-14-03-05-21.png)
+![](/img/2020-05-14-03-05-21.png){: height="50%" width="50%"}
 
 ## Abstract
 - 뉴럴넷은 복잡한 언어 패턴과 query-document relation을 자동으로 학습할 수 있는 새로운 가능성을 제공하고 있음
@@ -66,7 +66,7 @@ comments: true
   - BERT가 잘되니 적용해보겠음 (open-domain document에 학습하다보니 general pattern 학습함)
 
 ## Document Search with BERT
-![bg 100% right:30%](img/2020-05-14-01-47-55.png)
+![](/img/2020-05-14-01-47-55.png){: height="50%" width="50%"}
 - 본 논문에서는 off-the-shelf BERT architecture를 사용
   - sentence pair classification architecture를 의미
 - 마지막 레이어에서 binary classification을 통해 relevance의 확률을 예측함
@@ -79,7 +79,7 @@ comments: true
 - document score is the score of ```the first passage (BERT-FirstP), the best passage (BERT-MaxP), or the sum of all passage scores (BERT-SumP)```
 
 ## Document Search with BERT
-![bg 100% right:30%](img/2020-05-14-01-47-55.png)
+![](/img/2020-05-14-01-47-55.png){: height="50%" width="50%"}
 
 ### Augmenting BERT with Search Knowledge
 - search task는 다음 두가지를 모두 요구함
@@ -107,7 +107,7 @@ comments: true
     - web pages (tables, navigation bars, discontinuous text)
     - 50M web pages and 200 queries
   - For augmenting BERT with search data, we follow the domain adaptation setting from Dai et al. [1] and use the same Bing search log sample. The sample contains 0.1M queries and 5M query-document pairs.
-![bg 100% right:40%](img/2020-05-14-02-17-12.png)
+![](/img/2020-05-14-02-17-12.png){: height="50%" width="50%"}
 
 - Baselines and Implementations
   - Unsupervised baselines
@@ -134,7 +134,7 @@ comments: true
 - ClueWeb09-B에서는 BERT는 Coor-Ascent와 title query에서는 비슷하지만 description query에서는 더 좋은 성능을 보여줌
 - 위 결과를 종합하면 description queries에서는 BERT가 효과가 있음
 
-![bg 100% right:40%](img/2020-05-14-02-21-41.png)
+![](/img/2020-05-14-02-21-41.png){: height="50%" width="50%"}
 
 #### Sources of effectiveness
 - two layers from the BERT-MaxP model when predicting the relevance between a description query ‘Where are wind power installations located?’ and a sentence ‘There were 1,200 wind power installations in Germany’
@@ -142,7 +142,7 @@ comments: true
 - where-in 매칭은 context를 고려한다고 할 수 있음 (전통 IR에서는 이런 단어들은 무시함 (IDF가 낮아서))
 - 이런걸 보면 stopwords도 사실 relevance에 중요한 단서가 될 수 있음을 보여줌
 
-![bg 100% right:45%](img/2020-05-14-02-32-54.png)
+![](/img/2020-05-14-02-32-54.png){: height="50%" width="50%"}
 
 #### Title queries vs. description queries
 - 정리하면, description queries가 title queries를 이번 연구처럼 large margin을 갖고 이긴게 거의 처음임
@@ -156,7 +156,7 @@ comments: true
   - narrative (removing stopwords and punctuation)
 - ```BERT-MaxP``` makes large improvement on longer queries by modeling word meaning and context.
 
-![bg 100% right:40%](img/2020-05-14-02-49-20.png)
+![](/img/2020-05-14-02-49-20.png){: height="50%" width="50%"}
 
 ### Understanding the Search Task
 - Corpus-trained text representation이 꼭 search task와 align되는건 아님
@@ -168,9 +168,8 @@ comments: true
 - ```결과적으로 Bing search log로 학습하면 성능이 더 개선됨```
 
 
-![bg 100% right:40%](assets/img/2020-05-14-02-55-48.png)
+![](/img/2020-05-14-02-55-48.png){: height="50%" width="50%"}
 
----
 
 ## Conclusion
 <span style="font-size:70%">

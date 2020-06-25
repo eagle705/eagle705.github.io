@@ -14,8 +14,8 @@ comments: true
 - 마소에서 인턴했고 2021 fall 박사과정 자리 구하는중 (아직 석사라는 뜻)
 - 개인블로그 운영: https://michaelzhouwang.github.io/
 
-![100%](img/2020-06-18-18-12-06.png)
-![bg right 80%](img/2020-06-18-18-13-16.png)
+![](/img/2020-06-18-18-12-06.png){: height="50%" width="50%"}
+![](/img/2020-06-18-18-13-16.png){: height="50%" width="50%"}
 
 - 저자:
     - Wangchunshu Zhou, Ke Xu (Beihang University)
@@ -37,7 +37,7 @@ comments: true
 - text simplication and paraphrase generation task와 비슷함
 - 비슷한 단어 찾기와 맥락 의미 유지 두가지가 중요한데 대부분의 선행 연구는 첫번째 (동의어로 교체)에 초점이 맞춰짐
 
-![bg right:45% 85%](img/2020-05-26-16-14-52.png)
+![](/img/2020-05-26-16-14-52.png){: height="50%" width="50%"}
 
 - 하지만 사전같은 리소스는 제한되어 있고, 바꾼 단어가 문장에 어떤 영향 주는지를 고려못함
 
@@ -62,7 +62,7 @@ $$
 - $P\left(x_{k}^{\prime} | \widetilde{\boldsymbol{x}}, k\right)$ 이거는 k 번째 단어가 partially masked with embedding dropout인 경우임
 - 분모 나눈건 origin word 의 확률을 빼줘서 normalize 해준 것임
 
-![bg right:40% 100%](img/2020-05-26-16-17-22.png)
+![](/img/2020-05-26-16-17-22.png){: height="50%" width="50%"}
 
 ```python
 token_prediction_scores = prediction_scores[문장내에서 변경할 토큰 위치, bert_token_index]            
@@ -102,7 +102,6 @@ $$
 - ~~음..오른쪽은 cosine으로 벡터간 유사도 보겠다는 거고 왼쪽은 attention으로 그것의 중요도를 대략 계산해보겠다는 거 같군~~
 - 이렇게하면 예제에 나왔던 **hot** and **touch** 등의 단어는 validation (s_v) 점수가 낮게 나와서 랭킹에서 떨어지고 반면에 **powerful** 같은 단어는 높게 나와서 랭킹에서 올라감
 - 최종적으로 다음과 같이 점수를 linear combination 해서 단어를 선택할 수 있음
-
 
 
 $$
@@ -148,9 +147,9 @@ $$
 - original BERT는 기존 sota를 이길 수 없음 (Table 2 참고)
 - embedding dropout 후 SOTA 먹음
 - GAP score 라는 걸로 평가함 (MAP의 변형임)
-![bg right 100%](img/2020-05-26-17-14-49.png)
-![bg right 80%](img/2020-05-26-16-26-25.png)
-![bg right 80%](img/2020-05-26-16-31-38.png)
+![](/img/2020-05-26-17-14-49.png){: height="50%" width="50%"}
+![](/img/2020-05-26-16-26-25.png){: height="50%" width="50%"}
+![](/img/2020-05-26-16-31-38.png){: height="50%" width="50%"}
 
 ## Conclusion
 - annotated data and manually curated resources 없이도 결과 잘 나옴

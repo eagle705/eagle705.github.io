@@ -24,19 +24,19 @@ comments: true
         - 키바나는 JVM에서 실행되는 엘라스틱서치와 로그스태시와 달리 node.js로 실행하는 웹애플리케이션임
         - ```http://localhost:5601/```
 
-![](img/2020-05-14-14-47-09.png)
+![](/img/2020-05-14-14-47-09.png){: height="50%" width="50%"}
 
 - RDB와 Es 비교
     - Database  -> Index
     - Table -> Type
     - column -> Field
     - row -> Document
-![](img/2020-05-14-14-46-56.png)
-![](img/2020-05-14-14-47-43.png)
+![](/img/2020-05-14-14-46-56.png){: height="50%" width="50%"}
+![](/img/2020-05-14-14-47-43.png){: height="50%" width="50%"}
 
 
 - ES 아키텍쳐 / 용어 정리
-![](img/2020-05-14-14-48-39.png)
+![](/img/2020-05-14-14-48-39.png){: height="50%" width="50%"}
     - 클러스터
         - 노드들의 집합
         - 서로 다른 클러스터는 데이터의 접근, 교환이 불가
@@ -51,14 +51,14 @@ comments: true
         - 인덱스: RDB의 DB와 대응됨
         - 샤드: 데이터 분산해서 저장하는 방법임. scale out을 위해 index를 여러 shard로 쪼갬. 기본적으로는 1개 존재하고 나중에 개수 조정가능
         - 복제: 또 다른 형태의 shard라 할 수 있음. 노드를 손실했을 경우 데이터 신뢰성을 위해 샤드들 복제하는 것. 그러므로 replica는 서로 다른 노드에 존재하는 것이 좋음
-        ![](img/2020-05-14-15-05-45.png)
+        ![](/img/2020-05-14-15-05-45.png){: height="50%" width="50%"}
 
 - ES 특징
     - Scale out: 샤드를 통해 규모가 수평적으로 늘어날 수 있음
     - 고가용성: replica를 통해 데이터 안정성 보장
     - Schema Free: json 문서를 통해 데이터 검색을 수행하므로 스키마 개념이 없음
     - Restful: 데이터 CRUD 작업은 HTTP Restful API를 통해 수행함
-    ![](img/2020-05-14-15-07-47.png)
+    ![](/img/2020-05-14-15-07-47.png){: height="50%" width="50%"}
 
 
 - 예시 (document (row) 생성)
@@ -74,7 +74,7 @@ comments: true
 
     - 결과:
         - 이렇게 curl 요청을 하면, victolee 인덱스에, blog 타입으로 id 값이 1인 document가 저장됨        
-        ![](img/2020-05-14-15-17-07.png)
+        ![](/img/2020-05-14-15-17-07.png){: height="50%" width="50%"}
 
 
 - 역색인 (Inverted Index)
@@ -99,13 +99,13 @@ comments: true
     - 만일 my_playlist가 존재하지 않았다면, 새로운 인덱스인 my_playlist가 만들어짐. document인 song과 id인 6도 똑같이 만들어짐.
 
     - 값을 업데이트 하기 위해서는 PUT 명령어를 동일한 document에 사용하면 됨. 새로운 필드도 추가 가능함
-    ![](img/2020-05-14-17-39-18.png)
+    ![](/img/2020-05-14-17-39-18.png){: height="50%" width="50%"}
 
     - GET 명령어 쓰면 값 불러옴
         ```
         GET /my_playlist/song/6
         ```
-        ![](img/2020-05-14-17-40-20.png)
+        ![](/img/2020-05-14-17-40-20.png){: height="50%" width="50%"}
 
     - 데이터 선택하는 조건문 예시
     ```bash
