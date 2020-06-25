@@ -14,10 +14,9 @@ comments: true
 - 마소에서 인턴했고 2021 fall 박사과정 자리 구하는중 (아직 석사라는 뜻)
 - 개인블로그 운영: https://michaelzhouwang.github.io/
 
-Twitter | GoogleScholar
+| Twitter | GoogleScholar |
 :-------------------------:|:-------------------------:
-![](/img/2020-06-18-18-12-06.png){: height="50%" width="50%"} |
-![](/img/2020-06-18-18-13-16.png){: height="30%" width="30%"}
+| ![](/img/2020-06-18-18-12-06.png){: height="50%" width="50%"} | ![](/img/2020-06-18-18-13-16.png){: height="30%" width="30%"} |
 
 - 저자:
     - Wangchunshu Zhou, Ke Xu (Beihang University)
@@ -39,7 +38,7 @@ Twitter | GoogleScholar
 - text simplication and paraphrase generation task와 비슷함
 - 비슷한 단어 찾기와 맥락 의미 유지 두가지가 중요한데 대부분의 선행 연구는 첫번째 (동의어로 교체)에 초점이 맞춰짐
 
-![](/img/2020-05-26-16-14-52.png){: height="30%" width="30%"}
+![](/img/2020-05-26-16-14-52.png){: height="40%" width="40%"}
 
 - 하지만 사전같은 리소스는 제한되어 있고, 바꾼 단어가 문장에 어떤 영향 주는지를 고려못함
 
@@ -51,14 +50,12 @@ Twitter | GoogleScholar
 - 반대로 마스킹 안하면 거의 99.99% 의 확률로 original target word를 예측함
 - 위 두개 방법의 trade-off를 고려해서 embedding dropout 하는걸 선택
 - 문장이 있을때 문장에서 k 번째 단어를 나타내는 표현을 아래와 같이 한다고 할 때
-$$
-\boldsymbol{x}=\left(x_{1}, \cdots, \underline{x}_{k}, \cdots, x_{L}\right)
-$$
+
+$\boldsymbol{x}=\left(x_{1}, \cdots, \underline{x}_{k}, \cdots, x_{L}\right)$
+
 - proposal score $s_{p}\left(x_{k}^{\prime} | \boldsymbol{x}, k\right)$ 는 $x_{k}$의 대체 단어로 $x_{k}^{\prime}$ 를 선택하는 점수임
 
-$$
-s_{p}\left(x_{k}^{\prime} | \boldsymbol{x}, k\right)=\log \frac{P\left(x_{k}^{\prime} | \widetilde{\boldsymbol{x}}, k\right)}{1-P\left(x_{k} | \widetilde{\boldsymbol{x}}, k\right)}
-$$
+$s_{p}\left(x_{k}^{\prime} | \boldsymbol{x}, k\right)=\log \frac{P\left(x_{k}^{\prime} | \widetilde{\boldsymbol{x}}, k\right)}{1-P\left(x_{k} | \widetilde{\boldsymbol{x}}, k\right)}$
 
 - $P\left(x_{k} | \boldsymbol{x}, k\right)$ 는 x라는 주어진 문장이 있을 때 k 번째 단어가 예측될 확률임
 - $P\left(x_{k}^{\prime} | \widetilde{\boldsymbol{x}}, k\right)$ 이거는 k 번째 단어가 partially masked with embedding dropout인 경우임
