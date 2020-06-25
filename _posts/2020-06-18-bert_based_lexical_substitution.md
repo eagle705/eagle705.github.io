@@ -14,8 +14,10 @@ comments: true
 - 마소에서 인턴했고 2021 fall 박사과정 자리 구하는중 (아직 석사라는 뜻)
 - 개인블로그 운영: https://michaelzhouwang.github.io/
 
-![](/img/2020-06-18-18-12-06.png){: height="50%" width="50%"}
-![](/img/2020-06-18-18-13-16.png){: height="50%" width="50%"}
+Twitter | GoogleScholar
+:-------------------------:|:-------------------------:
+![](/img/2020-06-18-18-12-06.png){: height="50%" width="50%"} |
+![](/img/2020-06-18-18-13-16.png){: height="30%" width="30%"}
 
 - 저자:
     - Wangchunshu Zhou, Ke Xu (Beihang University)
@@ -37,7 +39,7 @@ comments: true
 - text simplication and paraphrase generation task와 비슷함
 - 비슷한 단어 찾기와 맥락 의미 유지 두가지가 중요한데 대부분의 선행 연구는 첫번째 (동의어로 교체)에 초점이 맞춰짐
 
-![](/img/2020-05-26-16-14-52.png){: height="50%" width="50%"}
+![](/img/2020-05-26-16-14-52.png){: height="30%" width="30%"}
 
 - 하지만 사전같은 리소스는 제한되어 있고, 바꾼 단어가 문장에 어떤 영향 주는지를 고려못함
 
@@ -113,7 +115,7 @@ $$
     with torch.no_grad():
         last_hidden_states, pooler_output, hidden_states, attentions = bert_model(input_ids)
 
-    num_of_top_hidden_use = 6
+    num_of_top_hidden_use = 4 # top 4 layer
     stacked_token_attentions = torch.stack([ attention[0].mean(axis=[0]) for attention in attentions[-num_of_top_hidden_use:] ])    
 
     # layer 별로도 평균

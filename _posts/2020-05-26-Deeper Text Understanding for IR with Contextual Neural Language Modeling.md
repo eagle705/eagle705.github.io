@@ -78,9 +78,6 @@ comments: true
 - neural ranker는 각각의 passage에 대해 독립적으로 relevance를 예측함 (같은 문서지만 쪼갰으니 여러번 계산하는 듯..?!)
 - document score is the score of ```the first passage (BERT-FirstP), the best passage (BERT-MaxP), or the sum of all passage scores (BERT-SumP)```
 
-## Document Search with BERT
-![](/img/2020-05-14-01-47-55.png){: height="50%" width="50%"}
-
 ### Augmenting BERT with Search Knowledge
 - search task는 다음 두가지를 모두 요구함
   - general text understanding
@@ -172,8 +169,6 @@ comments: true
 
 
 ## Conclusion
-<span style="font-size:70%">
-
 - Text understanding is a long-desired feature for text retrieval
 - Contextual neural language models open new possibilities for understanding word context and modeling language structures
 - BERT가 search task에서 적용 잘되고 성능도 높여줌
