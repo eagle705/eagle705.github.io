@@ -14,9 +14,7 @@ comments: true
 - 마소에서 인턴했고 2021 fall 박사과정 자리 구하는중 (아직 석사라는 뜻)
 - 개인블로그 운영: https://michaelzhouwang.github.io/
 
-| Twitter | GoogleScholar |
-:-------------------------:|:-------------------------:
-| ![](/img/2020-06-18-18-12-06.png){: height="50%" width="50%"} | ![](/img/2020-06-18-18-13-16.png){: height="30%" width="30%"} |
+![](/img/2020-06-18-18-12-06.png){: height="50%" width="50%"}  ![](/img/2020-06-18-18-13-16.png){: height="30%" width="30%"}
 
 - 저자:
     - Wangchunshu Zhou, Ke Xu (Beihang University)
@@ -51,14 +49,14 @@ comments: true
 - 위 두개 방법의 trade-off를 고려해서 embedding dropout 하는걸 선택
 - 문장이 있을때 문장에서 k 번째 단어를 나타내는 표현을 아래와 같이 한다고 할 때
 
-$\boldsymbol{x}=\left(x_{1}, \cdots, \underline{x}_{k}, \cdots, x_{L}\right)$
+$${\boldsymbol{x}=\left(x_{1}, \cdots, \underline{x}_{k}, \cdots, x_{L}\right)}$$
 
-- proposal score $s_{p}\left(x_{k}^{\prime} | \boldsymbol{x}, k\right)$ 는 $x_{k}$의 대체 단어로 $x_{k}^{\prime}$ 를 선택하는 점수임
+- proposal score $s_{p}\left(x_{k}^{\prime} \| \boldsymbol{x}, k\right)$ 는 $x_{k}$의 대체 단어로 $x_{k}^{\prime}$ 를 선택하는 점수임
 
-$s_{p}\left(x_{k}^{\prime} | \boldsymbol{x}, k\right)=\log \frac{P\left(x_{k}^{\prime} | \widetilde{\boldsymbol{x}}, k\right)}{1-P\left(x_{k} | \widetilde{\boldsymbol{x}}, k\right)}$
+$s_{p}\left(x_{k}^{\prime} \| \boldsymbol{x}, k\right)=\log \frac{P\left(x_{k}^{\prime} \| \widetilde{\boldsymbol{x}}, k\right)}{1-P\left(x_{k} \| \widetilde{\boldsymbol{x}}, k\right)}$
 
-- $P\left(x_{k} | \boldsymbol{x}, k\right)$ 는 x라는 주어진 문장이 있을 때 k 번째 단어가 예측될 확률임
-- $P\left(x_{k}^{\prime} | \widetilde{\boldsymbol{x}}, k\right)$ 이거는 k 번째 단어가 partially masked with embedding dropout인 경우임
+- $P\left(x_{k} \| \boldsymbol{x}, k\right)$ 는 x라는 주어진 문장이 있을 때 k 번째 단어가 예측될 확률임
+- $P\left(x_{k}^{\prime} \| \widetilde{\boldsymbol{x}}, k\right)$ 이거는 k 번째 단어가 partially masked with embedding dropout인 경우임
 - 분모 나눈건 origin word 의 확률을 빼줘서 normalize 해준 것임
 
 ![](/img/2020-05-26-16-17-22.png){: height="50%" width="50%"}
