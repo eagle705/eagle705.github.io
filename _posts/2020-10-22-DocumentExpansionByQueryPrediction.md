@@ -31,7 +31,6 @@ comments: true
 - QA 시스템의 관점에서는 문서가 질문을 잠재적으로 포함한다고도 볼 수 있음
 - (query, relevant documents) pair 셋으로 seq2seq 모델 학습해서 query 예측하는 방법 제안
 - re-ranking component와 결합하면 two retrieval task에서 SOTA 결과 나옴
-![](/img/2020-10-22-18-10-11.png){: height="50%" width="50%"} 
 
 
 ## Introduction
