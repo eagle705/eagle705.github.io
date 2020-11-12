@@ -15,7 +15,7 @@ comments: true
     (New York University, Facebook AI Research), 2019
 - 조경현 교수님과 co-work
 - 같은 년도에 쓴 Passage Re-ranking with BERT도 인용수가 높은 편 (4페이지 짜리인데도)
-![](assets/img/2020-10-22-18-14-11.png){: height="50%" width="50%"} 
+![](/img/2020-10-22-18-14-11.png){: height="50%" width="50%"} 
 
 
 ## 느낀점
@@ -31,7 +31,7 @@ comments: true
 - QA 시스템의 관점에서는 문서가 질문을 잠재적으로 포함한다고도 볼 수 있음
 - (query, relevant documents) pair 셋으로 seq2seq 모델 학습해서 query 예측하는 방법 제안
 - re-ranking component와 결합하면 two retrieval task에서 SOTA 결과 나옴
-![](assets/img/2020-10-22-18-10-11.png){: height="50%" width="50%"} 
+![](/img/2020-10-22-18-10-11.png){: height="50%" width="50%"} 
 
 
 ## Introduction
@@ -53,7 +53,7 @@ comments: true
 - top-k random sampling 을 통해 10개의 질의를 예측함
 - 확장된 문서가 인덱싱 되고 나면 BM25를 통해 결과 출력함
 - BERT 이용해서 re-rank 함 (option)
-![](assets/img/2020-10-22-18-10-11.png){: height="50%" width="50%"} 
+![](/img/2020-10-22-18-10-11.png){: height="50%" width="50%"} 
 
 ## Experimental Setup
 모델 학습과 평가를 위해 두가지 데이터셋 활용
@@ -81,11 +81,11 @@ comments: true
 - 문서에 없던 단어도 생성하기도함
 - ```비율은 대략 69:31 = 기존단어:새단어```
 - 대략 10개 query로 ```top-k random sampling > beam search```
-![](assets/img/2020-10-22-18-20-52.png){: height="50%" width="50%"} 
+![](/img/2020-10-22-18-20-52.png){: height="50%" width="50%"} 
 
-![](assets/img/2020-10-22-18-21-58.png){: height="50%" width="50%"} 
+![](/img/2020-10-22-18-21-58.png){: height="50%" width="50%"} 
 
-![](assets/img/2020-10-22-18-24-53.png){: height="50%" width="50%"} 
+![](/img/2020-10-22-18-24-53.png){: height="50%" width="50%"} 
 
 ## Conclusion
 - neural net 기반 document expasnion의 성공적인 첫 사례다!
