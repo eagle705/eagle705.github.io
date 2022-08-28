@@ -62,7 +62,9 @@ exclude: null
 ignore: null
 theme: icarus
 deploy:
-  type: ''
+  type: git
+  repo: https://github.com/eagle705/eagle705.github.io.git
+  branch: master
 excerpt:
     depth: 5  # 7줄 까지만 노출된다는 뜻
     hideWholePostExcerpt: true
