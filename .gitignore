@@ -1,5 +1,8 @@
-_site
-.sass-cache
-.jekyll-metadata
 .DS_Store
-backup
+Thumbs.db
+db.json
+*.log
+node_modules/
+public/
+.deploy*/
+_multiconfig.yml

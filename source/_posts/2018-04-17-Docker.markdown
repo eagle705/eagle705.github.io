@@ -1,0 +1,354 @@
+---
+layout: post
+title:  "Docker 입문"
+categories: cslog
+comments: true
+date: 2018-04-17 12:00:00
+tags: docker
+toc: true
+---
+
+Docker를 처음 입문한건 텐서플로우를 윈도우에 설치하면서부터였다. 뭔가 바로 로컬에서 소스를 수정할 수 있는게 아니라서 뭔가 여간 불편해서 그 이후로 잘 안썼었는데.. 이 도커가 사람들은 정말 편리한지 이제 시장에서 배포환경이 거의다 도커가 되어버렸다(~~배포는 사실 진짜 편하긴하지..~~). 최근 회사에서도 도커를 쓸일이 생겨버려서.. 이젠 좀 체계적으로 정리를 해야겠다 싶다.
+
+- 컨테이너 하나가 하나의 프로세스라고 보면 된다
+- dockerhub는 github같은 오픈된 도커 이미지 저장소다
+- docker id는 앞부분의 일부만 입력해도 실행이 된다
+
+### Docker 상태체크
+```docker ps -a``` : 실행중인 도커 컨테이너 리스트를 확인   
+```docker images``` : 도커 이미지 목록   
+```docker login``` : docker hub계정으로 로그인 가능   
+```docker restart <도커id>``` : 도커 컨테이너 재실행   
+```docker attach <도커id>``` : (실행중인)도커 컨테이너에 접속 (웹서버 같이 백그라운드에서 실행되는 컨테이너에 attach로 접속하면 커맨드를 입력할 수 없고 로그인만 볼 수 있음)   
+```docker inspect <도커id>``` : 도커 컨테이너의 공유폴더나 기타 옵션들을 다 볼수있음!   
+
+### Docker 컨테이너 & 이미지 삭제
+```docker rm <도커id>``` : 도커 컨테이너를 삭제함
+```docker rmi <도커id>``` : 도커 이미지를 삭제함   
+이미지까지 삭제해줘야 나중에 docker image를 업로드할때 같은 이름일경우 오류가 안남
+
+
+### Docker 컨테이너 안에 접속
+```docker exec <도커id>``` : 컨테이너에 새로운 프로세스를 실행시킬 때 사용함(예를들면 쉘이나.. / 컨테이너가 재시작될때 같이 재시작되진 않는다고 함_체크필요!!)   
+```docker exec -it  <도커id> /bin/bash```: 컨테이너에 접속해서 bash 쉘 실행! (-it 라고 덧붙여 주어야 한다. 이는 STDIN 표준 입출력을 열고 가상 tty (pseudo-TTY) 를 통해 접속하겠다는 의미)
+### Docker 컨테이너 안에 파일 복사
+```docker cp /path/foo.txt <도커id>:/path/foo.txt```: 호스트에서 컨테이너로 파일 전송하는 방법   
+```docker cp <도커id>:/path/foo.txt /path/foo.txt```:컨테이너에서 호스트로 파일 전송하는 방법   
+
+
+### Docker 실행
+```docker run -d -p 8888:8888 -p 6006:6006 dockerhub계정/이미지이름```: 도커 이미지 다운받고 포트포워딩 후 실행(아마 -d가 다운.. -p가 포트포워딩인듯?)   
+```docker run -p 443:1443 -p 8080:8000  -itd -v <호스트의 로컬디렉토리>:<컨테이너의 디렉토리> --name <생성할컨테이너이름> <이미지이름>```: -v 옵션으로 공유폴더 마운트를 해줄 수 있음! -d는 백그라운드 옵션
+```docker-compose up -d```
+
+
+### Docker 이미지 업로드
+```docker commit -m "<메세지>" <도커id> dockerhub계정/이미지이름:태그```: docker 이미지 커밋(컨테이너에서 이미지 생성, 포트포워딩 새로 짜줄때 많이 씀)   
+```docker commit <도커id> <이미지이름>```: docker 이미지 커밋(컨테이너에서 이미지 생성, 포트포워딩 새로 짜줄때 많이 씀)
+```docker push dockerhub계정/이미지이름:태그```: dockerhub에 이미지 업로드
+
+### Docker 이미지 파일화 및 다시 로딩
+
+#### 컨테이너 To 이미지:태그
+```
+sudo docker commit oj-postgres oj-postgres:181107
+sudo docker commit oj-backend oj-backend:181107
+sudo docker commit oj-redis oj-redis:181107
+sudo docker commit judge-server judge-server:181107
+```
+
+#### 이미지:태그 To 파일(tar)
+```
+sudo docker save oj-redis:181107 > oj-redis
+sudo docker save oj-backend:181107 > oj-backend
+sudo docker save oj-postgres:181107 > oj-postgres
+sudo docker save judge-server:181107 > judge-server 
+```
+
+#### 중간팁, docker관련 명령어 검색
+```history | grep docker```
+
+#### 파일 To 이미지
+```
+docker load < judge-server
+docker load < oj-backend
+docker load < oj-postgres
+docker load < oj-redis
+```
+
+#### 다시 로딩 (docker-compose.yml)
+```
+1 version: "3"
+2 services:
+3
+4   oj-redis:
+5     image: oj-redis:180918  <-- 이 부분을 images에 있는 이미지:태그 로 변경
+6     container_name: oj-redis_180918
+7     restart: always
+8     volumes:
+9       - $PWD/data/redis:/data
+10     ports:
+11       - "0.0.0.0:6379:6379"
+```
+```docker-compose up -d```로 새로 이미지 생성
+
+참고용!!: https://www.slideshare.net/rkawkxms/docker-container
+도커 치트시트 https://gist.github.com/nacyot/8366310
+도커 셋팅 끝판왕: http://raccoonyy.github.io/docker-usages-for-dev-environment-setup/
+도커 run options: http://pyrasis.com/book/DockerForTheReallyImpatient/Chapter20/28
+
+
+### NVIDIA Docker Settings
+![docker_image](https://cloud.githubusercontent.com/assets/3028125/12213714/5b208976-b632-11e5-8406-38d379ec46aa.png){: height="50%" width="50%"}
+- 말 나온김에.. 딥러닝 필수품인 NVIDIA docker를 셋팅해보자
+- nvidia-docker 와 docker 두개를 설치해줘야한다
+- reference: 
+  - https://hiseon.me/linux/ubuntu/install-docker/
+  - https://github.com/NVIDIA/nvidia-docker
+  - https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(version-2.0)
+  - http://moducon.kr/2018/wp-content/uploads/sites/2/2018/12/leesangsoo_slide.pdf
+  - ftp: https://m.blog.naver.com/PostView.nhn?blogId=alice_k106&logNo=220650722592&proxyReferer=https%3A%2F%2Fwww.google.com%2F
+
+##### Install
+- ubuntu-dirvers devices 명령어로 어떤 Nvidia graphic driver를 설치할지 체크
+```
+root@DeepLearning:/home/eagle# ubuntu-drivers devices
+== /sys/devices/pci0000:00/0000:00:02.0/0000:02:00.0 ==
+vendor   : NVIDIA Corporation
+modalias : pci:v000010DEd00001B06sv00001462sd00003609bc03sc00i00
+driver   : nvidia-410 - third-party non-free
+driver   : nvidia-387 - third-party non-free
+driver   : nvidia-415 - third-party free
+driver   : nvidia-430 - third-party free recommended
+driver   : nvidia-418 - third-party non-free
+driver   : nvidia-390 - third-party non-free
+driver   : nvidia-396 - third-party non-free
+driver   : xserver-xorg-video-nouveau - distro free builtin
+driver   : nvidia-384 - third-party non-free
+```
+
+- Ubuntu 16.04/18.04, Debian Jessie/Stretch/Buster
+```
+# Add the package repositories
+$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+$ curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+$ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+$ sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+$ sudo systemctl restart docker
+```
+
+```
+$ sudo apt-get install nvidia-docker2
+$ sudo pkill -SIGHUP dockerd
+```
+
+- docker hub에서 이미지를 검색: https://hub.docker.com/r/nvidia/cuda
+```
+docker pull nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
+```
+
+- 잘 동작하는지 nvidia-smi 명령어로 테스트
+```
+docker run --gpus all nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04 nvidia-smi
+```
+
+- 딥러닝 프레임워크 이미지 다운 및 설치
+  - 텐서플로우 docker가 jupyter가 깔려있어서 이걸로 설치 후 파이토치도 설치하자: https://hub.docker.com/r/tensorflow/tensorflow/tags?page=2
+```
+docker run --runtime=nvidia -it -p 8888:8888 -p 6006:6006 tensorflow/tensorflow:latest-gpu-py3-jupyter
+```
+
+- ftp 사용(5000 포트로 접근하는 경우임! 5000포트라는 건 변경가능!) 및 파일 시스템 공유까지 하고 싶으면 아래와 같이 셋팅 (도커의 경우 /tf 으로 경로를 두면 됨)
+
+```
+docker run --runtime=nvidia -it -p 8888:8888 -p 6006:6006 -p 5000:22 -itd -v <호스트의 공유할 디렉토리>:<도커의 공유될 디렉토리> nvidia/cuda:10.0-cudnn7-ubuntu16.04-tf1.4-pytorch1.2
+```
+
+- 잘 동작하는지 확인
+
+```Python
+from tensorflow.python.client import device_lib
+def get_available_gpus():
+    return [x.name for x in device_lib.list_local_devices()]
+get_available_gpus()
+
+# ['/device:CPU:0',
+#  '/device:XLA_GPU:0',
+#  '/device:XLA_GPU:1',
+#  '/device:XLA_CPU:0',
+#  '/device:GPU:0',
+#  '/device:GPU:1']
+```
+
+
+#### ftp setting in docker
+- image -> container를 만들때 포트포워딩을 해준다
+- 만약 못해줬으면 커밋해서 다시 이미지로 만들고 다시 컨테이너로 떠야한다
+
+```docker run -i -t --name sftp -p 50000:22 ubuntu```
+
+- ssh 설치
+```apt-get install ssh ```
+
+- ssh 생성
+
+```
+cd ~/
+ssh-keygen -t rsa -P '' -f ~/.ssh/id_dsa
+
+# docker container 안에서 ssh-key 생성 결과
+Generating public/private rsa key pair.
+Created directory '/root/.ssh'.
+Your identification has been saved in /root/.ssh/id_dsa.
+Your public key has been saved in /root/.ssh/id_dsa.pub.
+The key fingerprint is:
+SHA256:woWqfGuErQHO6/FCmDkpY8oD4UsVNqP3lrACrtc0g0M root@f44bce126400
+The key's randomart image is:
++---[RSA 2048]----+
+|                 |
+|   =   .         |
+|  o + . .        |
+|+.E+ o .         |
+|BBo+= + S        |
+|X@=o*+ .         |
+|X+*Boo           |
+|o*=.o.           |
+|.ooo.            |
++----[SHA256]-----+
+```
+
+- sshd를 위한 폴더 생성
+
+```mkdir /var/run/sshd```
+
+- sshd가 컨테이너 시작시 실행되도록 ~/.bashrc 파일에 다음을 추가
+
+```
+# autorun
+/usr/sbin/sshd
+```
+
+- 변경사항 적용
+
+```source ~/.bashrc```
+
+- User 추가
+
+```adduser eagle705 ```
+
+##### NLP dependecy settings (konlpy)
+  - ref: https://provia.tistory.com/57
+
+- 방법1
+
+```
+apt-get update
+apt-get install g++ openjdk-8-jdk
+pip install konlpy  
+apt-get install curl
+bash <(curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh)
+```
+
+- 방법2
+
+```
+mkdir mecab_install
+cd mecab_install
+wget mecab-0.996-ko-0.9.2.tar.gz
+tar -zxvf mecab-*-ko-*.tar.gz
+cd mecab-0.996-ko-0.9.2
+./configure
+make
+make check
+make install
+mecab --version
+ldconfig
+mecab --version
+
+```
+
+- 방법3
+
+```
+pip install python-mecab-ko
+```
+
+- 그래도 안될때
+
+```
+mecab-config --libs-only-L | sudo tee /etc/ld.so.conf.d/mecab.conf
+ldconfig
+git clone https://bitbucket.org/eunjeon/mecab-python-0.996.git
+pip install ./mecab-python-0.996
+
+```
+
+```
+#!/bin/sh
+
+OUT_DIR="${1:-./mecab}"
+
+mkdir -v -p $OUT_DIR
+
+sudo yum install git cmake make automake wget
+
+wget https://bitbucket.org/eunjeon/mecab-ko/downloads/mecab-0.996-ko-0.9.2.tar.gz
+wget https://bitbucket.org/eunjeon/mecab-ko-dic/downloads/mecab-ko-dic-2.1.1-20180720.tar.gz
+
+mv mecab-0.996-ko-0.9.2.tar.gz "$OUT_DIR/"
+mv mecab-ko-dic-2.1.1-20180720.tar.gz "$OUT_DIR/"
+
+cd "$OUT_DIR"
+
+tar zxfv mecab-0.996-ko-0.9.2.tar.gz
+cd mecab-0.996-ko-0.9.2
+autoreconf -vi
+#./configure
+./configure --with-mecab-config=./mecab-config --with-charset=utf8
+make
+make check
+sudo make install
+cd ../
+
+sudo ldconfig
+tar zxfv mecab-ko-dic-2.1.1-20180720.tar.gz
+cd mecab-ko-dic-2.1.1-20180720
+autoreconf -vi
+./configure
+make
+sudo make install
+
+cd ../
+git clone https://bitbucket.org/eunjeon/mecab-python-0.996.git
+cd mecab-python-0.996
+python setup.py build
+python setup.py install
+
+mecab-config --libs-only-L | sudo tee /etc/ld.so.conf.d/mecab.conf
+sudo ldconfig
+
+#chmod +x /home/eagle/anaconda3/envs/dl_py3/lib/python3.6/site-packages/*
+
+```
+
+- 사전추가
+
+```
+wget https://bitbucket.org/eunjeon/mecab-ko-dic/downloads/mecab-ko-dic-2.1.1-20180720.tar.gz
+tar -zxvf mecab-ko-dic-2.1.1-20180720.tar.gz
+cd mecab-ko-dic-2.1.1-20180720
+./configure
+make
+make install
+mecab -d /usr/local/lib/mecab/dic/mecab-ko-dic
+```
+
+- 그 외에 설치할 것
+```
+pip install easydict
+pip install sklearn
+pip install pandas
+pip install xlrd
+pip install easydict
+(https://worthpreading.tistory.com/56)
+```

@@ -1,0 +1,318 @@
+---
+layout: post
+title:  "XGBoost 정리"
+categories: cslog
+comments: true
+date: 2018-06-12 12:00:00
+tags: ML
+toc: true
+---
+
+본 문서는 XGBoost에 대한 기본적인 설명과 설치 가이드에 대해서 다룬 문서입니다.
+
+### A. 소개
+
+- 오픈소스 명: XGBoost
+- Github URL: https://github.com/dmlc/xgboost
+- Ref: Tianqi Chen and Carlos Guestrin. XGBoost: A Scalable Tree Boosting System. In 22nd SIGKDD Conference on Knowledge Discovery and Data Mining, 2016
+
+
+
+### B. 설치
+XGBoost는 CPU전용 설치와 GPU전용 설치 두개로 나뉜다.   
+CPU 전용으로 설치한다면,   
+```pip install xgboost``` 를 해버리면 끝이나
+실제로 사용하려고 하면, Decision Tree보다 느린 속도를 체감하게 되므로 자연스럽게 GPU를 쓰게 된다.   
+GPU 전용으로 설치하려면, 소스로부터 직접 컴파일 해야한다.
+XGBoost에서는 install guide를 제공해주고 있는데, 현재까지 나온 install guide에는 약간의 문제가 있는데 바로 multi-gpu 관련 문제다. multi-gpu를 사용하기 위해선 GPU간의 communication을 담당해주는 **NCLL**(pronounced "Nickel") 이라는걸 셋팅해줘야하는데 기본 가이드에선 본 셋팅이 빠져있기 때문이다.   
+설치 가이드: http://xgboost.readthedocs.io/en/latest/build.html#building-with-gpu-support   
+교정된 내용 출처: https://github.com/dmlc/xgboost/issues/2915   
+
+Ubuntu기준 전체적인 설치 프로세스는 다음과 같다.
+```
+git clone --recursive https://github.com/dmlc/xgboost
+git submodule init
+git submodule update
+
+cd xgboost; make -j4
+
+mkdir build
+cd build
+
+# 여기서 셋팅이 중요! (공식가이드에선 -DUSE_NCCL=ON가 빠져있음)
+cmake .. -DUSE_CUDA=ON -DUSE_NCCL=ON
+make -j
+```
+
+파이썬 패키지 설치
+```
+cd ..
+cd python-package; sudo python setup.py install
+sudo apt-get install python-setuptools
+export PYTHONPATH=~/xgboost/python-package
+cd python-package; python setup.py develop --user
+```
+그러나 여기서 설치된게 conda env에 저장되는건 아니다.   
+xgboost 폴더에서 conda 환경폴더로 복사해주면 끝!
+```
+사용자계정:~/xgboost$ cp -R * ~/anaconda3/envs/dl/lib/python3.6/site-packages/xgboost/
+```
+
+만약 Jupyter notebook에서 conda env의 커널이 안나온다면 다음 명령어로 해결하자.
+```
+source activate myenv
+python -m ipykernel install --user --name myenv --display-name "Python (myenv)"
+```
+
+## 사용법
+간단하다. 파라미터 몇개만 추가해주면 된다.
+(parameter 설명: http://xgboost.readthedocs.io/en/latest/parameter.html)
+```python3
+import xgboost as xgb 
+dtrain = xgb.DMatrix(x_train, label=y_train)
+dtest = xgb.DMatrix(x_test, label=y_test)
+
+param = {
+    'max_depth': 4,  # the maximum depth of each tree
+    'eta': 0.3,  # the training step for each iteration
+    'silent': 1, # logging mode - quiet
+    'objective': 'multi:softprob',  # error evaluation for multiclass training
+    'num_class': 2, # the number of classes that exist in this datset
+#   'gpu_id': 0, # 특정 GPU를 지정하고 싶을때 쓰는 id 
+    'n_gpus' : 2, # 2개 사용하자
+    'max_bin': 16, # GPU 
+    'tree_method': 'gpu_hist', # GPU method (자세한 설명은 문서로!)
+    'predictor':'gpu_predictor' # train뿐만아니라 predict할때도 gpu쓸건지 결정
+}   
+
+num_round = 35 # the number of training iterations
+model = xgb.train(param, dtrain, num_round)
+```
+
+### CPU vs GPU in XGBoost
+
+````
+# 실험 데이터 45,000 건에 대한 결과
+# Before GPU
+# CPU times: user 11min 57s, sys: 6min 2s, total: 17min 59s
+# Wall time: 8min 10s
+
+# After GPU
+# CPU times: user 1min 35s, sys: 8.03 s, total: 1min 43s
+# Wall time: 10.1 s
+
+GPU 2대가 잘 돌아간다~
+# +-----------------------------------------------------------------------------+
+# | NVIDIA-SMI 390.67                 Driver Version: 390.67                    |
+# |-------------------------------+----------------------+----------------------+
+# | GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+# | Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+# |===============================+======================+======================|
+# |   0  GeForce GTX 108...  Off  | 00000000:02:00.0  On |                  N/A |
+# | 37%   54C    P2   205W / 250W |   6352MiB / 11177MiB |     75%      Default |
+# +-------------------------------+----------------------+----------------------+
+# |   1  GeForce GTX 108...  Off  | 00000000:03:00.0 Off |                  N/A |
+# | 32%   45C    P2   172W / 250W |    811MiB / 11178MiB |     45%      Default |
+# +-------------------------------+----------------------+----------------------+
+```
+
+
+### XGBoost rank
+- XGBoost rank도 랭킹 관련해서는 꽤 강력한 알고리즘인거 같은데 공식 홈페이지도 문서화가 너무 잘 안되어있어서 따로 이렇게 정리해두려함
+
+
+
+```python
+# ref: https://www.jianshu.com/p/9caef967ec0a
+# https://www.slideshare.net/MinsubYim/evaluation-in-ir-system
+# Dataformat을 보면
+# Query 상황에 대해 feedback 하기위한 rank 데이터가 필요함
+# Rank는 중복순위는 안되지만 중복되도 어느정도 그 값을 반영함
+# Data format
+# input: (batch, feature_dim) # feature에 벡터뿐 아니라 rank를 넣는건 어떨까?
+# output: (batch, label)
+# group은 query당 1개라고 생각하면 될듯
+# 데이터 셋을 만드려면, 쿼리당 대응되는 순위가 있어야함 (꼭 순위가 아니면 그냥 1등짜리)
+```
+
+
+```python
+import pandas as pd
+import numpy as np
+from xgboost import DMatrix,train
+
+xgb_rank_params1 ={    
+    'booster' : 'gbtree',
+    'eta': 0.1,
+    'gamma' : 1.0 ,
+    'min_child_weight' : 0.1,
+    'objective' : 'rank:pairwise',
+    'eval_metric' : 'merror',
+    'max_depth' : 6,
+    'num_boost_round':10,
+    'save_period' : 0 
+}
+
+xgb_rank_params2 = {
+    'bst:max_depth':2, 
+    'bst:eta':1, 'silent':1, 
+    'objective':'rank:pairwise',
+    'nthread':4,
+    'eval_metric':'ndcg'
+}
+  
+```
+
+
+```python
+# generate training dataset
+n_group=2
+n_choice=5  
+feature_dim = 4
+dtrain=np.random.uniform(0,100,[n_group*n_choice,feature_dim])  # from, to, size(10*4)
+print(dtrain) # 총 10개고, feature는 4차원
+```
+
+    [[98.15224011 98.04314806 55.75168775 49.41552951]
+     [ 0.56621336 93.68536087 33.47794833 62.47306473]
+     [23.30221404  4.19151316 25.7820436  20.25906041]
+     [46.72072013 58.08852829 98.69009012  2.8024138 ]
+     [12.55738795  9.25738782 38.79516659  5.4123012 ]
+     [ 0.48553844 54.86897349 10.16412276 95.7597808 ]
+     [89.66433777 18.72695147 15.36669597 68.28897962]
+     [90.64073532  7.53006587 64.95569435 80.3247172 ]
+     [18.26159288 85.18426467  2.33733382 56.1864659 ]
+     [92.46583392 74.05326436 36.58640261 96.30062398]]
+
+
+
+```python
+# numpy.random.choice(a, size=None, replace=True, p=None)
+# 각 그룹마다, [0,1,2,4,5] 중에 5개를 중복없이 뽑아서 넣는다. 그리고 한줄로 핀다
+dtarget=np.array([np.random.choice([0,1,2,4,5],5,False) for i in range(n_group)])
+print(dtarget)
+dtarget = dtarget.flatten() 
+print(dtarget)
+```
+
+    [[2 1 4 4 0]
+     [2 4 2 5 5]]
+    [2 1 4 4 0 2 4 2 5 5]
+
+
+
+```python
+# N_group은 표본의 각 그룹이 연속적이면 앞에서 뒤로 각 그룹에 있는 샘플의 수를 나타내는 데 사용됩니다. 
+# [5,5]은 10개의 샘플 중 첫 번째 5 개가 첫 번째 그룹이고 마지막 세 개가 두 번째 그룹임을 의미합니다.
+dgroup = np.array([n_choice for i in range(n_group)])
+print(dgroup)
+dgroup = dgroup.flatten()
+print(dgroup)
+```
+
+    [5 5]
+    [5 5]
+
+
+
+```python
+# concate Train data, very import here !
+xgbTrain = DMatrix(dtrain, label = dtarget)
+print(xgbTrain)
+```
+
+    <xgboost.core.DMatrix object at 0x1a0eecd9e8>
+
+
+
+```python
+xgbTrain.set_group(dgroup)
+print(xgbTrain)
+```
+
+    <xgboost.core.DMatrix object at 0x1a0eecd9e8>
+
+
+
+```python
+# generate eval data
+dtrain_eval=np.random.uniform(0,100,[n_group*n_choice,feature_dim])        
+xgbTrain_eval = DMatrix(dtrain_eval, label = dtarget)
+xgbTrain_eval.set_group(dgroup)
+evallist  = [(xgbTrain,'train'),(xgbTrain_eval, 'eval')] # eval만 있어도 되는듯
+```
+
+
+```python
+# train model
+# rankModel = train(xgb_rank_params1,xgbTrain,num_boost_round=10)
+# rankModel = train(xgb_rank_params2,xgbTrain,num_boost_round=20,evals=evallist)
+
+xgb_rank_params3 = {
+    'bst:max_depth':3, 
+    'bst:eta':1, 'silent':1, 
+    'objective':'rank:pairwise',
+    'nthread':4,
+    'eval_metric':'ndcg'
+}
+  
+rankModel = train(xgb_rank_params3,xgbTrain,num_boost_round=20,evals=evallist)
+```
+
+    [0]	train-ndcg:0.820237	eval-ndcg:0.658025
+    [1]	train-ndcg:1	eval-ndcg:0.929127
+    [2]	train-ndcg:1	eval-ndcg:0.787053
+    [3]	train-ndcg:1	eval-ndcg:0.715353
+    [4]	train-ndcg:1	eval-ndcg:0.755255
+    [5]	train-ndcg:1	eval-ndcg:0.6952
+    [6]	train-ndcg:1	eval-ndcg:0.6952
+    [7]	train-ndcg:1	eval-ndcg:0.6952
+    [8]	train-ndcg:1	eval-ndcg:0.6952
+    [9]	train-ndcg:1	eval-ndcg:0.724963
+    [10]	train-ndcg:1	eval-ndcg:0.724963
+    [11]	train-ndcg:1	eval-ndcg:0.724963
+    [12]	train-ndcg:1	eval-ndcg:0.724963
+    [13]	train-ndcg:1	eval-ndcg:0.6952
+    [14]	train-ndcg:1	eval-ndcg:0.6952
+    [15]	train-ndcg:1	eval-ndcg:0.6952
+    [16]	train-ndcg:1	eval-ndcg:0.6952
+    [17]	train-ndcg:1	eval-ndcg:0.685061
+    [18]	train-ndcg:1	eval-ndcg:0.685061
+    [19]	train-ndcg:1	eval-ndcg:0.685061
+
+
+
+```python
+dtarget
+```
+
+
+
+
+    array([2, 1, 4, 4, 0, 2, 4, 2, 5, 5])
+
+
+
+
+```python
+print(rankModel.predict(xgbTrain))
+```
+
+    [ 0.72241294 -0.65030587  1.4792428   2.1987503  -1.6671811  -1.2401314
+      0.6501097  -0.49726778  2.8408237   2.3687568 ]
+
+
+
+```python
+#test dataset
+dtest=np.random.uniform(0,100,[n_group*n_choice, feature_dim])    
+dtestgroup=np.array([n_choice for i in range(n_group)]).flatten()
+xgbTest = DMatrix(dtest)
+xgbTest.set_group(dgroup)
+
+# test
+print(rankModel.predict( xgbTest))
+```
+
+    [ 1.5810932  -0.70324016 -0.490084    0.646863   -0.6283437   0.29787558
+      1.371202    1.1917953   0.61845744  0.8794551 ]

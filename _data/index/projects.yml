@@ -1,4 +1,0 @@
-- name: BERT based NER Tagger
-  descr: "BERT+CRF based Named Entity Recognition model for Korean"
-  image: pong.png
-  github: https://github.com/eagle705/pytorch-bert-crf-ner

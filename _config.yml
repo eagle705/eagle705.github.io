@@ -1,71 +1,68 @@
-#
-###################################
-# Site wide configuration
-####################################
-#
-title: eagle705's Note
-email: xelloss705@naver.com
-description: Better is one day in your court than a thousand elsewhere.
-url: https://eagle705.github.io # the base hostname & protocol for your site
-keywords: ["Blog", "Note"]
-
-#
-###################################
-# Jekyll configuration
-####################################
-#
-timezone:          Asia/Seoul
-markdown:          kramdown
-highlighter:       rouge
-excerpt_separator: <!--more-->
-permalink:         /articles/:year-:month/:title
-
-kramdown:
-  auto_ids: true
-  footnote_nr: 1
-  entity_output: as_char
-  toc_levels: 1..6
-  enable_coderay: false
-
-#
-###################################
-# Site Owner configuration
-####################################
-#
-owner:
-  name: eagle705
-  avatar: eagle705-logo.png  # leonids-logo.png
-  job: "문과처럼(?) 살고 싶은 머신러닝 개발자"
-  bio: "Better is one day in your court than a thousand elsewhere."
-  email: xelloss705@naver.com
-  disqus-shortname:
-  twitter: #username
-  facebook: hisdevelopers #username
-  google:
-    plus: #username
-    analytics: UA-110980734-1
-    verify:
-    ad-client:
-    ad-slot:
-  bing-verify:
-  github: eagle705
-  gitlab: #username
-  stackoverflow: #123456/username   from a "http://stackoverflow.com/users/123456/username" link
-  linkedin: #username
-  skype: #username
-  xing: #username
-  instagram: #username
-  lastfm: #username
-  tumblr: #username
-  pinterest: #username
-  foursquare: #username
-  steam: #username
-  dribbble: #username
-  youtube: #username
-  soundcloud: #username
-  weibo: #username
-  flickr: #username
-  500px: #username
-  codepen: #username
-  reddit: #username
-  telegram: #username
+title: Luke's Blog
+subtitle: 
+description: 
+keywords: null
+author: Joosung Yoon
+language: ko
+timezone: Asia/Seoul
+url: https://eagle705.github.io
+# permalink: ':year/:month/:day/:title/'
+permalink: ':title/'
+permalink_defaults: null
+pretty_urls:
+  trailing_index: true
+  trailing_html: true
+source_dir: source
+public_dir: public
+tag_dir: tags
+archive_dir: archives
+category_dir: categories
+code_dir: downloads/code
+i18n_dir: ':lang'
+skip_render: null
+new_post_name: ':title.md'
+default_layout: post
+titlecase: false
+external_link:
+  enable: true
+  field: site
+  exclude: ''
+filename_case: 0
+render_drafts: false
+post_asset_folder: false
+relative_link: false
+future: true
+highlight:
+  enable: true
+  line_number: true
+  auto_detect: false
+  tab_replace: ''
+  wrap: true
+  hljs: false
+prismjs:
+  enable: false
+  preprocess: true
+  line_number: true
+  tab_replace: ''
+index_generator:
+  path: ''
+  per_page: 10
+  order_by: '-date'
+default_category: uncategorized
+category_map: null
+tag_map: null
+meta_generator: true
+date_format: YYYY-MM-DD
+time_format: HH:mm:ss
+updated_option: mtime
+per_page: 10
+pagination_dir: page
+include: null
+exclude: null
+ignore: null
+theme: icarus
+deploy:
+  type: ''
+excerpt:
+    depth: 5  # 7줄 까지만 노출된다는 뜻
+    hideWholePostExcerpt: true
