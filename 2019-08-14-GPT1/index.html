@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Improving Language Understanding by Generative Pre-Training (GPT) - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Author 저자:Alec Radford, Karthik Narasimhan, Tim Salimans, Ilya Sutskever (Open AI, Open AI다! 부럽(?)다)  Who is an Author?Alec Radford라는 친군데, GPT논문 인용수가 젤 많겠지 했는데 오히려 Vision쪽에서 한 Generative model 인용수가 넘사"><meta property="og:type" content="blog"><meta property="og:title" content="Improving Language Understanding by Generative Pre-Training (GPT)"><meta property="og:url" content="https://eagle705.github.io/2019-08-14-GPT1/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="Author 저자:Alec Radford, Karthik Narasimhan, Tim Salimans, Ilya Sutskever (Open AI, Open AI다! 부럽(?)다)  Who is an Author?Alec Radford라는 친군데, GPT논문 인용수가 젤 많겠지 했는데 오히려 Vision쪽에서 한 Generative model 인용수가 넘사"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190814104818828.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190814142108114.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190816143527570.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190816160501429.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190816172158400.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190816173713950.png"><meta property="article:published_time" content="2019-08-14T03:00:00.000Z"><meta property="article:modified_time" content="2022-08-27T15:53:13.173Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://eagle705.github.io/img/markdown-img-paste-20190814104818828.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/2019-08-14-GPT1/"},"headline":"Improving Language Understanding by Generative Pre-Training (GPT)","image":["https://eagle705.github.io/img/markdown-img-paste-20190814104818828.png","https://eagle705.github.io/img/markdown-img-paste-20190814142108114.png","https://eagle705.github.io/img/markdown-img-paste-20190816143527570.png","https://eagle705.github.io/img/markdown-img-paste-20190816160501429.png","https://eagle705.github.io/img/markdown-img-paste-20190816172158400.png","https://eagle705.github.io/img/markdown-img-paste-20190816173713950.png"],"datePublished":"2019-08-14T03:00:00.000Z","dateModified":"2022-08-27T15:53:13.173Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"Author 저자:Alec Radford, Karthik Narasimhan, Tim Salimans, Ilya Sutskever (Open AI, Open AI다! 부럽(?)다)  Who is an Author?Alec Radford라는 친군데, GPT논문 인용수가 젤 많겠지 했는데 오히려 Vision쪽에서 한 Generative model 인용수가 넘사"}</script><link rel="canonical" href="https://eagle705.github.io/2019-08-14-GPT1/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-08-14T03:00:00.000Z" title="2019. 8. 14. 오후 12:00:00">2019-08-14</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T15:53:13.173Z" title="2022. 8. 28. 오전 12:53:13">2022-08-28</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">16분안에 읽기 (약 2336 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">Improving Language Understanding by Generative Pre-Training (GPT)</h1><div class="content"><h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>저자:Alec Radford, Karthik Narasimhan, Tim Salimans, Ilya Sutskever (<strong>Open AI</strong>, <del>Open AI다! 부럽(?)다</del>)</li>
+</ul>
+<h3 id="Who-is-an-Author"><a href="#Who-is-an-Author" class="headerlink" title="Who is an Author?"></a>Who is an Author?</h3><p>Alec Radford라는 친군데, GPT논문 인용수가 젤 많겠지 했는데 오히려 Vision쪽에서 한 Generative model 인용수가 넘사임.. 원래 유명한 친구였음</p>
+<p><img src="/img/markdown-img-paste-20190814104818828.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h4 id="느낀점"><a href="#느낀점" class="headerlink" title="느낀점"></a>느낀점</h4><ul>
+<li>작은 변화가 큰 성능의 변화를 가져다줌<ul>
+<li>Add auxiliary objective</li>
+<li>pre-training LM</li>
+</ul>
+</li>
+</ul>
+<h4 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h4><ul>
+<li>NLU는 다양한 범위의 태스크를 가짐 ex) textual entailment, qa, semantic similarity assessment and document classification</li>
+<li>unlabeled data는 엄청 많고 labeled data는 매우 적음</li>
+<li>unlabeled data를 잘 쓰면 모델 성능에 도움줄 것임</li>
+<li>우리는 generative pre-training of LM에 이를 적용했고 discriminative fine-tuning으로 성능을 높임</li>
+<li>이전 방법과의 차이가 뭐냐면, 우리는 효과적인 fine-tuning을 위해 모델의 Architecture는 거의 안바꾸고 input을 바꾸는 방법을 썼음 (task-aware input transformation을 사용함)</li>
+<li>우리가 제안하는 방법을 설명하기 위해 NLU의 다양한 태스크에 대한 benchmark를 보여줄 것임</li>
+<li>우리의 general task-agnostic model이 특정 task에 특화되게 학습한 모델 보다 성능이 높았고 12개 Task 중에 9개에서 SOTA 찍었음</li>
+<li>특히 commonsense reasoning(Stories Cloze Test) 은 8.9% 올랐고 qa(RACE)는 5.7%, text entailment(MultiNLI)는 1.5% 올랐음</li>
+</ul>
+<h4 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h4><ul>
+<li>raw text로부터 효과적으로 학습하는 능력은 supervised learning에 의존하는걸 완화시켜줄 수 있음</li>
+<li>supervised learning을 위해 일일이 손으로 labeling하는건 비용도 매우 비쌈</li>
+<li>supervision이 가능하다고쳐도, unsupervised 방식으로 good representation을 학습하는건 performace에 큰 boost를 줌</li>
+<li>예를 들자면 word embedding 학습이 있음</li>
+<li>word-level information from unlabeled data 이상의 것을 얻어내는 건 두가지 이유 때문에 challenging함<ul>
+<li>First, 어떤 타입의 optimization objectives이 차후 transfer learing을 위한 text representation을 배우는데 효과적인지 분명치 않음<ul>
+<li>최근 연구들은 LM, NMT, discourse coherence등 다양한 objectives들에 대해 적용되었음</li>
+</ul>
+</li>
+<li>Second, 가장 효과적으로 학습된 representation을 target task에 대해서 transfer하는 방법에 대해서 합의 된게 없음(no consensus)<ul>
+<li>최근 연구들은 보통 task가 바뀜에 따라 model Architecture를 바꾸는 바꾸거나, learning objectives를 바꾸거나 하는 방법들을 썼었음</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>본 논문에서는 Language unserstanding task에 대해서 unsupervised pre-training and supervised fine-tuning을 결합한 semi-supervised approach방법을 제안함</li>
+<li>본 연구팀의 목적은 다양한 task에 little adaptation이 가능한 universial representation을 학습하는 것임</li>
+<li>처음엔 LM objective 쓸거고 그 다음엔 task에 맞는 supervised objective 쓸 것임</li>
+<li>Model backbone은 Trasnformer 쓸 것임</li>
+</ul>
+<h4 id="2-Related-work"><a href="#2-Related-work" class="headerlink" title="2. Related work"></a>2. Related work</h4><h5 id="Semi-supervised-learning-for-NLP"><a href="#Semi-supervised-learning-for-NLP" class="headerlink" title="Semi-supervised learning for NLP"></a>Semi-supervised learning for NLP</h5><ul>
+<li>본 연구는 semi-supervised learning for NLP 범주에 속해 있음</li>
+<li>sequence labeling, text classification등에서 많이 쓰임</li>
+<li>이전에는 unlabeled data로 word-level or phrase-level statistics를 계산해서 supervised model의 feature로 사용하는 방법이 있었음</li>
+<li>몇년 전에는 word embedidngs 같은 것에 대한 연구도 많이 이뤄졌는데, 이건 word-level information에 대해 주로 다루지만 본 연구에서는 higher-level semantics에 대해서도 다루는 것을 목표로함</li>
+<li>최근에는 unlabeled corpus로부터 Phrase-level, Sentence-level embeddings에 대한 연구도 많이 이뤄짐</li>
+</ul>
+<h5 id="Unsupervised-pre-training"><a href="#Unsupervised-pre-training" class="headerlink" title="Unsupervised pre-training"></a>Unsupervised pre-training</h5><ul>
+<li>Unsupervised pre-training은 semi-supervised learning의 speicial case인데, good initialzation point를 찾는 게 목적임</li>
+<li>이전의 연구들은 image classificaiton, regression task 등에서 쓰였음</li>
+<li>그 후의 연구들은 regularization scheme이나 better generalization을 위해서도 쓰였</li>
+<li>최근 연구들은 뉴럴넷 학습을 돕기 위해서 쓰임 (image classificaiton, speech regcognition, entity disambiguation, and machine translation)</li>
+<li>여기서 본 연구와 가장 가까운건 train을 돕는 것임; LM objective로 pre-training 후에 target task에 대해서 fine-tuning하는 것 with supervision</li>
+</ul>
+<h5 id="Auxiliary-training-objectives"><a href="#Auxiliary-training-objectives" class="headerlink" title="Auxiliary training objectives"></a>Auxiliary training objectives</h5><ul>
+<li>Auxiliary unsupervised training objectives를 추가하는 건 semi-supervised learning의 alternative 형태임</li>
+<li>그 유명한 Collobert는 POS tagging, chunking, NER, LM등 다양한 auxiliary NLP Task를 사용해서 semantic role labeling의 성능을 올렸</li>
+<li>본 연구에서도 auxiliary objective를 사용하지만 이미 unsupervised pre-training 단계에서 여러 언어적 특징들을 학습한걸 확인할 수 있었음</li>
+</ul>
+<h4 id="3-Framework"><a href="#3-Framework" class="headerlink" title="3. Framework"></a>3. Framework</h4><ul>
+<li>학습은 크게 두 단계로 나눔<ul>
+<li>Pre-training stage: high-capacity language model을 학습</li>
+<li>Fine-tuning stage: labeled data를 통해 discriminative task에 대해서 학습</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-1-Unsupervised-pre-training"><a href="#3-1-Unsupervised-pre-training" class="headerlink" title="3.1 Unsupervised pre-training"></a>3.1 Unsupervised pre-training</h5><ul>
+<li>unsupervised corpus of token $U &#x3D; {u_1, …, u_n}$에 대해서 standard LM objective를 최대로 하는 likelihood는 다음과 같음</li>
+<li>$${L_1(U) &#x3D; \sum_i logP(u_i|u_{i-k}, …, u_{i-i} ; \Theta )}$$</li>
+<li>Model backbone: a multi-layer <em>Transformer decoder</em> (for LM)</li>
+</ul>
+<p>$h_0 &#x3D; UW_e+W_p$<br>$h_l &#x3D; transformer_block(h_{l-1}) \forall i \in [1, n] $<br>$P(u) &#x3D; softmax(h_nW_e^T)$</p>
+<ul>
+<li>Notations<ul>
+<li>$k$ : size of the context window</li>
+<li>$P$ : $\Theta$ param을 갖는 neural net으로 모델링 된 조건부 확률; SGD로 학습됨</li>
+<li>$U &#x3D; {u_{-k}, …, u_{-1}}$ : context vector of tokens</li>
+<li>$n$ : num of layers</li>
+<li>$W_e$ : token embedding matrix</li>
+<li>$W_p$ : position embedding matrix</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-2-Supervised-fine-tuning"><a href="#3-2-Supervised-fine-tuning" class="headerlink" title="3.2 Supervised fine-tuning"></a>3.2 Supervised fine-tuning</h5><ul>
+<li>Standard LM objective로 학습 후에 supervised target task에 대해서 fine-tuning 해야함</li>
+<li>final transformer block’s activation $h_l^m$을 $W_y$ param을 갖는 linear output layer에 한번 더 통과시켜서 $y$ 값을 예측함   </li>
+<li>$${P(y|x^1, … , x^m) &#x3D; softmax(h_l^mW_y)}$$</li>
+<li>새로운 objective는 다음과 같음   </li>
+<li>$${L_2(C) &#x3D; \sum_{(x,y)}logP(y|x^1, … , x^m)}$$</li>
+<li>여기에 auxiliary objective를 추가함<ul>
+<li>fine-tuning할 때 generalization에 도움줌</li>
+<li>학습할때 더 빠르게 수렴하게 해줌</li>
+</ul>
+</li>
+<li>최종 objective는 다음과 같음 (with weight $\lambda$)</li>
+<li>$L_3(C) &#x3D; L_2(C) + \lambda * L_1(C)$</li>
+<li>Notations<ul>
+<li>$C$ : a labeled dataset</li>
+</ul>
+</li>
+<li>최종적으로 fine-tuning때 추가되는 extra param은 $W_y$과 delimiter tokens을 위한 embeddings임</li>
+</ul>
+<p><img src="/img/markdown-img-paste-20190814142108114.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h5 id="3-3-Task-specific-input-transformations"><a href="#3-3-Task-specific-input-transformations" class="headerlink" title="3.3 Task-specific input transformations"></a>3.3 Task-specific input transformations</h5><ul>
+<li><p>text classification 같은건 바로 fine-tune되지만, qa, text entailment 같은건 input format 바꿔줘야함 (input transformation)</p>
+</li>
+<li><p>모든 transformation에는 randomly initialized start and end token ($<s>, <e>$)이 들어감</p>
+</li>
+<li><p>Textual Entailment: </p>
+<ul>
+<li>premise(전제) $p$와 hypothesis(가설)  $h$ token sequence를 concat하는데 중간에 delimiter token ($)을 넣음</li>
+</ul>
+</li>
+<li><p>Similarity: </p>
+<ul>
+<li>유사문장에는 순서가 의미가 없으므로 AB, BA 순서 모두 input으로 사용하고 중간에 delimiter 넣어줌. </li>
+<li>그 후 각각 seq에서 $h_l^m$ 을 얻은 후 element-wise로 합치고 linear output layer에 feed 시킴</li>
+</ul>
+</li>
+<li><p>Question Answering and Commonsense Reasoning: </p>
+<ul>
+<li>document $z$, question $q$, set of possible answers {$a_k$}에 대해서 answer의 경우의 수에 맞게 3개를 delimiter 사용해서 concat함 [$z;q;$;a_k$] </li>
+<li>각 seq에서 결과 값 구한 후 softmax layer에서 normalized해서 possible answer에 대한 output distribution을 구함</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-Experiments"><a href="#4-Experiments" class="headerlink" title="4 Experiments"></a>4 Experiments</h4><h5 id="4-1-Setup"><a href="#4-1-Setup" class="headerlink" title="4.1 Setup"></a>4.1 Setup</h5><h6 id="Unsupervised-pre-training-1"><a href="#Unsupervised-pre-training-1" class="headerlink" title="Unsupervised pre-training"></a>Unsupervised pre-training</h6><ul>
+<li>Data: <ul>
+<li>the BooksCorpus dataset for training LM<ul>
+<li>contains over 7,000 unique unpublished books</li>
+<li>contains long stretches of contiguous text</li>
+</ul>
+</li>
+<li>the 1B Word Benchmark (alternative dataset) for training LM, which used by a similar approach, ELMo  <ul>
+<li>shufffled at a sentence level</li>
+<li>destroying long-range structure</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h6 id="Model-specifications"><a href="#Model-specifications" class="headerlink" title="Model specifications"></a>Model specifications</h6><ul>
+<li>Model Backbone: 12-layer decoder-only transformer with masked self-attention heads <ul>
+<li>768 dimensional staets</li>
+<li>12 attetnion heads</li>
+</ul>
+</li>
+<li>position-wise feed-forward network<ul>
+<li>3072 dimensional inner states</li>
+</ul>
+</li>
+<li>optim: <ul>
+<li>Adam: lr&#x3D;2.5e-4</li>
+<li>Warmup: 0~2000 step까지는 linear하게 lr을 증가 시키다가 다시 증가 된 값을 0으로 감소시킴 (cosine schedule 사용)</li>
+</ul>
+</li>
+<li>epoch: 100<ul>
+<li>minibatches: 64 randomly sampled</li>
+<li>token lenghth: contiguous sqeunces of 512 tokens</li>
+</ul>
+</li>
+<li>Layernorm: $N(0,0.002)$</li>
+<li>token format: BPE</li>
+<li>dropout: 0.1 (embeddings, residual, attention)</li>
+<li>Modified version of L2 regularization: $w&#x3D;0.01$ </li>
+<li>Activation function: Gaussian Error Linear Unit (GELU)</li>
+<li>position embedding : use learnable embedding not sinusoidal version</li>
+</ul>
+<h6 id="Fine-tuning-detials"><a href="#Fine-tuning-detials" class="headerlink" title="Fine-tuning detials"></a>Fine-tuning detials</h6><ul>
+<li>Add dropout to the classifier with a rate of 0.1</li>
+<li>Use Learning rate of 6.25e-5 and a batchsize of 32</li>
+<li>fine-tune speed: 3 epochs</li>
+<li>use linear learning rate decay schedule with warmup over 0.2% of training; $\lambda$ was set to 0.5</li>
+</ul>
+<h5 id="4-2-Supervised-fine-tuning"><a href="#4-2-Supervised-fine-tuning" class="headerlink" title="4.2 Supervised fine-tuning"></a>4.2 Supervised fine-tuning</h5><ul>
+<li>natural language inference, question answering, semantic similarity, and text classification 등의 Task에 대해서 해봄<ul>
+<li>Natural Language Inference<ul>
+<li>Textual entailment라고도 알려짐</li>
+<li>문장 pair를 읽어보고 그 둘의 관계가 (entailment &#x2F; contradiction &#x2F; neural) 인지 알아내는 것</li>
+<li>SNLI, MNLI, QNLI, SciTail, RTE 등 여러 데이터셋에서 평가</li>
+<li>SOTA도 이겼음</li>
+</ul>
+</li>
+<li>Question answering and commonsense reasoning<ul>
+<li>RACE, Story Cloze 등 여러 데이터셋에서 평가</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/img/markdown-img-paste-20190816143527570.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>Semantic Similarity<ul>
+<li>Recognizing rephrasing of concepts, understanding negation and handling syntactic ambiguity</li>
+<li>MRPC, QQP, STS-B 등의 데이터 셋에서 평가</li>
+</ul>
+</li>
+<li>classification<ul>
+<li>CoLa (Corpus of Linguistic Acceptability): 문법적으로 맞는지 판단</li>
+<li>SST-2: 감성분석</li>
+</ul>
+</li>
+</ul>
+<p><img src="/img/markdown-img-paste-20190816160501429.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>결과적으로 12개 데이터셋 중에서 9개가 SOTA 찍음</li>
+</ul>
+<h4 id="5-Analysis"><a href="#5-Analysis" class="headerlink" title="5. Analysis"></a>5. Analysis</h4><h5 id="Impact-of-number-of-layers-transferred"><a href="#Impact-of-number-of-layers-transferred" class="headerlink" title="Impact of number of layers transferred"></a>Impact of number of layers transferred</h5><ul>
+<li>여러개의 layer를 transfer learning 할 때 효과에 대해서 관찰해봄</li>
+<li>the standard result that <strong>transferring embeddings improves performance and that each transformer layer provides further benefits up to 9%</strong> for full transfer on MultiNLI. </li>
+<li>This indicates that each layer in the pre-trained model contains useful functionality for solving target tasks.</li>
+</ul>
+<h5 id="Zero-shot-Behaviors"><a href="#Zero-shot-Behaviors" class="headerlink" title="Zero-shot Behaviors"></a>Zero-shot Behaviors</h5><ul>
+<li>LM pre-training이 왜 효과적인지 알아보고자함</li>
+<li>일단 transformer가 다른 애들보다 더 LM을 잘 학습하고 있음 </li>
+<li>the performance of these heuristics is stable and steadily increases over training suggesting that generative pretraining supports the learning of a wide variety of task relevant functionality</li>
+</ul>
+<p><img src="/img/markdown-img-paste-20190816172158400.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h5 id="Ablation-studies"><a href="#Ablation-studies" class="headerlink" title="Ablation studies"></a>Ablation studies</h5><ul>
+<li>w&#x2F;o pre-training: 성능이 14.8%까지 떨어짐.. ptre-training 매우 중요함</li>
+<li>w&#x2F;o aux LM: pre-training은 했지만 fine-tune할때 LM빼면 데이터 적은 경우에 대해서는 성능 오히려 더 잘나왔지만 데이터 많은 경우에 대해서는 확실히 성능이 좀 떨어짐 (그렇게 큰 차이는 없긴했음)</li>
+<li>LSTM w&#x2F; aux LM: 딴건 다 똑같고 model backbone을 transformer에서 LSTM으로 바꿔쓴ㄴ데 성능이 전체적으로 떨어짐(MRPC만 더 높음)</li>
+<li>결론: pre-training도 aux objective(보조적인 목표함수)도 중요하다</li>
+</ul>
+<p><img src="/img/markdown-img-paste-20190816173713950.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h4 id="6-Conclusion"><a href="#6-Conclusion" class="headerlink" title="6. Conclusion"></a>6. Conclusion</h4><ul>
+<li>generative pre-training + discriminative fine-tuning의 힘은 강력했음</li>
+<li>12개 dataset 중 9개에서 SOTA 찍었음</li>
+<li>본 논문의 연구가 unsupervised learning에 대한 새로운 연구에 도움이 되길 바람(실제로 매우 그렇게 됨)</li>
+</ul>
+<h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h4><ul>
+<li><a target="_blank" rel="noopener" href="http://web.ift.uib.no/Teori/KURS/WRK/TeX/symALL.html">Latex Symbols</a></li>
+</ul>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Improving Language Understanding by Generative Pre-Training (GPT)</p><p><a href="https://eagle705.github.io/2019-08-14-GPT1/">https://eagle705.github.io/2019-08-14-GPT1/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2019-08-14</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-08-28</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2019-09-11-MLbasic/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">ML Basic - 머신러닝과 확률</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2019-08-14-research_to_production/"><span class="level-item">Research to Production</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/2019-08-14-GPT1/';
+            this.page.identifier = '2019-08-14-GPT1/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">28</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">16</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">17</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">1</span><span class="level-item">Author</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Who-is-an-Author"><span class="level-left"><span class="level-item">1.1</span><span class="level-item">Who is an Author?</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#느낀점"><span class="level-left"><span class="level-item">1.1.1</span><span class="level-item">느낀점</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">1.1.2</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#1-Introduction"><span class="level-left"><span class="level-item">1.1.3</span><span class="level-item">1. Introduction</span></span></a></li><li><a class="level is-mobile" href="#2-Related-work"><span class="level-left"><span class="level-item">1.1.4</span><span class="level-item">2. Related work</span></span></a></li><li><a class="level is-mobile" href="#3-Framework"><span class="level-left"><span class="level-item">1.1.5</span><span class="level-item">3. Framework</span></span></a></li><li><a class="level is-mobile" href="#4-Experiments"><span class="level-left"><span class="level-item">1.1.6</span><span class="level-item">4 Experiments</span></span></a></li><li><a class="level is-mobile" href="#5-Analysis"><span class="level-left"><span class="level-item">1.1.7</span><span class="level-item">5. Analysis</span></span></a></li><li><a class="level is-mobile" href="#6-Conclusion"><span class="level-left"><span class="level-item">1.1.8</span><span class="level-item">6. Conclusion</span></span></a></li><li><a class="level is-mobile" href="#Reference"><span class="level-left"><span class="level-item">1.1.9</span><span class="level-item">Reference</span></span></a></li></ul></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-10-22T03:00:00.000Z">2020-10-22</time></p><p class="title"><a href="/2020-10-22-DocumentExpansionByQueryPrediction/">Document Expansion by Query Prediction</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-06-18T03:00:00.000Z">2020-06-18</time></p><p class="title"><a href="/2020-06-18-bert_based_lexical_substitution/">BERT-based Lexical Substitution</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-27T03:00:00.000Z">2020-05-27</time></p><p class="title"><a href="/2020-05-27-elastic_search/">Elastic Search 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-26T03:00:00.000Z">2020-05-26</time></p><p class="title"><a href="/2020-05-26-Deeper%20Text%20Understanding%20for%20IR%20with%20Contextual%20Neural%20Language%20Modeling/">Deeper Text Understanding for IR with Contextual Neural Language Modeling&quot;</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-02-10T03:00:00.000Z">2020-02-10</time></p><p class="title"><a href="/2020-02-10-Practical-Linux-Unix/">Linux, Unix 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2022 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>

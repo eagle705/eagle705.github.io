@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Linux, Unix 정리 - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="리눅스 명령어 정리 및 stanford CS1U 강의 요약"><meta property="og:type" content="blog"><meta property="og:title" content="Linux, Unix 정리"><meta property="og:url" content="https://eagle705.github.io/2020-02-10-Practical-Linux-Unix/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="리눅스 명령어 정리 및 stanford CS1U 강의 요약"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://eagle705.github.io/img/og_image.png"><meta property="article:published_time" content="2020-02-10T03:00:00.000Z"><meta property="article:modified_time" content="2022-08-27T10:54:33.520Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="linux"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://eagle705.github.io/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/2020-02-10-Practical-Linux-Unix/"},"headline":"Linux, Unix 정리","image":["https://eagle705.github.io/img/og_image.png"],"datePublished":"2020-02-10T03:00:00.000Z","dateModified":"2022-08-27T10:54:33.520Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"리눅스 명령어 정리 및 stanford CS1U 강의 요약"}</script><link rel="canonical" href="https://eagle705.github.io/2020-02-10-Practical-Linux-Unix/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-02-10T03:00:00.000Z" title="2020. 2. 10. 오후 12:00:00">2020-02-10</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T10:54:33.520Z" title="2022. 8. 27. 오후 7:54:33">2022-08-27</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/cslog/">cslog</a></span><span class="level-item">18분안에 읽기 (약 2768 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">Linux, Unix 정리</h1><div class="content"><h2 id="Shorcut"><a href="#Shorcut" class="headerlink" title="Shorcut"></a>Shorcut</h2><p>자주 쓰는 명령어 모음</p>
+<ul>
+<li>lshw: 하드웨어 스펙보기</li>
+<li>예약변수: <code>HOME</code>, <code>PATH</code>, <code>PWD</code>, <code>LANG</code>, 등등</li>
+</ul>
+<h3 id="위치-매개-변수-Positional-Parameters"><a href="#위치-매개-변수-Positional-Parameters" class="headerlink" title="위치 매개 변수(Positional Parameters)"></a>위치 매개 변수(Positional Parameters)</h3><table>
+<thead>
+<tr>
+<th>문자</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$0</td>
+<td>실행된 스크립트 이름</td>
+</tr>
+<tr>
+<td>$1</td>
+<td>$1 $2 $3…${10}인자 순서대로 번호가 부여된다. 10번째부터는 “{}”감싸줘야 함</td>
+</tr>
+<tr>
+<td>$*</td>
+<td>전체 인자 값</td>
+</tr>
+<tr>
+<td>$@</td>
+<td>전체 인자 값($* 동일하지만 쌍따옴표로 변수를 감싸면 다른 결과 나옴)</td>
+</tr>
+<tr>
+<td>$#</td>
+<td>매개 변수의 총 개수</td>
+</tr>
+</tbody></table>
+<h3 id="특수-매개-변수-Special-Parameters"><a href="#특수-매개-변수-Special-Parameters" class="headerlink" title="특수 매개 변수(Special Parameters)"></a>특수 매개 변수(Special Parameters)</h3><table>
+<thead>
+<tr>
+<th>문자</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$$</td>
+<td>현재 스크립트의 PID</td>
+</tr>
+<tr>
+<td>$?</td>
+<td>최근에 실행된 명령어, 함수, 스크립트 자식의 종료 상태</td>
+</tr>
+<tr>
+<td>$!</td>
+<td>최근에 실행한 백그라운드(비동기) 명령의 PID</td>
+</tr>
+<tr>
+<td>$-</td>
+<td>현재 옵션 플래그</td>
+</tr>
+<tr>
+<td>$_</td>
+<td>지난 명령의 마지막 인자로 설정된 특수 변수</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="디버깅-Debugging"><a href="#디버깅-Debugging" class="headerlink" title="디버깅(Debugging)"></a>디버깅(Debugging)</h3><ul>
+<li>간단하게는 echo, exit 명령나 tee 명령어로 디버깅한다.</li>
+<li>다른 방법으로 실행 시 옵션을 주거나 코드에 한줄만 추가하면 해볼수 있다.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Bash 옵션(스크립트 실행 시)</th>
+<th>set 옵션(스크립트 코드 삽입)</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bash -n</td>
+<td>set -n, set -o noexec</td>
+<td>스크립트 실행없이 단순 문법 오류만 검사(찾지 못하는 문법 오류가 있을수 있음)</td>
+</tr>
+<tr>
+<td>bash -v</td>
+<td>set -v, set -o verbose</td>
+<td>명령어 실행전 해당 명령어 출력(echo)</td>
+</tr>
+<tr>
+<td>bash -x</td>
+<td>set -x, set -o xtrace</td>
+<td>명령어 실행후 해당 명령어 출력(echo)</td>
+</tr>
+<tr>
+<td></td>
+<td>set -u, set -o nounset</td>
+<td>미선언된 변수 발견시 “unbound variable” 메시지 출력</td>
+</tr>
+</tbody></table>
+<h3 id="배열-Array-Variable"><a href="#배열-Array-Variable" class="headerlink" title="배열(Array Variable)"></a>배열(Array Variable)</h3><ul>
+<li>배열 변수 사용은 반드시 괄호를 사용해야 한다.(예: ${array[1]})</li>
+<li>참고: 1차원 배열만 지원함</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 배열의 크기 지정없이 배열 변수로 선언</span></span><br><span class="line"><span class="comment"># 참고: &#x27;declare -a&#x27; 명령으로 선언하지 않아도 배열 변수 사용 가능함</span></span><br><span class="line"><span class="built_in">declare</span> -a array</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4개의 배열 값 지정</span></span><br><span class="line">array=(<span class="string">&quot;hello&quot;</span> <span class="string">&quot;test&quot;</span> <span class="string">&quot;array&quot;</span> <span class="string">&quot;world&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 기존 배열에 1개의 배열 값 추가(순차적으로 입력할 필요 없음)</span></span><br><span class="line">array[4]=<span class="string">&quot;variable&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 기존 배열 전체에 1개의 배열 값을 추가하여 배열 저장(배열 복사 시 사용)</span></span><br><span class="line">array=(<span class="variable">$&#123;array[@]&#125;</span> <span class="string">&quot;string&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 위에서 지정한 배열 출력</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hello world 출력: <span class="variable">$&#123;array[0]&#125;</span> <span class="variable">$&#123;array[3]&#125;</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;배열 전체 출력: <span class="variable">$&#123;array[@]&#125;</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;배열 전체 개수 출력: <span class="variable">$&#123;#array[@]&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">printf</span> <span class="string">&quot;배열 출력: %s\n&quot;</span> <span class="variable">$&#123;array[@]&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 배열 특정 요소만 지우기</span></span><br><span class="line"><span class="built_in">unset</span> array[4]</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;배열 전체 출력: <span class="variable">$&#123;array[@]&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 배열 전체 지우기</span></span><br><span class="line"><span class="built_in">unset</span> array</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;배열 전체 출력: <span class="variable">$&#123;array[@]&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="반복문-for-while-until"><a href="#반복문-for-while-until" class="headerlink" title="반복문(for, while, until)"></a>반복문(for, while, until)</h3><ul>
+<li>반목문 작성 시 아래 명령어(흐름제어)을 알아두면 좋다.</li>
+<li>반복문을 빠져 나갈때: break</li>
+<li>현재 반복문이나 조건을 건너 뛸때: continue</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 지정된 범위 안에서 반복문 필요 시 좋음</span></span><br><span class="line"><span class="keyword">for</span> string <span class="keyword">in</span> <span class="string">&quot;hello&quot;</span> <span class="string">&quot;world&quot;</span> <span class="string">&quot;...&quot;</span>; <span class="keyword">do</span>;</span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$&#123;string&#125;</span>;</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 수행 조건이 true 일때 실행됨 (실행 횟수 지정이 필요하지 않은 반복문 필요 시 좋음)</span></span><br><span class="line">count=0</span><br><span class="line"><span class="keyword">while</span> [ <span class="variable">$&#123;count&#125;</span> -le 5 ]; <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$&#123;count&#125;</span></span><br><span class="line">    count=$(( <span class="variable">$&#123;count&#125;</span>+<span class="number">1</span> ))</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 수행 조건이 false 일때 실행됨 (실행 횟수 지정이 필요하지 않은 반복문 필요 시 좋음)</span></span><br><span class="line">count2=10</span><br><span class="line">until [ <span class="variable">$&#123;count2&#125;</span> -le 5 ]; <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$&#123;count2&#125;</span></span><br><span class="line">    count2=$(( <span class="variable">$&#123;count2&#125;</span>-<span class="number">1</span> ))</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="조건문-if…elif…else…fi"><a href="#조건문-if…elif…else…fi" class="headerlink" title="조건문(if…elif…else…fi)"></a>조건문(if…elif…else…fi)</h3><ul>
+<li>조건문 작성 시 주의해야될 부분은 실행 문장이 없으면 오류 발생함</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">string1=<span class="string">&quot;hello&quot;</span></span><br><span class="line">string2=<span class="string">&quot;world&quot;</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$&#123;string1&#125;</span> == <span class="variable">$&#123;string2&#125;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="comment"># 실행 문장이 없으면 오류 발생함</span></span><br><span class="line">    <span class="comment"># 아래 echo 문장을 주석처리하면 확인 가능함</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;hello world&quot;</span></span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$&#123;string1&#125;</span> == <span class="variable">$&#123;string3&#125;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;hello world 2&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;hello world 3&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># AND</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$&#123;string1&#125;</span> == <span class="variable">$&#123;string2&#125;</span> ] &amp;&amp; [ <span class="variable">$&#123;string3&#125;</span> == <span class="variable">$&#123;string4&#125;</span> ]</span><br><span class="line">..생략</span><br><span class="line"></span><br><span class="line"><span class="comment"># OR</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$&#123;string1&#125;</span> == <span class="variable">$&#123;string2&#125;</span> ] || [ <span class="variable">$&#123;string3&#125;</span> == <span class="variable">$&#123;string4&#125;</span> ]</span><br><span class="line">..생략</span><br><span class="line"></span><br><span class="line"><span class="comment"># 다중 조건</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="variable">$&#123;string1&#125;</span> == <span class="variable">$&#123;string2&#125;</span> || <span class="variable">$&#123;string3&#125;</span> == <span class="variable">$&#123;string4&#125;</span> ]] &amp;&amp; [ <span class="variable">$&#123;string5&#125;</span> == <span class="variable">$&#123;string6&#125;</span> ]</span><br><span class="line">..생략</span><br></pre></td></tr></table></figure>
+<hr>
+<ul>
+<li><p>문자열 인덱싱:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://superuser.com/questions/1033273/bash-4-3-substring-negative-length-on-os-x">https://superuser.com/questions/1033273/bash-4-3-substring-negative-length-on-os-x</a></li>
+<li>맥에서는 -1 이런게 잘 안먹혀서 ${STR:6:$#-1}  이런식으로 해야하는듯</li>
+</ul>
+</li>
+<li><p>문자열 짜르기: </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.tutorialkart.com/bash-shell-scripting/bash-split-string/">https://www.tutorialkart.com/bash-shell-scripting/bash-split-string/</a></li>
+</ul>
+</li>
+<li><p>파일 합치기:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> part-000 part_blog_normal_doc_20030317 &gt; part_blog_normal_concat</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>0-9 사이 숫자만 변경되는 패턴 찾기:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://recipes4dev.tistory.com/157">https://recipes4dev.tistory.com/157</a></li>
+<li><code>grep &quot;STR[0-9]&quot; *</code></li>
+</ul>
+</li>
+<li><p>문자열 뒤에서 짜르기</p>
+<ul>
+<li>rev 두번쓰는건 좀 느림..</li>
+<li>parameter expansion을 쓰자<ul>
+<li>참고: <a target="_blank" rel="noopener" href="https://blog.gaerae.com/2015/01/bash-hello-world.html">https://blog.gaerae.com/2015/01/bash-hello-world.html</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 뒤에꺼만 짜르기</span><br><span class="line">last=$&#123;data%,*&#125;</span><br><span class="line">d3b028:~/test_200225$ echo $last</span><br><span class="line"># 결과: foo,bar,baz</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 뒤에꺼만 냅두기</span><br><span class="line">data=foo,bar,baz,qux</span><br><span class="line">last=$&#123;data##*,&#125;</span><br><span class="line"></span><br><span class="line"># 결과: qux</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>문자열 중간 짜르기</p>
+<ul>
+<li>ref: <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/5683367/how-to-cropcut-text-files-based-on-starting-and-ending-line-numbers-in-cygwin">https://stackoverflow.com/questions/5683367/how-to-cropcut-text-files-based-on-starting-and-ending-line-numbers-in-cygwin</a></li>
+</ul>
+</li>
+<li><p>큰 파일 짜르기</p>
+<ul>
+<li>ref: <a target="_blank" rel="noopener" href="https://linoxide.com/linux-how-to/split-large-text-file-smaller-files-linux/">https://linoxide.com/linux-how-to/split-large-text-file-smaller-files-linux/</a></li>
+<li><a target="_blank" rel="noopener" href="https://askubuntu.com/questions/54579/how-to-split-larger-files-into-smaller-parts">https://askubuntu.com/questions/54579/how-to-split-larger-files-into-smaller-parts</a></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">split</span> -l 라인수 파일 (옵션은 추후 참고)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>tab으로 짜르기</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://linuxhint.com/20_awk_examples/#a4">https://linuxhint.com/20_awk_examples/#a4</a></li>
+</ul>
+</li>
+<li><p>파일내의 단어 문자수 세기</p>
+<ul>
+<li>ref: <a target="_blank" rel="noopener" href="https://leeahnlee.tistory.com/14">https://leeahnlee.tistory.com/14</a></li>
+<li>-c : 전체 문자의 수를 출력</li>
+<li>-l  : 전체 라인의 수를 출력</li>
+<li>-w : 전체 단어의 수를 출력</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">wc</span> -l 파일명</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>큰 파일 label 기준으로 짜르기</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># label 2 기준으로 몇라인인지 숫자세기</span></span><br><span class="line"><span class="built_in">cat</span> _blog_all_title_total.txt | grep -w $<span class="string">&#x27;\t2&#x27;</span> | <span class="built_in">wc</span> -l</span><br><span class="line"><span class="comment"># 또는 # label 8192 기준으로 몇라인인지 숫자세기</span></span><br><span class="line"><span class="built_in">cat</span> _blog_all_title_total.txt | grep -w $<span class="string">&#x27;\t8192’ | wc -l</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>ref: </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://recipes4dev.tistory.com/157">https://recipes4dev.tistory.com/157</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/9954515/grep-find-lines-that-contains-t">https://stackoverflow.com/questions/9954515/grep-find-lines-that-contains-t</a></li>
+</ul>
+</li>
+<li><p>기타 Notation</p>
+<ul>
+<li><code>$#</code>          csh, sh     스크립트 할 arguments의 갯수<br>-ref: <a target="_blank" rel="noopener" href="https://idchowto.com/?p=11930">https://idchowto.com/?p=11930</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h3><ul>
+<li>grep엔 메타문자가 있음<ul>
+<li><code>^</code>: 라인의 시작</li>
+</ul>
+</li>
+<li>블로그 파일을 gdid grep으로 분류하고 싶다면 다음과 같이하면 됨<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat imp_log.txt | grep ^90000003_ &gt; blog_imp_log.txt</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="sort-amp-join"><a href="#sort-amp-join" class="headerlink" title="sort &amp; join"></a>sort &amp; join</h3><p>파일을 join 하려면 우선 sort 를 해야됨</p>
+<ul>
+<li>sort: <a target="_blank" rel="noopener" href="https://goitgo.tistory.com/15">https://goitgo.tistory.com/15</a><ul>
+<li>sort하려는데 저장공간이 없다고 뜰때: <a target="_blank" rel="noopener" href="https://www.linuxquestions.org/questions/linux-newbie-8/sort-big-files-tmp-sorta3aljf-no-space-left-on-device-823971/">https://www.linuxquestions.org/questions/linux-newbie-8/sort-big-files-tmp-sorta3aljf-no-space-left-on-device-823971/</a></li>
+</ul>
+</li>
+<li>join: <a target="_blank" rel="noopener" href="https://m.blog.naver.com/PostView.nhn?blogId=zzeun&amp;logNo=130186967794&amp;proxyReferer=https://www.google.com/">https://m.blog.naver.com/PostView.nhn?blogId=zzeun&amp;logNo=130186967794&amp;proxyReferer=https:%2F%2Fwww.google.com%2F</a></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sort</span> 파일명 &gt; sorted_파일명.txt </span><br></pre></td></tr></table></figure>
+
+<p>join 할땐 여러가지 옵션이 있음<br>우선 key값은 sep 기준으로 맨 앞에 있는게 보통임 (비교할 key 값은 옵션으로 지정가능)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">join</span> 파일1 파일2 &gt; joined_파일3.txt</span><br></pre></td></tr></table></figure>
+
+<p>만약 join되지 않는 라인만 출력하고자 한다면 다음과 같이하면 됨 (파일1에서 join되지 않는 라인 출력)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">join</span> -v 1 file1 file2 &gt; not_joined_file3.txt</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="rsync"><a href="#rsync" class="headerlink" title="rsync"></a>rsync</h3><ul>
+<li>Rsync(Remoe Sync)는 원격에 있는 파일과 디렉토리를 복사하고 동기화 하기 위해서 사용하는 툴이며 동시에 네트워크 프로토콜임</li>
+<li>Rsync는 CLI툴로, 커맨드 라인의 옵션들을 이용해서 배치 프로그램을 개발하기 쉬다는 장점이 있다. 이 스크립트를 cron 등에 올리는 걸로 간단하게 백업 혹은 미러(mirror) 시스템을 구축할 수 있음</li>
+<li>장점<ul>
+<li>원격 시스템으로 부터 파일을 효율적으로 복사하거나 동기화 할 수 있음</li>
+<li>Link, device, 파일의 소유자와 그룹 권한(permissions)등 파일의 부가정보도 복사할 수 있음</li>
+<li>scp보다 빠름 (rsync는 remote-update 프로토콜을 이용해서 차이가 있는 파일만 복사함. 처음엔 다 복사하니 비슷할수도)</li>
+<li>데이터를 압축해서 송&#x2F;수신하기 때문에 더 적은 대역폭을 사용</li>
+</ul>
+</li>
+<li>알고리즘<ul>
+<li>기본적으로 rsync는 파일의 크기와 수정 시간(modification)을 비교하는 것으로 파일을 전송할지 말지를 결정함</li>
+<li>–checksum 옵션을 이용하면 비교 방법을 개선할 수 있다. 이 옵션을 켜면, 파일의 checksum을 비교한다. 크기&#x2F;시간을 이용한 비교 방법보다 안전하지만 더 느리고 더 많은 자원을 사용</li>
+<li>Rsync는 파일을 고정 크기를 가지는 청크(chunk)로 나눈다음에 checksum을 계산한다. 이 checksum을 서로 계산해서, 다를 경우 해당 부분의 청크만을 복사한다.<br>만약 파일의 앞 부분의 정보가 수정돼서 정보들이 밀린다면 모든 청크의 checksum이 어긋날 것이다. 이 문제를 피하기 위해서 “Rolling hash”를 사용</li>
+</ul>
+</li>
+<li>출처: <a target="_blank" rel="noopener" href="https://skibis.tistory.com/16">https://skibis.tistory.com/16</a></li>
+</ul>
+<h4 id="rsync-사용법-시나리오"><a href="#rsync-사용법-시나리오" class="headerlink" title="rsync 사용법 시나리오"></a>rsync 사용법 시나리오</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://blueyikim.tistory.com/562">https://blueyikim.tistory.com/562</a></li>
+</ul>
+<h4 id="rsync-속도제한"><a href="#rsync-속도제한" class="headerlink" title="rsync 속도제한"></a>rsync 속도제한</h4><ul>
+<li>실 서비스에서 무언가를 가져오거나 적용할 땐 느린속도로 해주는게 좋음</li>
+<li>-bwlimit 옵션이 있고 단위는 kb&#x2F;s 임 (아래 예는 600KB&#x2F;s) (원격에서 로컬로 (rsync from to 로 보면됨))</li>
+</ul>
+<p><code>rsync -avz --progress --bwlimit=600 원격계정@원격ip:원격경로 로컬경로</code></p>
+<h6 id="파일-복사하지-않고-디렉토리-구조를-속도-제한해서-복사"><a href="#파일-복사하지-않고-디렉토리-구조를-속도-제한해서-복사" class="headerlink" title="파일 복사하지 않고 디렉토리 구조를 속도 제한해서 복사"></a>파일 복사하지 않고 디렉토리 구조를 속도 제한해서 복사</h6><p><code>rsync -av --progress --bwlimit=600 -f&quot;+ */&quot; -f&quot;- *&quot; 복사주는곳 복사받는곳</code></p>
+<hr>
+<h3 id="Practical-Unix"><a href="#Practical-Unix" class="headerlink" title="Practical Unix"></a>Practical Unix</h3><p>프로젝트를 하다보니 얼추 쓸수는 있게 되었는데 뭔가 디테일이 부족하다고 느끼던 차, 스탠포드에서 강의가 있는걸 알게되서 한번 빠르게 정주행해야곘다 생각했습니다. 아래에 간단하게 정리했습니다.</p>
+<p>command set: <a target="_blank" rel="noopener" href="https://www.tjhsst.edu/~dhyatt/superap/unixcmd.html">https://www.tjhsst.edu/~dhyatt/superap/unixcmd.html</a></p>
+<p>video:<br><a target="_blank" rel="noopener" href="https://practicalunix.org/video-schedule">https://practicalunix.org/video-schedule</a></p>
+<h4 id="week-2-Intro"><a href="#week-2-Intro" class="headerlink" title="week 2: Intro"></a>week 2: Intro</h4><ul>
+<li>사용할 shell (bash, zsh 등등)정하기</li>
+<li>사용할 eiditor (vim, emacs) 배우기</li>
+<li>shell과 editor 커스터마이징하기 (dot file! ex .zshrc)</li>
+<li>github에 올려놓고 자유롭게 저장, 바꿔쓰기</li>
+</ul>
+<p>참고로 난 macOS &#x2F; iTerm &#x2F; zsh 환경에서 작업 중<br><a target="_blank" rel="noopener" href="https://practicalunix.org/content/week-2-intro">https://practicalunix.org/content/week-2-intro</a></p>
+<h4 id="week-3-Pipelines-Input-x2F-Output-Redirection"><a href="#week-3-Pipelines-Input-x2F-Output-Redirection" class="headerlink" title="week 3: Pipelines - Input&#x2F;Output Redirection"></a>week 3: Pipelines - Input&#x2F;Output Redirection</h4><ul>
+<li>입출력 대상을 표준 입력(stdin), 표준 출력(stdout), 표준 오류(sterr)를 쓰지 않고 다른 경로인 파일로 재지정 하는 것</li>
+</ul>
+<h5 id="표준-입력-재지정-Input-Redirection"><a href="#표준-입력-재지정-Input-Redirection" class="headerlink" title="표준 입력 재지정(Input Redirection)"></a>표준 입력 재지정(Input Redirection)</h5><ul>
+<li>키보드 입력(표준 입력)을 파일에서 받도록 대체하는 것</li>
+<li>“&lt;” 연산자를 사용해서 키보드로 연결된 표준 입력 방향으로 파일로 변경(명시적)</li>
+<li>cat 명령어를 사용하는 것과 동일한 결과</li>
+</ul>
+<h5 id="표준-출력-재지정-Output-Redirection"><a href="#표준-출력-재지정-Output-Redirection" class="headerlink" title="표준 출력 재지정(Output Redirection)"></a>표준 출력 재지정(Output Redirection)</h5><ul>
+<li>명령의 실행 결과나 에러 상황을 화면에 출력하지 않고 바로 파일로 저장</li>
+<li>“&gt;” 연산자를 파일명 앞에 지정하여 사용함</li>
+<li>“&gt;” 연산자로 출력방향을 지정할 때 목적 파일은 항상 처음부터 다시 작성됨(파일 덮어씀)</li>
+<li>“&gt;&gt;” 연산자를 사용하면, 존재하지 않는 파일이면 “&gt;”과 마찬가지로 파일이 생성되고, 파일이 있는 경우에는 이어서 작성 됨</li>
+</ul>
+<h5 id="표준-오류-재지정-Error-Redirection"><a href="#표준-오류-재지정-Error-Redirection" class="headerlink" title="표준 오류 재지정(Error Redirection)"></a>표준 오류 재지정(Error Redirection)</h5><ul>
+<li>리다이렉션 연산자가 필요없음 (이부분은 아직 잘 모르겠음)</li>
+</ul>
+<h5 id="파이프-Pipe-파이프라인-Pipeline"><a href="#파이프-Pipe-파이프라인-Pipeline" class="headerlink" title="파이프(Pipe), 파이프라인(Pipeline)"></a>파이프(Pipe), 파이프라인(Pipeline)</h5><ul>
+<li>둘 이상의 명령을 함께 묶어 출력의 결곽 다른 프로그램의 입력으로 전환하는 기능임</li>
+<li>즉, 명령어의 표준출력을 또 다른 명령어의 표준 입력과 연결 시킬 수 있음</li>
+<li>명령어와 명령어의 연결은 <code>&quot;|&quot;</code> 기호를 사용함</li>
+<li><code>&quot;|&quot;</code> 기호 앞의 명령 결과가 <code>&quot;|&quot;</code> 기호 뒤의 명령에 입력 데이터로 사용됨</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> /bin  /usr/bin | <span class="built_in">sort</span> | <span class="built_in">uniq</span> | grep zip</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python read-input.py &lt; nums-0-999 &gt;&gt; result.txt</span><br></pre></td></tr></table></figure>
+
+<h5 id="기타-명령어"><a href="#기타-명령어" class="headerlink" title="기타 명령어"></a>기타 명령어</h5><ul>
+<li>‘head’, ‘tail’ : 파일의 시작, 끝을 보여줌</li>
+<li>‘tr’</li>
+<li>‘sort’</li>
+<li>‘uniq’</li>
+<li>‘cut’</li>
+<li>‘join’</li>
+<li>‘sed’</li>
+<li>‘awk’</li>
+<li>‘tee’</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="http://eunguru.tistory.com/89">http://eunguru.tistory.com/89</a><br><a target="_blank" rel="noopener" href="https://practicalunix.org/content/week-3-pipelines">https://practicalunix.org/content/week-3-pipelines</a></p>
+<h4 id="week-4-Grep-and-Regular-Expressions"><a href="#week-4-Grep-and-Regular-Expressions" class="headerlink" title="week 4: Grep and Regular Expressions"></a>week 4: Grep and Regular Expressions</h4><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.gaerae.com/2015/01/bash-hello-world.html">https://blog.gaerae.com/2015/01/bash-hello-world.html</a></li>
+</ul>
+<hr>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Linux, Unix 정리</p><p><a href="https://eagle705.github.io/2020-02-10-Practical-Linux-Unix/">https://eagle705.github.io/2020-02-10-Practical-Linux-Unix/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2020-02-10</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-08-27</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/linux/">linux</a></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020-05-26-Deeper%20Text%20Understanding%20for%20IR%20with%20Contextual%20Neural%20Language%20Modeling/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Deeper Text Understanding for IR with Contextual Neural Language Modeling&quot;</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020-02-06-Towards_a_Human_like_Open_Domain_Chatbot/"><span class="level-item">Towards a Human-like Open-Domain Chatbot</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/2020-02-10-Practical-Linux-Unix/';
+            this.page.identifier = '2020-02-10-Practical-Linux-Unix/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">28</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">16</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">17</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Shorcut"><span class="level-left"><span class="level-item">1</span><span class="level-item">Shorcut</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#위치-매개-변수-Positional-Parameters"><span class="level-left"><span class="level-item">1.1</span><span class="level-item">위치 매개 변수(Positional Parameters)</span></span></a></li><li><a class="level is-mobile" href="#특수-매개-변수-Special-Parameters"><span class="level-left"><span class="level-item">1.2</span><span class="level-item">특수 매개 변수(Special Parameters)</span></span></a></li><li><a class="level is-mobile" href="#디버깅-Debugging"><span class="level-left"><span class="level-item">1.3</span><span class="level-item">디버깅(Debugging)</span></span></a></li><li><a class="level is-mobile" href="#배열-Array-Variable"><span class="level-left"><span class="level-item">1.4</span><span class="level-item">배열(Array Variable)</span></span></a></li><li><a class="level is-mobile" href="#반복문-for-while-until"><span class="level-left"><span class="level-item">1.5</span><span class="level-item">반복문(for, while, until)</span></span></a></li><li><a class="level is-mobile" href="#조건문-if…elif…else…fi"><span class="level-left"><span class="level-item">1.6</span><span class="level-item">조건문(if…elif…else…fi)</span></span></a></li><li><a class="level is-mobile" href="#grep"><span class="level-left"><span class="level-item">1.7</span><span class="level-item">grep</span></span></a></li><li><a class="level is-mobile" href="#sort-amp-join"><span class="level-left"><span class="level-item">1.8</span><span class="level-item">sort &amp; join</span></span></a></li><li><a class="level is-mobile" href="#rsync"><span class="level-left"><span class="level-item">1.9</span><span class="level-item">rsync</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#rsync-사용법-시나리오"><span class="level-left"><span class="level-item">1.9.1</span><span class="level-item">rsync 사용법 시나리오</span></span></a></li><li><a class="level is-mobile" href="#rsync-속도제한"><span class="level-left"><span class="level-item">1.9.2</span><span class="level-item">rsync 속도제한</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Practical-Unix"><span class="level-left"><span class="level-item">1.10</span><span class="level-item">Practical Unix</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#week-2-Intro"><span class="level-left"><span class="level-item">1.10.1</span><span class="level-item">week 2: Intro</span></span></a></li><li><a class="level is-mobile" href="#week-3-Pipelines-Input-x2F-Output-Redirection"><span class="level-left"><span class="level-item">1.10.2</span><span class="level-item">week 3: Pipelines - Input/Output Redirection</span></span></a></li><li><a class="level is-mobile" href="#week-4-Grep-and-Regular-Expressions"><span class="level-left"><span class="level-item">1.10.3</span><span class="level-item">week 4: Grep and Regular Expressions</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#Reference"><span class="level-left"><span class="level-item">2</span><span class="level-item">Reference</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-10-22T03:00:00.000Z">2020-10-22</time></p><p class="title"><a href="/2020-10-22-DocumentExpansionByQueryPrediction/">Document Expansion by Query Prediction</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-06-18T03:00:00.000Z">2020-06-18</time></p><p class="title"><a href="/2020-06-18-bert_based_lexical_substitution/">BERT-based Lexical Substitution</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-27T03:00:00.000Z">2020-05-27</time></p><p class="title"><a href="/2020-05-27-elastic_search/">Elastic Search 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-26T03:00:00.000Z">2020-05-26</time></p><p class="title"><a href="/2020-05-26-Deeper%20Text%20Understanding%20for%20IR%20with%20Contextual%20Neural%20Language%20Modeling/">Deeper Text Understanding for IR with Contextual Neural Language Modeling&quot;</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-02-10T03:00:00.000Z">2020-02-10</time></p><p class="title"><a href="/2020-02-10-Practical-Linux-Unix/">Linux, Unix 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2022 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>

@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>ML Basic - 머신러닝과 확률 - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Prior &amp;amp; Posterior 사전 확률(prior probability):   관측자가 관측을 하기 전에 시스템 또는 모델에 대해 가지고 있는 선험적 확률. 예를 들어, 남여의 구성비를 나타내는 p(남자), p(여자) 등이 사전확률에 해당한다. 특정 사상이 일어나기 전의 확률을 뜻한다. 선험적 확률은 베이즈 추론에서 관측자가 관측을 하기 전에 가"><meta property="og:type" content="blog"><meta property="og:title" content="ML Basic - 머신러닝과 확률"><meta property="og:url" content="https://eagle705.github.io/2019-09-11-MLbasic/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="Prior &amp;amp; Posterior 사전 확률(prior probability):   관측자가 관측을 하기 전에 시스템 또는 모델에 대해 가지고 있는 선험적 확률. 예를 들어, 남여의 구성비를 나타내는 p(남자), p(여자) 등이 사전확률에 해당한다. 특정 사상이 일어나기 전의 확률을 뜻한다. 선험적 확률은 베이즈 추론에서 관측자가 관측을 하기 전에 가"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190925204340821.png"><meta property="og:image" content="http://sanghyukchun.github.io/images/post/61-1.jpg"><meta property="article:published_time" content="2019-09-11T03:00:00.000Z"><meta property="article:modified_time" content="2022-08-27T12:57:05.822Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="ML"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://eagle705.github.io/img/markdown-img-paste-20190925204340821.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/2019-09-11-MLbasic/"},"headline":"ML Basic - 머신러닝과 확률","image":["https://eagle705.github.io/img/markdown-img-paste-20190925204340821.png","http://sanghyukchun.github.io/images/post/61-1.jpg"],"datePublished":"2019-09-11T03:00:00.000Z","dateModified":"2022-08-27T12:57:05.822Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"Prior &amp; Posterior 사전 확률(prior probability):   관측자가 관측을 하기 전에 시스템 또는 모델에 대해 가지고 있는 선험적 확률. 예를 들어, 남여의 구성비를 나타내는 p(남자), p(여자) 등이 사전확률에 해당한다. 특정 사상이 일어나기 전의 확률을 뜻한다. 선험적 확률은 베이즈 추론에서 관측자가 관측을 하기 전에 가"}</script><link rel="canonical" href="https://eagle705.github.io/2019-09-11-MLbasic/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-09-11T03:00:00.000Z" title="2019. 9. 11. 오후 12:00:00">2019-09-11</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T12:57:05.822Z" title="2022. 8. 27. 오후 9:57:05">2022-08-27</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/cslog/">cslog</a></span><span class="level-item">21분안에 읽기 (약 3222 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">ML Basic - 머신러닝과 확률</h1><div class="content"><h3 id="Prior-amp-Posterior"><a href="#Prior-amp-Posterior" class="headerlink" title="Prior &amp; Posterior"></a>Prior &amp; Posterior</h3><ul>
+<li><p>사전 확률(prior probability): </p>
+<ul>
+<li>관측자가 관측을 하기 전에 시스템 또는 모델에 대해 가지고 있는 선험적 확률. 예를 들어, 남여의 구성비를 나타내는 p(남자), p(여자) 등이 사전확률에 해당한다.</li>
+<li>특정 사상이 일어나기 전의 확률을 뜻한다.</li>
+<li>선험적 확률은 베이즈 추론에서 관측자가 관측을 하기 전에 가지고 있는 확률 분포를 의미한다.</li>
+<li>ex) 동전을 던져서 앞면이 나올 확률은 1&#x2F;2, 특이한 동전은 1&#x2F;3이다.</li>
+<li>사전 확률은 일반적으로 실험하는 대상에 대해 잘 알고 있는 전문가가 선택하거나(informative prior), 혹은 전문적인 정보가 없는 무정보적 분포(uninformative prior)로 주어진다.</li>
+</ul>
+</li>
+<li><p>사후 확률(Posterior): </p>
+<ul>
+<li>사건이 발생한 후(관측이 진행된 후) 그 사건이 특정 모델에서 발생했을 확률</li>
+<li>사건 발생 후에 어떤 원인으로부터 일어난 것이라고 생각되어지는 확률</li>
+<li>조건부 확률을 통해 사후 확률을 표현할 수 있음</li>
+<li>사전 확률과 가능도(likelihood)가 주어졌을 때, 관측자는 관측값을 얻은 다음 베이즈 정리에 의해 사후 확률을 얻을 수 있음</li>
+<li>ex) 물건이 불량품이 생산되었을때 A공장에서 생산되었을 확률</li>
+<li>$posterior &#x3D; {likelihood \times prior \over evidence}$</li>
+</ul>
+</li>
+</ul>
+<h3 id="MLE-amp-MAP-예시"><a href="#MLE-amp-MAP-예시" class="headerlink" title="MLE &amp; MAP 예시"></a>MLE &amp; MAP 예시</h3><ul>
+<li><p>MLE(Maximum Likelihood Estimation) 방법</p>
+<ul>
+<li>MLE 방법은 남자에게서 그러한 머리카락이 나올 확률 p(z|남)과 여자에게서 그러한 머리카락이 나올 확률 p(z|여)을 비교해서 가장 확률이 큰, 즉 likelihood가 가장 큰 클래스(성별)를 선택하는 방법</li>
+</ul>
+</li>
+<li><p>MAP(Maximum A Posteriori) 방법 </p>
+<ul>
+<li>MAP 방법은 z라는 머리카락이 발견되었는데 그것이 남자것일 확률 p(남|z), 그것이 여자것일 확률 p(여|z)를 비교해서 둘 중 큰 값을 갖는 클래스(성별)를 선택하는 방법</li>
+<li>즉, 사후확률(posterior prabability)를 최대화시키는 방법으로서 MAP에서 사후확률을 계산할 때 베이즈 정리가 이용됨</li>
+</ul>
+</li>
+<li><p><code>즉 MLE는 남자인지 여자인지를 미리 정해놓고 시작해서 비교하는거고 MAP는 남자인지 여자인지를 모르는 상태에서 그것이 정해지는 확률까지도 고려해서 비교하는 것임</code></p>
+</li>
+<li><p><code>MAP가 그래서 특정 경우가 정해지는 것에 대한 사전확률을 고려한다고 하는 것임</code></p>
+</li>
+</ul>
+<h3 id="Maximum-Likelihood-Estimation-MLE"><a href="#Maximum-Likelihood-Estimation-MLE" class="headerlink" title="Maximum Likelihood Estimation (MLE)"></a>Maximum Likelihood Estimation (MLE)</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://ko.wikipedia.org/wiki/%EA%B0%80%EB%8A%A5%EB%8F%84">https://ko.wikipedia.org/wiki/%EA%B0%80%EB%8A%A5%EB%8F%84</a></li>
+</ul>
+<h3 id="Maximum-a-Posteriori-Estimation-MAP"><a href="#Maximum-a-Posteriori-Estimation-MAP" class="headerlink" title="Maximum a Posteriori Estimation (MAP)"></a>Maximum a Posteriori Estimation (MAP)</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://ko.wikipedia.org/wiki/%EC%B5%9C%EB%8C%80_%EC%82%AC%ED%9B%84_%ED%99%95%EB%A5%A0">https://ko.wikipedia.org/wiki/%EC%B5%9C%EB%8C%80_%EC%82%AC%ED%9B%84_%ED%99%95%EB%A5%A0</a></li>
+<li>It is very common to use regularized maximum likelihood.</li>
+</ul>
+<h3 id="MLE-vs-MAP"><a href="#MLE-vs-MAP" class="headerlink" title="MLE vs MAP"></a>MLE vs MAP</h3><p><img src="/img/markdown-img-paste-20190925204340821.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<p>최대 사후 확률에 대응하는 모수(Parameter)는 최대우도(MLE)와 마찬가지로 모수의 점 추정으로 사용할 수 있지만, 최대우도에서는 어떤 사건이 일어날 확률을 가장 높이는 모수를 찾는 것에 비해, 최대 사후 확률 모수는 모수의 사전 확률(Prior)과 결합된 확률을 고려한다는 점이 다르다.</p>
+<ul>
+<li><p>한줄 정리: MAP는 MLE에 비해서 Params(성비로 생각하면 편함)로 인해 발생할 사건의 사전확률(성비를 생각하면 편함)을 고려함!</p>
+</li>
+<li><p>MLE보단 MAP 방법이 정확하지만 대부분 Params의 사전확률(성비)을 모르는 경우가 많기 때문에 MLE를 사용함</p>
+</li>
+<li><p>Params의 사전 확률을 왜 알기 어렵나?? (<a target="_blank" rel="noopener" href="https://darkpgmr.tistory.com/62">Blog Reference</a>)</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">영상에서 피부색을 검출하는 문제는 결국, 영상의 각 픽셀이 피부색인지 아닌지 여부를 결정하는 classification 문제로 볼 수 있다.</span><br><span class="line"></span><br><span class="line">피부색 검출을 위해서는 먼저 샘플 영상들을 열심히 수집해서 피부색 DB와 일반 색상 DB를 구성해야 한다. </span><br><span class="line">DB구성이 끝나면 이제 입력 영상의 각 픽셀값이 피부색인지 여부를 베이지언 방법으로 판단해 보기로 하자. </span><br><span class="line">입력 픽셀값이 z라 하면 p(z|피부색)은 피부색 DB에 있는 데이터들 중에서 z와 같은 색을 가진 데이터의 비율을 세면 된다. </span><br><span class="line">또한 p(z|일반색)은 일반색 DB에 있는 데이터들 중에서 z와 같은 색을 가진 데이터의 비율이다.</span><br><span class="line"></span><br><span class="line">만일 ML로 피부색 검출을 한다면 p(z|피부색)과 p(z|일반색)을 비교해서 확률이 큰 값을 선택하면 될 것이다.</span><br><span class="line"></span><br><span class="line">그런데, 이 문제를 MAP로 풀면 어떻게 될까? </span><br><span class="line">수집된 DB에 있는 데이터의 개수를 이용하여 </span><br><span class="line">p(피부색) = |피부색DB|/(|피부색DB|+|일반색DB|), p(일반색) = |일반색DB|/(|피부색DB|+|일반색DB|)</span><br><span class="line">라 놓고 MAP를 적용하면 되는 것일까?</span><br><span class="line"></span><br><span class="line">대답은 NO!</span><br><span class="line"></span><br><span class="line">p(피부색)은 세상에 존재하는 모든 이미지 색상들 중에서 피부색이 얼마나 되느냐를 나타내는 말이다. </span><br><span class="line">따라서, 자신이 수집한 피부색 DB와 일반색 DB의 크기만을 가지고 이 확률을 추정하는 것은 무리가 있다. </span><br><span class="line">오히려 일반색 DB에 있는 데이터들 중에서 피부색 DB에 있는 색과 같은 색을 갖는 데이터들의 비율을 p(피부색)이라 잡는 것이 보다 합리적일 것이다.</span><br><span class="line"></span><br><span class="line">이와 같이 prior 확률 p(x)를 구하는 것은 쉬운 문제가 아니기 때문에 현실적으로는 MAP 대신 ML이 사용되는 경우도 많다.</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>여기까지 안가도, 정확한 성비를 구하려면 모든 인구의 인원과 성별별로 인원을 구해야되니.. prior를 구하기 어려울 수 있다 하겠다.</p>
+</li>
+<li><p>Q) MAP나 이런게 Neural Net이나 이런 부분에선 어떻게 적용될 수 있는걸까? DL에서는 거의 MLE 쓰는거 같은데..?! 아무래도 이런건 정보이론을 좀 더 공부해야 할듯..</p>
+</li>
+</ul>
+<h4 id="Notation"><a href="#Notation" class="headerlink" title="Notation"></a>Notation</h4><ul>
+<li>P(A, B): A,B의 Joint Prob</li>
+</ul>
+<h4 id="Generative-vs-Discriminative"><a href="#Generative-vs-Discriminative" class="headerlink" title="Generative vs Discriminative"></a>Generative vs Discriminative</h4><ul>
+<li><p>Generative: </p>
+<ul>
+<li>Joint Prob: P(X, C) &#x3D; P(X|C)P(C) &#x2F;&#x2F; Bayes rule로 해결<ul>
+<li>여러개의 그래프</li>
+<li>후보 토픽을 정하고 각 토픽의 분포에 따라 단어가 생성될 확률 계산</li>
+</ul>
+</li>
+<li>평균 분산만 두개 구하면 N 분포 쓸수있고 대부분을 N 으로 가정하니까 예전에 데이터 적을땐 Discriminative로 feature만드는것보다 Generative로 분포 가정해서 사용했음</li>
+<li>multi feature를 보기 힘듬..!</li>
+</ul>
+</li>
+<li><p>Discriminative:</p>
+<ul>
+<li>Conditional Prob: P(C|X)<ul>
+<li>한개의 그래프</li>
+</ul>
+</li>
+<li>feature등을 통해 class 추측</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://sanghyukchun.github.io/images/post/61-1.jpg" alt="gen_vs_dis"></p>
+<h4 id="Probability-Theory-vs-Decision-Theory-vs-Information-Theory"><a href="#Probability-Theory-vs-Decision-Theory-vs-Information-Theory" class="headerlink" title="Probability Theory vs Decision Theory vs Information Theory"></a>Probability Theory vs Decision Theory vs Information Theory</h4><ul>
+<li>Probability Theory:</li>
+<li>Decision Theory: </li>
+<li>Information Theory:<ul>
+<li>획득가능한 정보량 &#x3D; 불확실성</li>
+<li>비트로 처음에 연구됨 (2진수)</li>
+<li>담아야되는 정보량(로그 밑은 2임) n &#x3D; -logP(x) &#x3D; log(1&#x2F;P(x))<ul>
+<li>2진수가 표현가능한 정보량</li>
+</ul>
+</li>
+<li>정보량이란 그 사상에 대해 모르는 정도에 대한 양</li>
+</ul>
+</li>
+</ul>
+<h4 id="etc"><a href="#etc" class="headerlink" title="etc"></a>etc</h4><ul>
+<li><p>Generative: HMM (전이확률 + 생성확률)</p>
+</li>
+<li><p>Discriminative: NB (각 feature는 독립으로 보자~) </p>
+</li>
+<li><p>Maximum Entropy: 본 데이터에 대한 확률(feature function(있으면 1 없으면 0으로 나타내고 실제 중요도는 그 앞에 곱해지는 가중치인 alpha값을 학습해서 정함) + 유니폼(엔트로피 최대)</p>
+</li>
+<li><p>MEMM: HMM과 비슷하지만 전이확률 대신 엔트로피로..?! 하지만 Label bias라는 문제가 있음 (길이 없으면 가지마라 라는.. 데이터 없으면 방해될 수 있음)</p>
+</li>
+<li><p>CRF: MEMM 저자가 1년 후 만들어낸 모델임.. Linear Chain CRF가 우리가 아는 CRF임</p>
+<ul>
+<li>원래 CRF는 어떠한 클릭(사이클 만족시키지 않는..어떤 조건이 있는데 그걸 만족시키면 클릭임)도 자질로 쓸 수 있다</li>
+<li>이전 상태의 feature function의 가중치도 상태에 따라 달라지고.. 전이 확률이 너무 Label bias 문제를 만드니 이걸 하나의 feature로 보면서 영향을 줄여보겠다는게 CRF의 컨셉이라고 할 수 있음</li>
+</ul>
+</li>
+<li><p>Structured SVM:</p>
+<ul>
+<li>SVM은 원래 분류만하는데 SVM으로 sequence 라벨링 문제 해결하려고 할때 씀</li>
+</ul>
+</li>
+</ul>
+<h4 id="Examples"><a href="#Examples" class="headerlink" title="Examples"></a>Examples</h4><ul>
+<li>가정: 어느 공장이 있다고 가정하자. 공장은 3개가 있다.</li>
+<li>목표: $P(Y \mid X)$ ; 불량품이 생산되었을때 어떤 공장에서 생산되었는지에 대한 확률을 구하는 것</li>
+<li>노테이션:<ul>
+<li>A, B, C: 공장</li>
+<li>X: 불량인 경우의 클래스</li>
+</ul>
+</li>
+<li>조건:<ul>
+<li>$P(A)$ &#x3D; 35% : A 공장에서 물건을 생산할 확률이 35%임<ul>
+<li>$P(A \cap X)$ &#x3D; 1% : A 공장에서 생산하고 불량인 확률</li>
+</ul>
+</li>
+<li>$P(B)$ &#x3D; 20% : B 공장에서 물건을 생산할 확률이 20%임<ul>
+<li>$P(B \cap X)$ &#x3D; 1.3% : B 공장에서 생산하고 불량인 확률</li>
+</ul>
+</li>
+<li>$P(C)$ &#x3D; 45% : C 공장에서 물건을 생산할 확률이 45%임<ul>
+<li>$P(C \cap X)$ &#x3D; 2% : C 공장에서 생산하고 불량인 확률</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>이번엔 $P(A \mid X)$에 대한 값을 구해보도록 하겠다. </p>
+<p>$P(A \mid X)$ &#x3D; ${P(X \mid A) P(A) \over P(X)}$ &#x3D; ${P(X \cap A) \over P(A)}  P(A) \over P(X)$ &#x3D; $P(X \cap A) \over P(X)$</p>
+<p>와 같이 정리할 수 있다. 이때, $P(A)$ &#x3D; 35% 지만 쓸일이 없고, $P(X)$ &#x3D; (불량 개수 &#x2F; 전체 생산수) 로 구할 수 있거나 marginal prob로 구할수 있었던것 같다. 아무튼 남은건 $P(X \cap A)$인데, 이 친구는 독립인경우에 $P(X) * P(A)$로 바꿔서 쓸수있지만 (그렇게 되면 결국 $P(A|B)&#x3D;P(A)$이다) 여기선 독립이 아니기 때문에 단순하게 곱하기로 하면 안된다. $P(X \cap A)$ 는 A 공장에서 생산했고 불량인 제품의 확률을 사용해야하므로 위에 정의된 1%를 써야한다.<br>결과적으로 다음과 같다.<br>$P(A \mid X)$ &#x3D; $P(X \mid A) P(A) \over P(X)$ &#x3D; ${P(X \cap A) \over P(A)}  P(A) \over P(X)$ &#x3D; $P(X \cap A) \over P(X)$ &#x3D; $0.01 \over P(X)$ </p>
+<p>A를 클래스로 해석해서 그렇지 파라미터등으로 해석해서 모델을 찾는걸로 바꾼다면, 위의 값을 Maximize하는것이 중요하기 때문에, $P(X)$ 의 값은 사실상 고려하지 않아도 된다. 저 형태의 값의 크기가 가장 크게 나오는 theta만 찾으면 된다.</p>
+<h4 id="기타"><a href="#기타" class="headerlink" title="기타"></a>기타</h4><ol>
+<li>Forward </li>
+<li>Viterbi(Dynamic으로 해결하는데, forwad일때 이전 상태에서 최대값의 확률을 갖는 path를 저장해놓고 나중에 backward할때 다시 계산하지 않고 저장한 path를 사용하면서 해결하는 방식음)<ul>
+<li>N-Best하면 계산량 너무 많으니 계산량 줄이기 위해 beam search 같은거 하는 것..!</li>
+</ul>
+</li>
+<li>Shortest path</li>
+</ol>
+<h4 id="loss-function-정리"><a href="#loss-function-정리" class="headerlink" title="loss function 정리"></a>loss function 정리</h4><ul>
+<li><p>용어정리:</p>
+<ul>
+<li>multi-class vs multi-label</li>
+<li>&#x3D;&#x3D; 여러 클래스중 1개 맞추기 혹은.. 그냥 클래스가 여러개일 때를 의미 vs 여러 클래스중 N개 맞추기</li>
+</ul>
+</li>
+<li><p>categorical_crossentropy: one-hot encoding 을 label로 하는 multi-class용 Loss</p>
+</li>
+<li><p>sparse_categorical_crossentropy: class index를 label로 하는 multi-class용 Loss (1개의 클래스에 대해서만 계산하면 되는 sparse한 상황이니까 이걸쓰면 계산상의 이득이 있다로 이해하면 될듯..)</p>
+</li>
+<li><dl><dt>binary_crossentropy: multi-hot encoding 을 label로 하는 multi-label에도 사용 가능한 Loss<br>(Sigmoid Cross-Entropy라고도 불리움, Activation이 Softmax가 아닌 Sigmoid기 때문에 다른 확률값에 영향 받지 않아서 multi-label 문제)</dt><dd>0,1 을 갖는 index로 하고 싶으면 마지막 차원의 크기를 1로 셋팅하면 됨 (MLP for binary classification참고: <a target="_blank" rel="noopener" href="https://keras.io/getting-started/sequential-model-guide/">https://keras.io/getting-started/sequential-model-guide/</a>)</dd></dl></li>
+<li><p>추가:</p>
+<ul>
+<li>Multi-hot Sparse Categorical Cross Entropy라는 것도 있다(?)<br><a target="_blank" rel="noopener" href="https://cwiki.apache.org/confluence/display/MXNET/Multi-hot+Sparse+Categorical+Cross-entropy">https://cwiki.apache.org/confluence/display/MXNET/Multi-hot+Sparse+Categorical+Cross-entropy</a></li>
+</ul>
+</li>
+<li><p>참고: </p>
+<ul>
+<li>Loss function 설명: <a target="_blank" rel="noopener" href="https://gombru.github.io/2018/05/23/cross_entropy_loss/">https://gombru.github.io/2018/05/23/cross_entropy_loss/</a></li>
+<li>Multi-label image cf 예제: <a target="_blank" rel="noopener" href="https://github.com/suraj-deshmukh/Keras-Multi-Label-Image-Classification/blob/master/miml.ipynb">https://github.com/suraj-deshmukh/Keras-Multi-Label-Image-Classification/blob/master/miml.ipynb</a></li>
+<li>Eras BCE: <a target="_blank" rel="noopener" href="https://www.tensorflow.org/api_docs/python/tf/keras/losses/BinaryCrossentropy">https://www.tensorflow.org/api_docs/python/tf/keras/losses/BinaryCrossentropy</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
+<li><p>MLE &amp; MAP </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://hwiyong.tistory.com/27">https://hwiyong.tistory.com/27</a></li>
+<li><a target="_blank" rel="noopener" href="https://darkpgmr.tistory.com/62">https://darkpgmr.tistory.com/62</a></li>
+<li><a target="_blank" rel="noopener" href="http://sanghyukchun.github.io/58/">http://sanghyukchun.github.io/58/</a></li>
+<li><a target="_blank" rel="noopener" href="https://m.blog.naver.com/PostView.nhn?blogId=ynca333&amp;logNo=221314899811&amp;proxyReferer=https://www.google.com/">https://m.blog.naver.com/PostView.nhn?blogId=ynca333&amp;logNo=221314899811&amp;proxyReferer=https%3A%2F%2Fwww.google.com%2F</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.synapsoft.co.kr/blog/6002">http://www.synapsoft.co.kr/blog/6002</a></li>
+</ul>
+</li>
+<li><p>베이즈 정리</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://ratsgo.github.io/statistics/2017/07/01/bayes/">https://ratsgo.github.io/statistics/2017/07/01/bayes/</a></li>
+</ul>
+</li>
+<li><p>Generative VS Discriminative</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://sanghyukchun.github.io/61/">http://sanghyukchun.github.io/61/</a></li>
+</ul>
+</li>
+<li><p>옥스포드 자료 (Generative, Discriminative, MLE)</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://www.stats.ox.ac.uk/~flaxman/HT17_lecture5.pdf">http://www.stats.ox.ac.uk/~flaxman/HT17_lecture5.pdf</a></li>
+</ul>
+</li>
+<li><p>이 자료가 최종 정리본 CMU!</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://www.cs.cmu.edu/~epxing/Class/10701-08f/Lecture/lecture5.pdf">http://www.cs.cmu.edu/~epxing/Class/10701-08f/Lecture/lecture5.pdf</a></li>
+</ul>
+</li>
+<li><p>비슷한글 정리한 블로그</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://devkihyun.github.io/study/Machine-learining-and-Probability/">https://devkihyun.github.io/study/Machine-learining-and-Probability/</a></li>
+</ul>
+</li>
+<li><p>ROC, AUC, True&#x2F;False Pos&#x2F;Neg 정리 (매우 잘됨)</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.waytoliah.com/1222">https://www.waytoliah.com/1222</a></li>
+<li><a target="_blank" rel="noopener" href="https://nittaku.tistory.com/297">https://nittaku.tistory.com/297</a></li>
+<li><a target="_blank" rel="noopener" href="https://m.blog.naver.com/PostView.nhn?blogId=sw4r&amp;logNo=221015817276&amp;proxyReferer=https://www.google.com/">https://m.blog.naver.com/PostView.nhn?blogId=sw4r&amp;logNo=221015817276&amp;proxyReferer=https%3A%2F%2Fwww.google.com%2F</a></li>
+</ul>
+</li>
+<li><p>Normal Equation을 풀기 어려운 이유</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://daeson.tistory.com/172">https://daeson.tistory.com/172</a></li>
+</ul>
+</li>
+</ul>
+</div><div class="article-licensing box"><div class="licensing-title"><p>ML Basic - 머신러닝과 확률</p><p><a href="https://eagle705.github.io/2019-09-11-MLbasic/">https://eagle705.github.io/2019-09-11-MLbasic/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2019-09-11</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-08-27</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/ML/">ML</a></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2019-10-08-SAN_for_NLI/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Stochastic Answer Networks for Natural Language Inference (SAN)</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2019-08-14-GPT1/"><span class="level-item">Improving Language Understanding by Generative Pre-Training (GPT)</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/2019-09-11-MLbasic/';
+            this.page.identifier = '2019-09-11-MLbasic/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">28</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">16</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">17</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Prior-amp-Posterior"><span class="level-left"><span class="level-item">1</span><span class="level-item">Prior &amp; Posterior</span></span></a></li><li><a class="level is-mobile" href="#MLE-amp-MAP-예시"><span class="level-left"><span class="level-item">2</span><span class="level-item">MLE &amp; MAP 예시</span></span></a></li><li><a class="level is-mobile" href="#Maximum-Likelihood-Estimation-MLE"><span class="level-left"><span class="level-item">3</span><span class="level-item">Maximum Likelihood Estimation (MLE)</span></span></a></li><li><a class="level is-mobile" href="#Maximum-a-Posteriori-Estimation-MAP"><span class="level-left"><span class="level-item">4</span><span class="level-item">Maximum a Posteriori Estimation (MAP)</span></span></a></li><li><a class="level is-mobile" href="#MLE-vs-MAP"><span class="level-left"><span class="level-item">5</span><span class="level-item">MLE vs MAP</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Notation"><span class="level-left"><span class="level-item">5.1</span><span class="level-item">Notation</span></span></a></li><li><a class="level is-mobile" href="#Generative-vs-Discriminative"><span class="level-left"><span class="level-item">5.2</span><span class="level-item">Generative vs Discriminative</span></span></a></li><li><a class="level is-mobile" href="#Probability-Theory-vs-Decision-Theory-vs-Information-Theory"><span class="level-left"><span class="level-item">5.3</span><span class="level-item">Probability Theory vs Decision Theory vs Information Theory</span></span></a></li><li><a class="level is-mobile" href="#etc"><span class="level-left"><span class="level-item">5.4</span><span class="level-item">etc</span></span></a></li><li><a class="level is-mobile" href="#Examples"><span class="level-left"><span class="level-item">5.5</span><span class="level-item">Examples</span></span></a></li><li><a class="level is-mobile" href="#기타"><span class="level-left"><span class="level-item">5.6</span><span class="level-item">기타</span></span></a></li><li><a class="level is-mobile" href="#loss-function-정리"><span class="level-left"><span class="level-item">5.7</span><span class="level-item">loss function 정리</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Reference"><span class="level-left"><span class="level-item">6</span><span class="level-item">Reference</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-10-22T03:00:00.000Z">2020-10-22</time></p><p class="title"><a href="/2020-10-22-DocumentExpansionByQueryPrediction/">Document Expansion by Query Prediction</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-06-18T03:00:00.000Z">2020-06-18</time></p><p class="title"><a href="/2020-06-18-bert_based_lexical_substitution/">BERT-based Lexical Substitution</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-27T03:00:00.000Z">2020-05-27</time></p><p class="title"><a href="/2020-05-27-elastic_search/">Elastic Search 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-26T03:00:00.000Z">2020-05-26</time></p><p class="title"><a href="/2020-05-26-Deeper%20Text%20Understanding%20for%20IR%20with%20Contextual%20Neural%20Language%20Modeling/">Deeper Text Understanding for IR with Contextual Neural Language Modeling&quot;</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-02-10T03:00:00.000Z">2020-02-10</time></p><p class="title"><a href="/2020-02-10-Practical-Linux-Unix/">Linux, Unix 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2022 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>

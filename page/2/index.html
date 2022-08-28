@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="blog"><meta property="og:title" content="Luke&#039;s Blog"><meta property="og:url" content="https://eagle705.github.io/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://eagle705.github.io/img/og_image.png"><meta property="article:author" content="Joosung Yoon"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://eagle705.github.io/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io"},"headline":"Luke's Blog","image":["https://eagle705.github.io/img/og_image.png"],"author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":null}</script><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-10-14T03:00:00.000Z" title="2019. 10. 14. 오후 12:00:00">2019-10-14</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T15:52:49.837Z" title="2022. 8. 28. 오전 12:52:49">2022-08-28</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">25분안에 읽기 (약 3760 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019-10-14-MassivelyMultilingualSentenceEmbeddigns/">Massively Multilingual Sentence Embeddings for Zero-Shot Cross-Lingual Transfer and Beyond</a></h1><div class="content"><h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>저자:<ul>
+<li>Mikel Artetxe (<strong>University of the Basque Country (UPV&#x2F;EHU)</strong>)</li>
+<li>Holger Schwenk (<strong>Facebook AI Research</strong>)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Who-is-an-Author"><a href="#Who-is-an-Author" class="headerlink" title="Who is an Author?"></a>Who is an Author?</h3><p>Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 같고 조경현 교수님하고도 co-author 이력이 있음. 페북에서 인턴할때 쓴 논문임.</p>
+<p><img src="/img/markdown-img-paste-20191014145614237.png" alt="author">{: height&#x3D;”50%” width&#x3D;”50%”}</p></div><a class="article-more button is-small is-size-7" href="/2019-10-14-MassivelyMultilingualSentenceEmbeddigns/#more">자세히 보기</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-10-11T03:00:00.000Z" title="2019. 10. 11. 오후 12:00:00">2019-10-11</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T15:53:01.316Z" title="2022. 8. 28. 오전 12:53:01">2022-08-28</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">10분안에 읽기 (약 1447 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019-10-11-UniversalLMFinetuneforTextClf/">Universal Language Model Fine-tuning for Text Classification (ULMFiT)</a></h1><div class="content"><h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>저자:Jeremy Howard, Sebastian Ruder (<strong>fast.ai</strong> University of San Francisco)</li>
+</ul>
+<h3 id="Who-is-an-Author"><a href="#Who-is-an-Author" class="headerlink" title="Who is an Author?"></a>Who is an Author?</h3><ul>
+<li>Google Scholar에 안나와서..</li>
+<li><a target="_blank" rel="noopener" href="https://twitter.com/jeremyphoward">Author’s Twitter</a></li>
+</ul>
+<h4 id="느낀점"><a href="#느낀점" class="headerlink" title="느낀점"></a>느낀점</h4></div><a class="article-more button is-small is-size-7" href="/2019-10-11-UniversalLMFinetuneforTextClf/#more">자세히 보기</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-10-08T03:00:00.000Z" title="2019. 10. 8. 오후 12:00:00">2019-10-08</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T15:53:04.246Z" title="2022. 8. 28. 오전 12:53:04">2022-08-28</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">12분안에 읽기 (약 1731 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019-10-08-SAN_for_NLI/">Stochastic Answer Networks for Natural Language Inference (SAN)</a></h1><div class="content"><h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>저자:Xiaodong Liu†, Kevin Duh and Jianfeng Gao (<strong>Microsoft Research, Johns Hopkins University</strong>)</li>
+</ul>
+<h3 id="Who-is-an-Author"><a href="#Who-is-an-Author" class="headerlink" title="Who is an Author?"></a>Who is an Author?</h3><p>Xiaodong Liu 라는 친구인데 꽤 꾸준히 연구활동을 하는 친구인것 같다.</p>
+<p><img src="/img/markdown-img-paste-20191007162823137.png" alt="author">{: height&#x3D;”50%” width&#x3D;”50%”}</p></div><a class="article-more button is-small is-size-7" href="/2019-10-08-SAN_for_NLI/#more">자세히 보기</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-09-11T03:00:00.000Z" title="2019. 9. 11. 오후 12:00:00">2019-09-11</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T12:57:05.822Z" title="2022. 8. 27. 오후 9:57:05">2022-08-27</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/cslog/">cslog</a></span><span class="level-item">21분안에 읽기 (약 3222 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019-09-11-MLbasic/">ML Basic - 머신러닝과 확률</a></h1><div class="content"><h3 id="Prior-amp-Posterior"><a href="#Prior-amp-Posterior" class="headerlink" title="Prior &amp; Posterior"></a>Prior &amp; Posterior</h3><ul>
+<li><p>사전 확률(prior probability): </p>
+<ul>
+<li>관측자가 관측을 하기 전에 시스템 또는 모델에 대해 가지고 있는 선험적 확률. 예를 들어, 남여의 구성비를 나타내는 p(남자), p(여자) 등이 사전확률에 해당한다.</li>
+<li>특정 사상이 일어나기 전의 확률을 뜻한다.</li>
+<li>선험적 확률은 베이즈 추론에서 관측자가 관측을 하기 전에 가지고 있는 확률 분포를 의미한다.</li>
+<li>ex) 동전을 던져서 앞면이 나올 확률은 1&#x2F;2, 특이한 동전은 1&#x2F;3이다.</li>
+<li>사전 확률은 일반적으로 실험하는 대상에 대해 잘 알고 있는 전문가가 선택하거나(informative prior), 혹은 전문적인 정보가 없는 무정보적 분포(uninformative prior)로 주어진다.</li>
+</ul>
+</li>
+<li><p>사후 확률(Posterior): </p>
+<ul>
+<li>사건이 발생한 후(관측이 진행된 후) 그 사건이 특정 모델에서 발생했을 확률</li>
+<li>사건 발생 후에 어떤 원인으로부터 일어난 것이라고 생각되어지는 확률</li>
+<li>조건부 확률을 통해 사후 확률을 표현할 수 있음</li>
+<li>사전 확률과 가능도(likelihood)가 주어졌을 때, 관측자는 관측값을 얻은 다음 베이즈 정리에 의해 사후 확률을 얻을 수 있음</li>
+<li>ex) 물건이 불량품이 생산되었을때 A공장에서 생산되었을 확률</li>
+<li>$posterior &#x3D; {likelihood \times prior \over evidence}$</li>
+</ul>
+</li>
+</ul>
+<h3 id="MLE-amp-MAP-예시"><a href="#MLE-amp-MAP-예시" class="headerlink" title="MLE &amp; MAP 예시"></a>MLE &amp; MAP 예시</h3><ul>
+<li><p>MLE(Maximum Likelihood Estimation) 방법</p>
+<ul>
+<li>MLE 방법은 남자에게서 그러한 머리카락이 나올 확률 p(z|남)과 여자에게서 그러한 머리카락이 나올 확률 p(z|여)을 비교해서 가장 확률이 큰, 즉 likelihood가 가장 큰 클래스(성별)를 선택하는 방법</li>
+</ul>
+</li>
+<li><p>MAP(Maximum A Posteriori) 방법 </p>
+<ul>
+<li>MAP 방법은 z라는 머리카락이 발견되었는데 그것이 남자것일 확률 p(남|z), 그것이 여자것일 확률 p(여|z)를 비교해서 둘 중 큰 값을 갖는 클래스(성별)를 선택하는 방법</li>
+<li>즉, 사후확률(posterior prabability)를 최대화시키는 방법으로서 MAP에서 사후확률을 계산할 때 베이즈 정리가 이용됨</li>
+</ul>
+</li>
+<li><p><code>즉 MLE는 남자인지 여자인지를 미리 정해놓고 시작해서 비교하는거고 MAP는 남자인지 여자인지를 모르는 상태에서 그것이 정해지는 확률까지도 고려해서 비교하는 것임</code></p>
+</li>
+<li><p><code>MAP가 그래서 특정 경우가 정해지는 것에 대한 사전확률을 고려한다고 하는 것임</code></p>
+</li>
+</ul>
+<h3 id="Maximum-Likelihood-Estimation-MLE"><a href="#Maximum-Likelihood-Estimation-MLE" class="headerlink" title="Maximum Likelihood Estimation (MLE)"></a>Maximum Likelihood Estimation (MLE)</h3></div><a class="article-more button is-small is-size-7" href="/2019-09-11-MLbasic/#more">자세히 보기</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-08-14T03:00:00.000Z" title="2019. 8. 14. 오후 12:00:00">2019-08-14</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T15:53:13.173Z" title="2022. 8. 28. 오전 12:53:13">2022-08-28</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">16분안에 읽기 (약 2336 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019-08-14-GPT1/">Improving Language Understanding by Generative Pre-Training (GPT)</a></h1><div class="content"><h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>저자:Alec Radford, Karthik Narasimhan, Tim Salimans, Ilya Sutskever (<strong>Open AI</strong>, <del>Open AI다! 부럽(?)다</del>)</li>
+</ul>
+<h3 id="Who-is-an-Author"><a href="#Who-is-an-Author" class="headerlink" title="Who is an Author?"></a>Who is an Author?</h3><p>Alec Radford라는 친군데, GPT논문 인용수가 젤 많겠지 했는데 오히려 Vision쪽에서 한 Generative model 인용수가 넘사임.. 원래 유명한 친구였음</p>
+<p><img src="/img/markdown-img-paste-20190814104818828.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p></div><a class="article-more button is-small is-size-7" href="/2019-08-14-GPT1/#more">자세히 보기</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-08-14T03:00:00.000Z" title="2019. 8. 14. 오후 12:00:00">2019-08-14</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T12:57:11.288Z" title="2022. 8. 27. 오후 9:57:11">2022-08-27</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/cslog/">cslog</a></span><span class="level-item">8분안에 읽기 (약 1247 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019-08-14-research_to_production/">Research to Production</a></h1><div class="content"><h3 id="Research"><a href="#Research" class="headerlink" title="Research"></a>Research</h3><ul>
+<li>개발 기간이 필요함</li>
+<li>어떤 데이터를 쓸지 어떤 데이터를 모을 수 있을지 어디까지 라벨링 할 수 있을지, 어떤 데이터로 원하는 데이터를 비슷하게 대체할 수 있을지 등을 생각해야함</li>
+<li>대략적인 시간을 산정해서 보고해야함</li>
+<li>논문을 많이 읽으면 읽을수록 좋긴함</li>
+<li>갖다 쓸수있는건 빠르게 갖다 써야함<ul>
+<li>케글이나 이런데서 빠르게 참조할 필요가 있음</li>
+</ul>
+</li>
+<li>프로토 타이핑은 매우 빠르게~!</li>
+<li>개인적으로는 처음부터 좋은 모델보단 baseline부터 서서히 올려가는게 결과를 확인하고 model capacity를 조정하면서 추후 모델 선택할 때 좋음</li>
+<li>Speed한 프로토타이핑이 생명 (빠르게 짜는게 중요함, gpu로 학습한다고 노는것도 별로 안좋음)</li>
+<li>Hyper Params 에 대한 실험 관리 + feature에 대한 실험 관리 도구가 좀 필요함</li>
+<li>git 관리를 잘해야함<ul>
+<li><a target="_blank" rel="noopener" href="https://www.gitignore.io/">gitignore</a></li>
+</ul>
+</li>
+<li>안해본 것에 대한 두려움이 없어야함</li>
+<li>DL Framework<ul>
+<li>Prototyping: PyTorch</li>
+<li>Service: TensorFlow or PyTorch <ul>
+<li>eager mode로 logit + loss 까지 tensor format &amp; shape 확인</li>
+<li>graph mode로 학습시켜서 pb 추출</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>AutoML: 어떤 오픈소스 쓸지 TBD</li>
+<li>앙상블까지 고려해야함<ul>
+<li>Model 관리하는 configuration 부분이 매우 귀찮아질 수 있음 (여러개의 모델을 사용하기 때문에)</li>
+<li>Data driven Software 될 수 있게 코드단이 아니라 configuration으로 모델의 구조를 변경 할 수 있어야함 (caffe나 claf 처럼)</li>
+</ul>
+</li>
+<li>처음 모델 짤때는 파이프라인+간단한 구조부터해서 구조를 업데이트하는 쪽으로 방향을 잡고 짜야함</li>
+<li>모델평가를 쉽게 돌리고 비교할 수 있는 파이프라인..!이 필요함</li>
+<li>feature store를 어떻게 구성할지, 실시간 학습 어떻게 구성할지 고민</li>
+</ul>
+<h3 id="Production"><a href="#Production" class="headerlink" title="Production"></a>Production</h3><ul>
+<li>환경셋팅 문서화 (한번에 뜨고 설치할 수 있게 <del>도커가 그립다</del>)</li>
+<li>클래스, 플로우 다이어그램: PlantUML (<a target="_blank" rel="noopener" href="https://meetup.toast.com/posts/117">https://meetup.toast.com/posts/117</a>)</li>
+<li>다이어그램 &amp; 마인드맵 그리고 개발하면 좋음</li>
+<li>L4 (Load Balancer)<ul>
+<li>L4에서는 1초간 계속 health check를 해서 서버 하나가 꺼지면 떼버리고 다시 살아있으면 붙임</li>
+<li>반응못하면 아마 500에러 낼듯</li>
+</ul>
+</li>
+<li>네트워크 프로토콜<ul>
+<li>패킷 찍어보기</li>
+<li>HTTP, HTTP2, gRPC(HTTP2+Protocol buf), status code 등등 체크</li>
+<li>Timeout 관리 (conn timeout, read timeout)</li>
+<li>서비스로 사용하는 프로토콜의 doc 숙지</li>
+<li><a target="_blank" rel="noopener" href="https://www.popit.kr/%EB%82%98%EB%A7%8C-%EB%AA%A8%EB%A5%B4%EA%B3%A0-%EC%9E%88%EB%8D%98-http2/">HTTP, HTTP2 관련 문서</a></li>
+<li><a target="_blank" rel="noopener" href="https://developers.google.com/web/fundamentals/performance/http2/?hl=ko">HTTP2 관련문서2_구글</a></li>
+</ul>
+</li>
+<li>healthcheck<ul>
+<li>프로세스 관리</li>
+<li>JandiAlert</li>
+</ul>
+</li>
+<li>부하테스트<ul>
+<li>실서버와 동일한 환경인 Sandbox가 필요함</li>
+<li>nGrinder</li>
+</ul>
+</li>
+<li>프로파일링<ul>
+<li>Network Distillation</li>
+</ul>
+</li>
+<li>TC 작성 (testcase)</li>
+<li>DB 연결 부분은 local에서도 테스트 할 수 있게끔 default value를 하나 만들어줘서 debug할 수 있게 해야함</li>
+<li>pylint등으로 개발스타일 통일</li>
+<li>로그 관리<ul>
+<li>파이썬 실행 전체 로그 파일로도 남기기~!</li>
+<li>python gRPC_server.py &gt; &#x2F;home&#x2F;디렉토리&#x2F;logs&#x2F;python_logs.log 2&gt;&amp;1 &amp;</li>
+<li><a target="_blank" rel="noopener" href="https://hyeonstorage.tistory.com/97">HTTP protocol에 따른 에러 처리</a></li>
+</ul>
+</li>
+<li>안해본 것에 대한 두려움이 없어야함</li>
+<li>Jandi Alert Code</li>
+<li>상용에서는 로그를 남기기 때문에, 모듈별로 테스트할때 로그가 남을 수 있는데 그러면 안됨! 왜냐하면, 로그를 모듈별로 일치시켜줘야하기 때문에~!(ex, 채팅 클라이언트&#x2F;채팅API&#x2F;챗봇엔진) 그러므로 로그를 안남기기 위한 API 테스트를 고려해서 인터페이스를 설계해야함 (로그를 안남기거나, 테스트를 위한 로그를 따로 남겨야함)</li>
+<li>디펜던시 없는 테스트(DB, API 서버등..과 분리)를 위해 테스트 케이스와 모듈을 만들어놔야함. 그래야 배포때 편함.</li>
+<li>서버 실행시 자원 얼마나 소모하는지 모니터링, 체크</li>
+<li>패치 프로세스 기록 필요함, 연동 테스트용 코드도.</li>
+<li>Script화 해놔서 다른 사람이 언제든지 사용할 수 있게 해야함.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> linecache</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">jandi_alert</span>(<span class="params">body, server, webhook_url, api=<span class="string">&quot;name of API&quot;</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    ref: https://drive.google.com/file/d/0B2qOhquiLKk0TVBqc2JkQmRCMGM/view</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    ERROR_COLOR = &quot;#FF0000&quot;;</span></span><br><span class="line"><span class="string">    INFO_COLOR = &quot;#0000FF&quot;;</span></span><br><span class="line"><span class="string">    WARNING_COLOR = &quot;#FFFF00&quot;;</span></span><br><span class="line"><span class="string">    DEFAULT_COLOR = &quot;#FAC11B;</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># ref: https://stackoverflow.com/questions/14519177/python-exception-handling-line-number</span></span><br><span class="line">    exc_type, exc_obj, tb = sys.exc_info()</span><br><span class="line">    f = tb.tb_frame</span><br><span class="line">    lineno = tb.tb_lineno</span><br><span class="line">    file_name = f.f_code.co_filename</span><br><span class="line">    linecache.checkcache(file_name)</span><br><span class="line">    line = linecache.getline(file_name, lineno, f.f_globals)</span><br><span class="line">    <span class="comment"># print &#x27;EXCEPTION IN (&#123;&#125;, LINE &#123;&#125; &quot;&#123;&#125;&quot;): &#123;&#125;&#x27;.format(filename, lineno, line.strip(), exc_obj)</span></span><br><span class="line">    file_name = os.path.basename(file_name)</span><br><span class="line"></span><br><span class="line">    payload = &#123;</span><br><span class="line">        <span class="string">&quot;body&quot;</span>: body,</span><br><span class="line">        <span class="string">&quot;connectColor&quot;</span>: <span class="string">&quot;#FF0000&quot;</span>,</span><br><span class="line">        <span class="string">&quot;connectInfo&quot;</span>: [&#123;</span><br><span class="line">            <span class="string">&quot;title&quot;</span>: <span class="string">&quot;___ 서버 이상&quot;</span>,</span><br><span class="line">            <span class="string">&quot;description&quot;</span>: <span class="string">&quot;server: &#123;&#125;\napi: &#123;&#125;\nfile_name: &#123;&#125;\nLINE &#123;&#125; &#x27;&#123;&#125;&#x27;: &#123;&#125;&quot;</span>.<span class="built_in">format</span>(server, api, file_name, lineno, line.strip(), exc_obj)</span><br><span class="line">        &#125;]</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    requests.post(</span><br><span class="line">        webhook_url, data=json.dumps(payload),</span><br><span class="line">        headers=&#123;<span class="string">&#x27;Accept&#x27;</span>: <span class="string">&#x27;application/vnd.tosslab.jandi-v2+json&#x27;</span>,</span><br><span class="line">                 <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/json&#x27;</span>&#125;</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></div><a class="article-more button is-small is-size-7" href="/2019-08-14-research_to_production/#more">자세히 보기</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-07-12T03:00:00.000Z" title="2019. 7. 12. 오후 12:00:00">2019-07-12</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T12:57:17.909Z" title="2022. 8. 27. 오후 9:57:17">2022-08-27</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/cslog/">cslog</a></span><span class="level-item">7분안에 읽기 (약 1027 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019-07-12-grpc_healthcheck/">gPRC + Healthcheck 뽀개기</a></h1><div class="content"><h4 id="gRPC-개념-설명"><a href="#gRPC-개념-설명" class="headerlink" title="gRPC 개념 설명"></a>gRPC 개념 설명</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://medium.com/@goinhacker/microservices-with-grpc-d504133d191d">Microservices with gRPC</a></li>
+</ul>
+<h4 id="gRPC-사용할-때-주의할점"><a href="#gRPC-사용할-때-주의할점" class="headerlink" title="gRPC 사용할 때 주의할점"></a>gRPC 사용할 때 주의할점</h4><ul>
+<li>retry 이슈<ul>
+<li>gRPC는 HTTP2 기반인데, 양방향 통신이라 커넥션을 계속 붙잡고 있는데, 이게 가끔 30분에 한번씩 끊길때가 있다 (뭐가 헤더 크기를 넘어가면서..어쩌구저쩌구 들었던거 같은데 다시 찾아봐야함)</li>
+<li>그럴땐 클라이언트 쪽에서 보낸 요청이 fail되고 서버가 못듣게 되는데 단순히 클라가 한번 더 retry해주면 된다. </li>
+<li>보통 http2를 쓰는 프로토콜은 retry 로직이 필수라한다</li>
+</ul>
+</li>
+<li>헬스체크 이슈 (ulimit, channel close, Too many open files)<ul>
+<li>grpc는 status 를 제공하고 health check 프로토콜도 제공한다. <del>어찌다가 try except으로 에러날때 status 코드를 꺼내는 방식으로 꼼수로 구성한적이 있었다..(이럼 안되지.. 이것 때문에 연차썼다가 출근해서 반차처리한 적이..흑흑)</del></li>
+<li>이때 grpc connect을 따로 close해주지 않으면 소켓연결이 쌓이게 되고 리눅스 운영체제에서 file open개수에 대한 ulimit을 초과하면 Too many open files 에러가 뜬다</li>
+<li>보통 이런경우 ulimit을 올려주면 되지만, 근본적인 에러원인인 소켓 증가 이유를 찾아야했고 찾다보니 health check때 retry 이슈로 except뜬게 쌓이고 있었다는 결론을 내렸다</li>
+<li>결과적으로 connect close를 잘해주자 안그러면 too many file opens 에러뜨니까</li>
+</ul>
+</li>
+</ul>
+<h4 id="gRPC-proto-살펴보기"><a href="#gRPC-proto-살펴보기" class="headerlink" title="gRPC.proto 살펴보기"></a>gRPC.proto 살펴보기</h4></div><a class="article-more button is-small is-size-7" href="/2019-07-12-grpc_healthcheck/#more">자세히 보기</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-05-16T03:00:00.000Z" title="2019. 5. 16. 오후 12:00:00">2019-05-16</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T15:53:22.543Z" title="2022. 8. 28. 오전 12:53:22">2022-08-28</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">16분안에 읽기 (약 2437 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019-05-16-SentencePiece/">SentencePiece: A simple and language independent subword tokenizer and detokenizer for Neural Text Processing</a></h1><div class="content"><h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>저자:Taku Kudo, John Richardson (Google, Inc)</li>
+<li>EMNLP 2018</li>
+<li>Official Repo: <a target="_blank" rel="noopener" href="https://github.com/google/sentencepiece">https://github.com/google/sentencepiece</a></li>
+<li>Recommended Tutorial: <a target="_blank" rel="noopener" href="https://github.com/google/sentencepiece/blob/master/python/sentencepiece_python_module_example.ipynb">https://github.com/google/sentencepiece/blob/master/python/sentencepiece_python_module_example.ipynb</a></li>
+</ul>
+<h3 id="Who-is-an-Author"><a href="#Who-is-an-Author" class="headerlink" title="Who is an Author?"></a>Who is an Author?</h3><p><img src="/img/markdown-img-paste-20190516010154436.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h4 id="장점"><a href="#장점" class="headerlink" title="장점"></a>장점</h4></div><a class="article-more button is-small is-size-7" href="/2019-05-16-SentencePiece/#more">자세히 보기</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-05-09T03:00:00.000Z" title="2019. 5. 9. 오후 12:00:00">2019-05-09</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T15:53:27.015Z" title="2022. 8. 28. 오전 12:53:27">2022-08-28</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">30분안에 읽기 (약 4430 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019-05-09-BERT/">BERT- Pre-training of Deep Bidirectional Transformers for Language Understanding</a></h1><div class="content"><h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>저자:Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova (<strong>Google AI Language</strong>, <del>Google AI니 말다했지</del>)</li>
+</ul>
+<h3 id="Who-is-an-Author"><a href="#Who-is-an-Author" class="headerlink" title="Who is an Author?"></a>Who is an Author?</h3><p>Jacob Devlin is a Senior Research Scientist at Google. At Google, his primary research interest is developing fast, powerful, and scalable deep learning models for information retrieval, question answering, and other language understanding tasks. From 2014 to 2017, he worked as a Principle Research Scientist at Microsoft Research, where he led Microsoft Translate’s transition from phrase-based translation to neural machine translation (NMT). He also developed state-of-the-art on-device models for mobile NMT. Mr. Devlin was the recipient of the ACL 2014 Best Long Paper award and the NAACL 2012 Best Short Paper award. He received his Master’s in Computer Science from the University of Maryland in 2009, advised by Dr. Bonnie Dorr.</p>
+<p><img src="/img/markdown-img-paste-20190509155558988.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p></div><a class="article-more button is-small is-size-7" href="/2019-05-09-BERT/#more">자세히 보기</a></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-05-01T03:00:00.000Z" title="2019. 5. 1. 오후 12:00:00">2019-05-01</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T15:53:34.980Z" title="2022. 8. 28. 오전 12:53:34">2022-08-28</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">29분안에 읽기 (약 4423 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019-05-01-Attention_is_All_you_need/">Attention Is All You Need</a></h1><div class="content"><p>이번엔 오늘날의 NLP계의 표준이 된 Transformer를 제안한 논문인 <code>Attenion Is All You Need</code>에 대해서 리뷰해보고자 한다. 대략적인 내용은 이미 알고 있었지만, 디테일한 부분도 살펴보고자 한다.</p>
+<h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>저자: Ashish Vaswani, 외 7명 (Google Brain)</li>
+<li><del>구글브레인..wow</del></li>
+<li>NIPS 2017 accepted</li>
+</ul>
+<h3 id="Who-is-an-Author"><a href="#Who-is-an-Author" class="headerlink" title="Who is an Author?"></a>Who is an Author?</h3><p><img src="/img/markdown-img-paste-20190501115722701.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p></div><a class="article-more button is-small is-size-7" href="/2019-05-01-Attention_is_All_you_need/#more">자세히 보기</a></article></div><nav class="pagination" role="navigation" aria-label="pagination"><div class="pagination-previous"><a href="/">이전</a></div><div class="pagination-next"><a href="/page/3/">다음</a></div><ul class="pagination-list is-hidden-mobile"><li><a class="pagination-link" href="/">1</a></li><li><a class="pagination-link is-current" href="/page/2/">2</a></li><li><a class="pagination-link" href="/page/3/">3</a></li></ul></nav></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">28</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">16</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">17</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-10-22T03:00:00.000Z">2020-10-22</time></p><p class="title"><a href="/2020-10-22-DocumentExpansionByQueryPrediction/">Document Expansion by Query Prediction</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-06-18T03:00:00.000Z">2020-06-18</time></p><p class="title"><a href="/2020-06-18-bert_based_lexical_substitution/">BERT-based Lexical Substitution</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-27T03:00:00.000Z">2020-05-27</time></p><p class="title"><a href="/2020-05-27-elastic_search/">Elastic Search 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-26T03:00:00.000Z">2020-05-26</time></p><p class="title"><a href="/2020-05-26-Deeper%20Text%20Understanding%20for%20IR%20with%20Contextual%20Neural%20Language%20Modeling/">Deeper Text Understanding for IR with Contextual Neural Language Modeling&quot;</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-02-10T03:00:00.000Z">2020-02-10</time></p><p class="title"><a href="/2020-02-10-Practical-Linux-Unix/">Linux, Unix 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2022 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>

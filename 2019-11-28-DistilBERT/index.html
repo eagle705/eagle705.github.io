@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Author 저자: Victor SANH, Lysandre DEBUT, Julien CHAUMOND, Thomas WOLF (Hugging Face) (허깅페이스에서 일해보고 싶다)    Who is an Author? AAAI를 들고 있는 NLP 하던 분인 듯 Thomas Wolf(huggingface)와 주로 작업하는 듯함{: height&amp;#x3D;”5"><meta property="og:type" content="blog"><meta property="og:title" content="DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter"><meta property="og:url" content="https://eagle705.github.io/2019-11-28-DistilBERT/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="Author 저자: Victor SANH, Lysandre DEBUT, Julien CHAUMOND, Thomas WOLF (Hugging Face) (허깅페이스에서 일해보고 싶다)    Who is an Author? AAAI를 들고 있는 NLP 하던 분인 듯 Thomas Wolf(huggingface)와 주로 작업하는 듯함{: height&amp;#x3D;”5"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191128112449864.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191128114914422.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191128150702207.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191128153317851.png"><meta property="article:published_time" content="2019-11-28T03:00:00.000Z"><meta property="article:modified_time" content="2022-08-27T15:52:42.954Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://eagle705.github.io/img/markdown-img-paste-20191128112449864.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/2019-11-28-DistilBERT/"},"headline":"DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter","image":["https://eagle705.github.io/img/markdown-img-paste-20191128112449864.png","https://eagle705.github.io/img/markdown-img-paste-20191128114914422.png","https://eagle705.github.io/img/markdown-img-paste-20191128150702207.png","https://eagle705.github.io/img/markdown-img-paste-20191128153317851.png"],"datePublished":"2019-11-28T03:00:00.000Z","dateModified":"2022-08-27T15:52:42.954Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"Author 저자: Victor SANH, Lysandre DEBUT, Julien CHAUMOND, Thomas WOLF (Hugging Face) (허깅페이스에서 일해보고 싶다)    Who is an Author? AAAI를 들고 있는 NLP 하던 분인 듯 Thomas Wolf(huggingface)와 주로 작업하는 듯함{: height&#x3D;”5"}</script><link rel="canonical" href="https://eagle705.github.io/2019-11-28-DistilBERT/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-11-28T03:00:00.000Z" title="2019. 11. 28. 오후 12:00:00">2019-11-28</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T15:52:42.954Z" title="2022. 8. 28. 오전 12:52:42">2022-08-28</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">16분안에 읽기 (약 2368 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter</h1><div class="content"><h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>저자:<ul>
+<li>Victor SANH, Lysandre DEBUT, Julien CHAUMOND, Thomas WOLF (<strong>Hugging Face</strong>) (<del>허깅페이스에서 일해보고 싶다</del>)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Who-is-an-Author"><a href="#Who-is-an-Author" class="headerlink" title="Who is an Author?"></a>Who is an Author?</h3><ul>
+<li>AAAI를 들고 있는 NLP 하던 분인 듯</li>
+<li>Thomas Wolf(huggingface)와 주로 작업하는 듯함<br><img src="/img/markdown-img-paste-20191128112449864.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+<h4 id="느낀점"><a href="#느낀점" class="headerlink" title="느낀점"></a>느낀점</h4><ul>
+<li>일단 논문이 짧다. 좋아.</li>
+<li>soft target probability로 CE한거랑, MLM, Cosine Embedding Loss만으로 좋은 성적을 얻음 (cosine embedding을 사용한건 기여할만함)</li>
+<li>최근 나왔던 MobileBERT처럼 Attention에 자체에 대해서 distillation하지 않아도 나쁘지 않은 결과가 나오는구나 싶긴함 물론 MobileBERT가 더 최신이니 Attention 자체에 대해서도 적용하면 좋겠지만.. 이건 BERT끼리만 가능한 approach니..</li>
+<li>weight initialization을 teacher network 에서 가져오는것도 나쁘진 않았음(layer 차이가 나서 좀 다르긴하지만)</li>
+<li>pre-train도 distillation 쓰고, fine-tune도 distillation 쓰면 잘되는건 알겠음.. 괜찮은 방법이긴한데 여러케이스가 존재할 수 있을것 같아 좀 더 비교가 필요해보임</li>
+</ul>
+<h4 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h4><ul>
+<li>NLP에서 large-scale pre-trained models에서 Transfer Learning하는게 매우 보편화됨</li>
+<li>그에 따라 computational training or inference가 제한되는 환경(one-the-edge)에서 이런 모델을 돌리는게 challenge가 됨</li>
+<li>본 논문에서는 DistilBERT라는 좀 더 작은 general purpose language representation model을 pre-train 하는 방법을 제안하고자 함</li>
+<li>대부분의 이전 연구들은 task-specific models을 만드는데 집중되어있었지만, 저자는 pre-training phase때 knowledge distillation하는데 집중함</li>
+<li>모델 크기는은 버트대비 40%감소했고 언어 이해 능력은 97%로 유지했고 속도도 60% 더 빠름</li>
+<li>pre-training할 때, inductive biases를 larger model로부터 학습하기 위해 3가지를 조합한 loss를 제안함(<code>language modeling, distillation and cosine-distance losses</code>)</li>
+<li>제안하는 더 작고, 빠르고, 가벼운(smaller, faster and lighter (<del>smaller와 lighter 차이가 뭐야..</del>)) 모델은 더 적은 비용으로 pre-train도 할 수 있음</li>
+<li>capabilities for on-device computation에 대해 proof-of-concetp experiment와 비교할만한 on-device 연구들을 통해 설명할 것임</li>
+</ul>
+<h4 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h4><p><img src="/img/markdown-img-paste-20191128114914422.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>지난 몇년간 NLP에서는 Transfer Learning이 아주 핫했고 large-scale pre-trained LM을 쓰는건 NLP Tasks에서 하나의 기본적인 tool이 되어버림 (Devlin et al., 2018, Radford et al., 2019, Liu et al., 2019)</li>
+<li>모델 성능은 좋아졌지만 빈번하게 수백만의 파라미터를 갖게되었고 현재까지의 연구로는 더 모델크기를 키우면 downstream task에서 더 높은 성능이 나오고 있음</li>
+<li>모델이 커지는건 몇가지 우려를 낳고 있음<ul>
+<li>첫째는, 환경적 비용이 문제가됨 (<code>First is the environmental cost of exponentially scaling these models’ computational requirements as mentioned in Schwartz et al. [2019], Strubell et al. [2019]</code>)</li>
+<li>둘째는, on-device에서 real-time으로 실행하면 새로운 application들을 가능케해줄수있을지라도, 계산비용이 증가하고 필요한 메모리가 커져서 다양한 곳에 적용하기엔 어렵게 만듬(<code>Second, while operating these models on-device in real-time has the potential to enable novel and interesting language processing applications, the growing computational and memory requirements of these models may hamper wide adoption</code>)</li>
+</ul>
+</li>
+<li>본 논문에서는 knoledge distillation으로 경량화한 LM 모델도 비슷한 성능을 낼수 있는걸 보임. 경량화헀으니 학습 비용도 적음</li>
+<li>3가지의 loss를 써서, bigger Trasnformer LM로 supervision해서 distillation한 결과 40% smaller Transformer를 만듬 (60% 더 빠른 inference time 갖게됨)</li>
+</ul>
+<h4 id="2-Knowledge-distillation"><a href="#2-Knowledge-distillation" class="headerlink" title="2. Knowledge distillation"></a>2. Knowledge distillation</h4><ul>
+<li><strong>Knowledge distillation</strong> (Bucila et al., 2006, Hinton et al., 2015)은 모델을 압축하는 기술임<ul>
+<li>the student model(compact model)은 the teacher model(larger model or ensemble of models)을 재생산하기 위해 학습됨</li>
+<li>지도학습에서 분류모델은 instance class를 예측하기위해 학습되는데, gold label의 estimated probability를 최대로하게 끔 학슴함</li>
+<li>보통의 training objective는 모델이 예측한 확률 분포와 one-hot empirical distribution of training labels의 cross-entropy를 최소화하게끔 함</li>
+<li>학습셋에서 잘 동작하는 모델은 correct class에 대해서 output distribution을 높은값을 갖는 확률로 예측하고 나머지는 거의 0에 가까운 확률로 예측하게됨</li>
+<li>하지만 이러한 “0”(“near-zero”)에 가까운 확률들중 일부는 다른것보다 더 큰데, model의 generalization capbilities를 반영하고 test set에서 얼마나 잘 동작할지를 보여줌</li>
+</ul>
+</li>
+<li><strong>Training loss</strong><ul>
+<li>the student는 soft target probabilities of the teacher에 대한 distillation loss로 학습함</li>
+<li>$ t_{i} $는 teacher고 $ s_{i} $는 student라 할때 Loss는 다음과 같음<br> $$<br> L_{c e}&#x3D;\sum_{i} t_{i} * \log \left(s_{i}\right) \text { where } t_{i}\left(\text { resp. } s_{i}\right)<br> $$</li>
+<li>이러한 목적함수는 the full teacher distribution을 활용할 수 있어서 충분한 training signal이 됨</li>
+<li>Hinton을 따라, <em>softmax-temperature</em>를 사용했음<br> $$<br> p_{i}&#x3D;\frac{\exp \left(z_{i} &#x2F; T\right)}{\sum_{j} \exp \left(z_{j} &#x2F; T\right)}<br> $$</li>
+<li>$ T $는 output distribution의 sommthness를 조절하는 텀이고, $ z_{i}$는 class $ i $에 대한 model score를 의미함</li>
+<li>학습시에는 same temperature $ T $를 student &amp; teacher에게 적용하고 inference할때는 $ T $ 값을 1로 셋팅해서 standard <em>softmax</em>를 사용함</li>
+<li>the final training objective는 distillation loss $ L_{ce} $를 the supervised training loss와 linear combination한 것임<ul>
+<li>maksed language modeling loss $ L_{mlm} $ (<del>BERT니까..</del>)</li>
+<li>cosine embedding loss $ L_{cos} $ (하다보니 발견하게 되었다고 함, student model과 teacher model의 hidden states vectors의 방향을 align 해줌! (<del>오..!</del>))</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-DistilBERT-a-distilled-version-of-BERT"><a href="#3-DistilBERT-a-distilled-version-of-BERT" class="headerlink" title="3. DistilBERT: a distilled version of BERT"></a>3. DistilBERT: a distilled version of BERT</h4><h5 id="Student-architecture"><a href="#Student-architecture" class="headerlink" title="Student architecture"></a>Student architecture</h5><ul>
+<li>the student - DistilBERT는 BERT의 general architecture과 같음</li>
+<li>The token-type embeddings and the pooler are removed while the number of layers is reduced by a factor of 2 (레이어수는 2배 감소)</li>
+<li>Transformer architecture에서 쓰이는 대부분의 Ops인 linear layer나 layer normalisation은 modern linear algebra frameworks로 highy optimized됨</li>
+<li>조사결과, last dimension (hidden size dimension)에 대한 변형은 layer 개수 변경에 비하면 computation efficiency에서 큰 임팩트가 없음을 알게됨</li>
+<li>그렇기 때문에 레이어를 줄이는 것에 포커스를 맞춤</li>
+</ul>
+<h5 id="Student-Initialization"><a href="#Student-Initialization" class="headerlink" title="Student Initialization"></a>Student Initialization</h5><ul>
+<li>최적화와 모델 구조 선택뿐만 아니라, 올바른 initialization 방법을 찾는게 중요함</li>
+<li>teacher model과 student model의 dim이 같으니, teacher model에서 빼오자 (<code>Taking advantage of the common dimensionality between teacher and student networks, we initialize the student from the teacher by taking one layer out of two</code>)</li>
+</ul>
+<h5 id="Distillation"><a href="#Distillation" class="headerlink" title="Distillation"></a>Distillation</h5><ul>
+<li>RoBERTa(Roberta: A robustly optimized bert pretraining approach) 논문에서 나온 버트를 학습시키기 위한 best practices를 적용함<ul>
+<li>gradient accumulation (up to 4K examples per batch)</li>
+<li>dynamic masking</li>
+<li>without NSP objective</li>
+</ul>
+</li>
+</ul>
+<h5 id="Data-and-compute-power"><a href="#Data-and-compute-power" class="headerlink" title="Data and compute power"></a>Data and compute power</h5><ul>
+<li>DistilBERT는 original BERT와 같은 학습 corpus(English Wikipedia and Toronto Book Corpus)를 사용함</li>
+<li>8개의 16GB V100 GPU로 90시간 정도 학습함 (RoBERTa의 경우 1024개의 32GB V100으로 하루 학습)</li>
+</ul>
+<h4 id="4-Experiments"><a href="#4-Experiments" class="headerlink" title="4. Experiments"></a>4. Experiments</h4><p><img src="/img/markdown-img-paste-20191128150702207.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h5 id="General-Language-Understanding"><a href="#General-Language-Understanding" class="headerlink" title="General Language Understanding"></a>General Language Understanding</h5><ul>
+<li>DistilBERT의 language understanding과 generalization capabilities 를 확인하기 위해 General Language Understanding Evaluation (GLUE) benchmark 로 평가함</li>
+<li>표 1에 9개의 task에 대해 정리했고 macro-scroe (average of individual score)도 함께 표시함</li>
+<li>ELMo보다 항상 좋고 기존 BERT의 97% 성능을 냄 (40% 적은 파라미터로)</li>
+</ul>
+<h5 id="4-1-Downstream-task-benchmark"><a href="#4-1-Downstream-task-benchmark" class="headerlink" title="4.1 Downstream task benchmark"></a>4.1 Downstream task benchmark</h5><h6 id="Downstream-tasks"><a href="#Downstream-tasks" class="headerlink" title="Downstream tasks"></a>Downstream tasks</h6><ul>
+<li>As shown in Table 2, DistilBERT is only 0.6% point behind BERT in test accuracy on the IMDb benchmark while being 40% smaller. On SQuAD, DistilBERT is within 3.5 points of the full BERT</li>
+<li>we could add another step of distillation during the adaptation phase by fine-tuning DistilBERT on SQuAD using a BERT model previously fine-tuned on SQuAD as a teacher for an additional term in the loss (knowledge distillation)</li>
+<li>two successive steps of distillation, one during the pre-training phase and one during the adaptation phase.<ul>
+<li>한마디로하면, fine-tuning도 fine-tune 된 teacher을 이용해서 하겠다는 것임</li>
+<li>결과는 매우 잘됨.. Table 2에서 DistilBERT (D)가 이것임</li>
+</ul>
+</li>
+</ul>
+<h6 id="Size-and-inference-speed"><a href="#Size-and-inference-speed" class="headerlink" title="Size and inference speed"></a>Size and inference speed</h6><ul>
+<li>속도에 대한건 Table 3에 정리함</li>
+<li>the inference time needed to do a full pass on the STS- B development set on CPU (Intel Xeon E5-2690 v3 Haswell @2.9GHz) using a batch size of 1</li>
+<li>DistilBERT has 40% fewer parameters than BERT and is 60% faster than BERT</li>
+</ul>
+<h6 id="On-device-computation"><a href="#On-device-computation" class="headerlink" title="On device computation"></a>On device computation</h6><ul>
+<li>on-the-edge applications에서 DistilBERT가 쓸만한지 테스트해보기 위해 QA 모바일앱을 만듬</li>
+<li>총 용량을 207 MB까지 낮췄음(quantization 이용하면 더 줄일 수 있음)</li>
+<li>We compare the average inference time on a recent smartphone (iPhone 7 Plus) against our previously trained question answering model based on BERT-base. Excluding the tokenization step, DistilBERT is 71% faster than BERT, and the whole model weighs 207 MB (which could be further reduced with quantization)</li>
+</ul>
+<h5 id="4-2-Ablation-study"><a href="#4-2-Ablation-study" class="headerlink" title="4.2 Ablation study"></a>4.2 Ablation study</h5><ul>
+<li>Table 4 presents the deltas with the full triple loss: removing the Masked Language Modeling loss has little impact while the two distillation losses account for a large portion of the performance.<br><img src="/img/markdown-img-paste-20191128153317851.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+<h4 id="5-Related-work"><a href="#5-Related-work" class="headerlink" title="5. Related work"></a>5. Related work</h4><ul>
+<li>Task-specific distillation <ul>
+<li>Tang et al. [2019] transfer fine-tune classification model BERT to an LSTM-based classifier</li>
+<li>Chatterjee [2019] distill BERT model fine-tuned on SQuAD in a smaller Transformer model previ- ously initialized from BERT</li>
+<li>Turc et al. [2019] use the original pretraining objective to train smaller student, then fine-tuned via distillation.</li>
+<li>저자는 general-purpose pre-training distillation이 task-specific distillation보다 좋다고 주장(<code>it beneficial to use a general-purpose pre-training distillation rather than a task-specific distillation.</code>)</li>
+</ul>
+</li>
+<li>Multi-distillation<ul>
+<li>Yang et al. [2019] combine the knowledge of an ensemble of teachers using multi-task learning to regularize the distillation.</li>
+<li>However, as shown in the ablation study, leveraging the teacher’s knowledge with initialization and additional losses leads to substantial gains.</li>
+</ul>
+</li>
+<li>Other compression techniques<ul>
+<li>Pruning:<ul>
+<li>Recent developments in weights pruning reveal that it is possible to remove some heads in the self-attention at test time without significantly degrading the performance Michel et al. [2019].</li>
+</ul>
+</li>
+<li>Quantization: <ul>
+<li>Some layers can be reduced to one head. A separate line of study leverages quantization to derive smaller models (Gupta et al. [2015])</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="6-Conclusion-and-future-work"><a href="#6-Conclusion-and-future-work" class="headerlink" title="6. Conclusion and future work"></a>6. Conclusion and future work</h4><ul>
+<li>DistilBERT를 소개함</li>
+<li>BERT의 genenral-purpose pre-trained version이며 40% 더 작고, 60% 더 빠르면서, 97%의 the language understanding capabilities를 유지함</li>
+<li>general-purpose language model이 distillation을 통해서도 성공적으로 학습이 됨을 밝히면서 각 components를 ablation study로 분석함</li>
+<li>edge applications에서도 설득력있는 옵션이라는걸 입증함 (<del>약간 더 개선이 필요해보이는데..</del>)</li>
+</ul>
+<h4 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h4><p><a target="_blank" rel="noopener" href="https://github.com/huggingface/transformers/blob/7edb51f3a516ca533797fb2bb2f2b7ce86e0df70/examples/distillation/distiller.py#L366">https://github.com/huggingface/transformers/blob/7edb51f3a516ca533797fb2bb2f2b7ce86e0df70/examples/distillation/distiller.py#L366</a></p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter</p><p><a href="https://eagle705.github.io/2019-11-28-DistilBERT/">https://eagle705.github.io/2019-11-28-DistilBERT/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2019-11-28</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-08-28</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2019-12-10-Distilling_Task-Specific_Knowledge_from_BERT_into_Simple_Neural_Networks/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Distilling Task-Specific Knowledge from BERT into Simple Neural Networks</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2019-11-11-Albert/"><span class="level-item">ALBERT: A Lite BERT for Self-supervised Learning of Language Representations</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/2019-11-28-DistilBERT/';
+            this.page.identifier = '2019-11-28-DistilBERT/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">28</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">16</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">17</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">1</span><span class="level-item">Author</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Who-is-an-Author"><span class="level-left"><span class="level-item">1.1</span><span class="level-item">Who is an Author?</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#느낀점"><span class="level-left"><span class="level-item">1.1.1</span><span class="level-item">느낀점</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">1.1.2</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#1-Introduction"><span class="level-left"><span class="level-item">1.1.3</span><span class="level-item">1. Introduction</span></span></a></li><li><a class="level is-mobile" href="#2-Knowledge-distillation"><span class="level-left"><span class="level-item">1.1.4</span><span class="level-item">2. Knowledge distillation</span></span></a></li><li><a class="level is-mobile" href="#3-DistilBERT-a-distilled-version-of-BERT"><span class="level-left"><span class="level-item">1.1.5</span><span class="level-item">3. DistilBERT: a distilled version of BERT</span></span></a></li><li><a class="level is-mobile" href="#4-Experiments"><span class="level-left"><span class="level-item">1.1.6</span><span class="level-item">4. Experiments</span></span></a></li><li><a class="level is-mobile" href="#5-Related-work"><span class="level-left"><span class="level-item">1.1.7</span><span class="level-item">5. Related work</span></span></a></li><li><a class="level is-mobile" href="#6-Conclusion-and-future-work"><span class="level-left"><span class="level-item">1.1.8</span><span class="level-item">6. Conclusion and future work</span></span></a></li><li><a class="level is-mobile" href="#Code"><span class="level-left"><span class="level-item">1.1.9</span><span class="level-item">Code</span></span></a></li></ul></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-10-22T03:00:00.000Z">2020-10-22</time></p><p class="title"><a href="/2020-10-22-DocumentExpansionByQueryPrediction/">Document Expansion by Query Prediction</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-06-18T03:00:00.000Z">2020-06-18</time></p><p class="title"><a href="/2020-06-18-bert_based_lexical_substitution/">BERT-based Lexical Substitution</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-27T03:00:00.000Z">2020-05-27</time></p><p class="title"><a href="/2020-05-27-elastic_search/">Elastic Search 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-26T03:00:00.000Z">2020-05-26</time></p><p class="title"><a href="/2020-05-26-Deeper%20Text%20Understanding%20for%20IR%20with%20Contextual%20Neural%20Language%20Modeling/">Deeper Text Understanding for IR with Contextual Neural Language Modeling&quot;</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-02-10T03:00:00.000Z">2020-02-10</time></p><p class="title"><a href="/2020-02-10-Practical-Linux-Unix/">Linux, Unix 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2022 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>

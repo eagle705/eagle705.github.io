@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Towards a Human-like Open-Domain Chatbot - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Author 저자: Daniel Adiwardana, Minh-Thang Luong, David R. So, Jamie Hall, Noah Fiedel, Romal Thoppilan, Zi Yang, Apoorv Kulshreshtha, Gaurav Nemade, Yifeng Lu, Quoc V. Le (Google Research, Brain Team)"><meta property="og:type" content="blog"><meta property="og:title" content="Towards a Human-like Open-Domain Chatbot"><meta property="og:url" content="https://eagle705.github.io/2020-02-06-Towards_a_Human_like_Open_Domain_Chatbot/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="Author 저자: Daniel Adiwardana, Minh-Thang Luong, David R. So, Jamie Hall, Noah Fiedel, Romal Thoppilan, Zi Yang, Apoorv Kulshreshtha, Gaurav Nemade, Yifeng Lu, Quoc V. Le (Google Research, Brain Team)"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20200204110046703.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20200205191123735.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20200206001401575.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20200206184512464.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20200206172821805.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20200206173112900.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20200206173741526.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20200206175349870.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20200206175413116.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20200206175435154.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20200206175752805.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20200206180455314.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20200206180338161.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20200206182100400.png"><meta property="article:published_time" content="2020-02-06T03:00:00.000Z"><meta property="article:modified_time" content="2022-08-27T15:52:05.110Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://eagle705.github.io/img/markdown-img-paste-20200204110046703.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/2020-02-06-Towards_a_Human_like_Open_Domain_Chatbot/"},"headline":"Towards a Human-like Open-Domain Chatbot","image":["https://eagle705.github.io/img/markdown-img-paste-20200204110046703.png","https://eagle705.github.io/img/markdown-img-paste-20200205191123735.png","https://eagle705.github.io/img/markdown-img-paste-20200206001401575.png","https://eagle705.github.io/img/markdown-img-paste-20200206184512464.png","https://eagle705.github.io/img/markdown-img-paste-20200206172821805.png","https://eagle705.github.io/img/markdown-img-paste-20200206173112900.png","https://eagle705.github.io/img/markdown-img-paste-20200206173741526.png","https://eagle705.github.io/img/markdown-img-paste-20200206175349870.png","https://eagle705.github.io/img/markdown-img-paste-20200206175413116.png","https://eagle705.github.io/img/markdown-img-paste-20200206175435154.png","https://eagle705.github.io/img/markdown-img-paste-20200206175752805.png","https://eagle705.github.io/img/markdown-img-paste-20200206180455314.png","https://eagle705.github.io/img/markdown-img-paste-20200206180338161.png","https://eagle705.github.io/img/markdown-img-paste-20200206182100400.png"],"datePublished":"2020-02-06T03:00:00.000Z","dateModified":"2022-08-27T15:52:05.110Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"Author 저자: Daniel Adiwardana, Minh-Thang Luong, David R. So, Jamie Hall, Noah Fiedel, Romal Thoppilan, Zi Yang, Apoorv Kulshreshtha, Gaurav Nemade, Yifeng Lu, Quoc V. Le (Google Research, Brain Team)"}</script><link rel="canonical" href="https://eagle705.github.io/2020-02-06-Towards_a_Human_like_Open_Domain_Chatbot/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-02-06T03:00:00.000Z" title="2020. 2. 6. 오후 12:00:00">2020-02-06</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T15:52:05.110Z" title="2022. 8. 28. 오전 12:52:05">2022-08-28</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/ML/">ML</a></span><span class="level-item">33분안에 읽기 (약 4937 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">Towards a Human-like Open-Domain Chatbot</h1><div class="content"><h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>저자:<ul>
+<li>Daniel Adiwardana, Minh-Thang Luong, David R. So, Jamie Hall, Noah Fiedel, Romal Thoppilan, Zi Yang, Apoorv Kulshreshtha, Gaurav Nemade, Yifeng Lu, Quoc V. Le (<strong>Google Research, Brain Team</strong>)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Who-is-an-Author"><a href="#Who-is-an-Author" class="headerlink" title="Who is an Author?"></a>Who is an Author?</h3><ul>
+<li>구글스칼라나 다른 곳에 딱히 프로필이 없음</li>
+<li>그의 행적은 트위터에.. <a target="_blank" rel="noopener" href="https://twitter.com/xpearhead">https://twitter.com/xpearhead</a></li>
+<li>미디엄도.. <a target="_blank" rel="noopener" href="https://medium.com/@dmail07">https://medium.com/@dmail07</a></li>
+</ul>
+<p><img src="/img/markdown-img-paste-20200204110046703.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h4 id="느낀점"><a href="#느낀점" class="headerlink" title="느낀점"></a>느낀점</h4><ul>
+<li>일단 논문이 꽤 길다</li>
+<li>모델쪽보단 automatic evaluation metric을 제안했다는것에 은근 더 중점을 맞추는 느낌</li>
+<li>모델쪽 얘기는 Evolved Transformer논문을 더 봐야할듯</li>
+<li>뭐랄까.. 설명이 많고 장황한 논문이다. 새로운 개념을 정의하는게 많은 논문임. 제안하는 개념이 필요한 이유등을 주로 설명함.</li>
+<li>Metric + large scale + tip이 본 논문의 주요 contribution인듯 modeling적인 부분은 별로 기술되어있지 않음</li>
+</ul>
+<h4 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h4><ul>
+<li>Meena라는 이름을 가진, multi-turn open-domain chatbot을 제안함</li>
+<li>public domain social media conversation으로부터 데이터를 정제해서 end-to-end로 학습시킴 (<del>데이터 공수가 꽤 중요했을듯</del>)</li>
+<li>2.6B params의 neural net으로 이루어진 모델은 단순하게 next token의 perplexity를 최소화시키는 방법으로 학습함</li>
+<li>Sensibleness and Specifity Average (SSA)라는 Human evaluation과 연관성을 가진 metric도 제안함 (human-like multi-turn conversation의 key element를 평가)</li>
+<li>실험 결과로 perplexity와 SSA간에는 strong correlation이 있는 것으로 나타남<ul>
+<li>best perplexity를 갖는 모델은 SSA도 높았음</li>
+<li><code>The fact that the best perplexity end-to-end trained Meena scores high on SSA (72% on multi-turn evalu- ation) suggests that a human-level SSA of 86% is potentially within reach if we can better op- timize perplexity</code></li>
+</ul>
+</li>
+<li>full version of Meena (filtering mechanism + tuned decoding)의 경우 79% SSA점수를 받았음 (기존에 존재하는 챗봇들보다 23% 높았음)</li>
+</ul>
+<h4 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h4><ul>
+<li>자연어로 자유롭게 대화하는 능력은 human intelligence의 증표 같은 것이며 진정한 인공지능에게 요구되는 것임</li>
+<li>closed-domain 챗봇은 특정 태스크를 위해 키워드나 인텐트등에 답변하지만 open-domain 챗봇의 경우엔 any topic에 대해서도 답변이 가능해야함</li>
+<li>기존 연구에서 MILABOT (Serban et al., 2017), XiaoIce (Zhou et al., 2018)1, Gunrock (Chen et al., 2018), Mitsuku (Worswick, 2018)2 and Cleverbot3 (by Rollo Carpenter) 등이 제안되었지만, complex frameworks (dialog managers with knowledge-based, retrieval-based, or rule-based systems)에 의존적이었음 (<del>어떻게 보면 당연한거같기도 한데 여기서는 지적함</del>)</li>
+<li>End-to-End NeuralNet 접근방법도 있었지만 하나의 학습 모델로 평이한 결과를 냄</li>
+<li>많은 연구에도 불구하고 open-domain chatbot은 여전히 약점들을 갖고 있음<ul>
+<li>open-ended input에 말이 안되는 답변을 하곤함</li>
+<li>혹은 모호하거나 일반적인 답변을 함</li>
+</ul>
+</li>
+<li>본 연구에서는 generative chatbot인 Meena를 제안함<ul>
+<li>40B words mined and filtered from public domain social media conversation 으로 end-to-end 학습함</li>
+<li>end-to-end 접근방법을 한계까지 밀어붙임</li>
+<li>large scale low-perplexity model이 대화 잘하는지 확인함</li>
+</ul>
+</li>
+<li>Meena에서는 Evolved Transformer (So et al., 2019) 기반의 seq2seq model을 사용함<ul>
+<li>모델은 multi-turn conversation 으로 학습함</li>
+<li>input sequence 형태는 all turn of the context 임 (최대 7개까지 사용) (<del>핑퐁팀의 접근과 비슷한듯</del>)</li>
+<li>output sequence 형태는 response임</li>
+<li>best model은 2.6B params을 사용하고 test perplexity로 10.2를 기록함</li>
+</ul>
+</li>
+<li>Meena와 다른 챗봇의 quality를 평가하기 위해 Sensibleness and Specificity Average (SSA)를 제안함<ul>
+<li>모델의 모든 답변에 대해 사람이 label을 달 때, 저 두가지 기준을 사용함</li>
+<li>sensible은 context 안에서 말이 되는지를 판단함<ul>
+<li>사람이 만든 대화에서는 97%정도가 이 기준에 부합했음</li>
+<li>하지만 이것만 가지고 판단할 경우 답변이 다소 모호하거나 지루할 수 있음(vague and boring)</li>
+<li>예를 들면, <strong>“I don’t know”</strong> 답변이 계속 나온다든지 하는 문제가 발생함</li>
+<li>그렇기 때문에 또 다른 평가 기준이 필요함</li>
+</ul>
+</li>
+<li>specificity는 주어진 context안에서 답변이 얼마나 구체적인지를 평가함</li>
+</ul>
+</li>
+<li>Meena, humans 그리고 다른 오픈도메인 챗봇을 SSA metric으로 비교하기 위해 2가지 타입의 human evaluation을 사용함<ul>
+<li>static:<ul>
+<li>1,477 multi-turn conversations을 큐레이션해서 데이터셋을 만듬</li>
+</ul>
+</li>
+<li>interactive:<ul>
+<li>사람이 시스템에 원하는건 무엇이든지 입력함</li>
+</ul>
+</li>
+<li>surprised but pleased, static, interactive evaluation에서 모두 SSA metric이 Meena’s perplexity와 strong correlation이 있음을 발견했음 (<code>In other words, the better that Meena fit its training data, the more sensible and specific its chat responses became.</code>)</li>
+<li>어찌보면 당연해보이는게 왜 놀랍냐면, 최근 연구들에서는 human evaluation과 BLEU같은 automatic metrics이 poor correlation을 갖는게 밝혀졌기 때문임 (<del>사실 BLEU를 생성 모델의 평가지표로 쓰는거 자체가 말이 안되긴 함</del>)</li>
+</ul>
+</li>
+<li>best end-to-end learned model은 avg 72% SSA를 기록했고 full version of Meena (+filtering mechanism and tuned decoding)는 79%의 SSA를 기록함 (사람 간의 대화 점수는 avg 86%임, 사람의 경우 sensibleness가 매우 높고, specificity는 눈에 띄게 낮은 경향이 있었음)</li>
+<li>평가방법에 단점이 있다면, static eval의 경우 데이터셋이 제한되어있으므로 human conversations을 모두 커버한다 할 수 없음</li>
+<li>그럼에도 불구하고 SSA score와 perplexity간에 발견한 correlation을 통해 perplexity를 개선하는게 human-like chatbot에 도움이 된다걸 발견했다는데 의의가 있음</li>
+<li>본 논문의 contribution은<ul>
+<li><code>proposing a simple human evaluation metric for multi-turn open-domain chatbots</code></li>
+<li><code>showing evidence that perplexity is an automatic metric that correlates with human judgment</code></li>
+<li><code>demonstrating that an end-to-end neural model with sufficiently low perplexity can surpass the sensibleness and specificity of existing chatbots that rely on complex, handcrafted frameworks developed over many years</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="2-Evaluating-chatbots"><a href="#2-Evaluating-chatbots" class="headerlink" title="2. Evaluating chatbots"></a>2. Evaluating chatbots</h4><ul>
+<li>챗봇과 NLG를 평가하는건 잘알려진 challenge임 (Liu et al., 2016; Lowe et al., 2017; Novikova et al., 2017; Hashimoto et al., 2019)</li>
+<li>본 논문에서는 사람과 같은 답변을 하는지를 평가하기위한 human evaluation metric을 제안함</li>
+<li>2가지 setup인 static (fixed set of multi-turn contexts to generate responses), interactive(chat freely with chatbots) 으로 나눠서 진행함</li>
+</ul>
+<h5 id="2-1-Measuring-Human-Likeness"><a href="#2-1-Measuring-Human-Likeness" class="headerlink" title="2.1 Measuring Human Likeness"></a>2.1 Measuring Human Likeness</h5><ul>
+<li>주어진 context에서 말이 되는지를 평가 (<code>given the context, makes sense</code>)</li>
+<li>Sensibleness<ul>
+<li>평가 요소<ul>
+<li>common sense</li>
+<li>logical coherence</li>
+<li>consistency</li>
+</ul>
+</li>
+<li>약점<ul>
+<li><code>However, being sensible is not enough. A generic response (e.g., I don’t know) can be sensible, but it is also boring and unspecific</code></li>
+<li>GenericBot(question에는 항상 “I don’t know”를, statement에는 항상 “ok” 시전)을 만들어서 평가해보니 static evaluation에서 DialoGPT (62%) 보다 높은 70%의 Sensible 점수를 받음 (DialoGPT 대답이 더 human-like 했음에도!)</li>
+<li>이러한 문제를 개선하기 위해 답변이 sensible로 label되면, crowd worker에게 이 답변이 context에 맞게 충분히 specific한지를 평가함</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Specificity<ul>
+<li>일단 sensible label이 된 상태여야 specificity label 할지를 고려함</li>
+<li>반례:<ul>
+<li>A says: “I love tennis,”</li>
+<li>B responds: “That’s nice,”</li>
+<li>label: “not specific”</li>
+</ul>
+</li>
+<li>올바른 예:<ul>
+<li>A says: “I love tennis,”</li>
+<li>B responds: “Me too, I can’t get enough of Roger Federer!”</li>
+<li>label: “specific”</li>
+</ul>
+</li>
+<li>GenericBot의 경우 어떠한 답변도 “specific” label을 받지 못했지만 DialoGPT의 경우 39%정도 “specific” label을 받음</li>
+</ul>
+</li>
+<li>평가할떄 들어가는 주관의 정도는 crowd worker의 agreement로 정량화 할수 있음 (<code>The degree of subjectivity is somewhat quantified in the crowd worker agreement</code>)</li>
+<li>모든 모델 성능평가에 대한 crowd worker의 consistency를 측정하기 위해 agreement와 Krippendorff’s alpha (Krippendorff, 2011)를 사용함 (<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Krippendorff%27s_alpha">https://en.wikipedia.org/wiki/Krippendorff%27s_alpha</a>)</li>
+</ul>
+<p><img src="/img/markdown-img-paste-20200205191123735.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>Sensibleness와 Specificity를 하나의 metric으로 사용하기 위해 간단히 두 값을 평균냈고 이를 SSA (Sensibleness and Specificity Average)라 표현</li>
+<li>점수:<ul>
+<li>GenericBot: 35%</li>
+<li>DialoGPT: 51%<br><img src="/img/markdown-img-paste-20200206001401575.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+</li>
+</ul>
+<h5 id="2-2-Static-Evaluation"><a href="#2-2-Static-Evaluation" class="headerlink" title="2.2 Static Evaluation"></a>2.2 Static Evaluation</h5><ul>
+<li>모델 비교를 편하게 하기 위한 common benchmark가 필요했음</li>
+<li>1,477 conversational contexts (with 1~3 conversation turn)</li>
+<li>위의 조건을 만족하는 대화 데이터셋을 Mini-Turing Benchmark (MTB)라 정함</li>
+<li>turn 개수에 따른 데이터 수<ul>
+<li>single-turn context (e.g., “How are you?”): 315</li>
+<li>two-turn: 500</li>
+<li>three-turn: 662</li>
+</ul>
+</li>
+<li>MTB에는 personality question도 포함됨 (e.g. “Do you like cats?”)</li>
+<li>이때 personality는 일관성이 있어야함<ul>
+<li><code>For example, the context “A: Do you like movies?; B: Yeah. I like sci-fi mostly; A: Really? Which is your favorite?” expects a consistent response such as I love Back to the Future. On the other hand, a response like I don’t like movies would be a contradiction</code></li>
+</ul>
+</li>
+<li>(<em>context, response</em>) pair에 대한 결과를 crowd workers에 보여준뒤 sensible and specific을 평가함</li>
+<li>이때 static이라는 단어가 왜 붙냐면 contexts가 고정되어 있기 때문임</li>
+</ul>
+<h5 id="2-3-Interactive-Evaluation"><a href="#2-3-Interactive-Evaluation" class="headerlink" title="2.3 Interactive Evaluation"></a>2.3 Interactive Evaluation</h5><ul>
+<li>static eval이 모델 비교하기엔 편하나, dataset에 따라 biased 한 경향이 있음</li>
+<li>crowd workers가 1:1로 chatbot에게 아무거나 물어보고 싶은걸 물어보는 평가 모드로 하나 더 추가함</li>
+<li>대화는 최소 14턴이 요구되고 (7턴은 챗봇), 최대로는 28턴까지 실험함</li>
+<li>각 모델당 100개의 conversations을 수집함 (즉 최소, 700개의 labeled turns이 모델당 있는 것임)</li>
+</ul>
+<h5 id="2-4-Estimate-of-Human-Performance"><a href="#2-4-Estimate-of-Human-Performance" class="headerlink" title="2.4 Estimate of Human Performance"></a>2.4 Estimate of Human Performance</h5><ul>
+<li>internal company volunteers의 도움을 받아 100개의 human-human conversations을 수집했음</li>
+<li>SSA를 위한 labeling은 위의 volunteers와는 상관없는 5명의 crowd workers의 majority voting으로 매 human turn마다 매겨짐</li>
+</ul>
+<h5 id="2-5-Evaluation-of-Cleverbot-and-DialoGPT"><a href="#2-5-Evaluation-of-Cleverbot-and-DialoGPT" class="headerlink" title="2.5 Evaluation of Cleverbot and DialoGPT"></a>2.5 Evaluation of Cleverbot and DialoGPT</h5><ul>
+<li>Cleverbot은 API 사용했음</li>
+<li>DialoGPT는 762M params짜리 공개된 모델을 사용함 (345M짜리 모델이 single-turn에서 가장 좋다고 알려져서 먼저 사용했었는데 762M 모델에 비해 multi-turn에서는 성능이 현저히 성능이 나빠서 762M 사용)</li>
+<li>DialoGPT authors가 decoding script를 공개하지 않아서, top-K (K&#x3D;10) decoding을 적용했음 (코드는 huggingface의 Wolf가 공개한 구현체 씀)</li>
+<li>위의 두 모델도 Meena와 같이 crowd sourcing으로 평가됨</li>
+</ul>
+<h5 id="2-6-Evaluation-of-Mitsuku-and-XiaoIce"><a href="#2-6-Evaluation-of-Mitsuku-and-XiaoIce" class="headerlink" title="2.6 Evaluation of Mitsuku and XiaoIce"></a>2.6 Evaluation of Mitsuku and XiaoIce</h5><ul>
+<li>Mitsuku는 webapp을 사용해야했고 XiaoIce는 public API 없어서 interactive evaluation을 수행</li>
+<li>자원봉사자들이 Mitsuku는 100개의 대화를, XiaoIce에서는 119개의 대화를 수집함</li>
+</ul>
+<h5 id="2-7-Automatic-Evaluation"><a href="#2-7-Automatic-Evaluation" class="headerlink" title="2.7 Automatic Evaluation"></a>2.7 Automatic Evaluation</h5><ul>
+<li>quick research iterations을 위해, perplexity에 집중했음</li>
+<li>기존의 평가방법과 달리, perplexity가 automatic metric가 됨</li>
+<li>A seq2seq model outputs a probability distribution over possible next response tokens</li>
+<li>Perplexity measures how well the model predicts the test set data; in other words, how accurately it anticipates what people will say next. When interpreting perplexity scores, bear in mind that lower is better and that the theoretical minimum is one</li>
+</ul>
+<h4 id="3-Meena-chatbot"><a href="#3-Meena-chatbot" class="headerlink" title="3. Meena chatbot"></a>3. Meena chatbot</h4><ul>
+<li>기존의 e2e dialog models은 크게 두가지 종류로 나뉘었음<ul>
+<li>(1) complex models with human-designed components</li>
+<li>(2) large neural network models (known as end-to-end models)</li>
+</ul>
+</li>
+<li>핵심 질문!! (open research question)<ul>
+<li><code>in order to reach a point where a model can carry out high-quality, multi-turn conversations with humans, could we simply take an end-to-end model and make it bigger—by adding more training data and increasing its parameter count—or is it necessary to combine such a model with other components?</code></li>
+</ul>
+</li>
+<li>본 논문이 제안하는 Meena Model (the largest end-to-end model)이 humanlike chat responses 를 open domain에서 할 수 있다는걸 보여줌으로써 위의 open research question에 답변이 가능할 것이라고 주장</li>
+</ul>
+<h5 id="3-1-Training-Data"><a href="#3-1-Training-Data" class="headerlink" title="3.1 Training Data"></a>3.1 Training Data</h5><ul>
+<li>Data는 public domain social media conversations을 정제해서 만듬</li>
+<li>source data는 multiple speakers를 포함한 message trees 형태임</li>
+<li>첫번째 메세지를 root로 삼고, 거기에 대한 답변이 child 노드가 됨</li>
+<li>이런식으로 하면 대화할때 각 메세지의 conversation turn을 알 수 있음</li>
+<li>대화속의 각 턴을 답변으로 하고 이전 턴들을 context로 하면 (<em>context, response</em>) pair training dataset을 만들 수 있음</li>
+<li>generation quality를 높이기 위해, 다음과 같은 조건을 만족하면 메세지를 삭제함<ul>
+<li>subword의 개수가 2개보다 적거나 128개보다 많은 경우</li>
+<li>alphabetic characters의 percentage가 70% 이하인 경우</li>
+<li>message가 URL을 갖고 있는 경우</li>
+<li>author’s username에 “bot”이 포함된 경우</li>
+<li>메세지가 100번 이상 반복된 경우</li>
+<li>parent’s text와 high n-gram이 겹치는 경우</li>
+<li>commercial text classifier가 메세지가 안전하지 않거나 공격적이라고 분류한 경우</li>
+</ul>
+</li>
+<li>추가로 메세지 내에서 parent’s text를 인용한건 따로 제거했음</li>
+<li>메세지가 제거된 경우 그 메세지 기준 sub-tree는 다 drop시킴</li>
+<li>필터링 후에 남은 (<em>context, response</em>) pair의 개수: 867M</li>
+<li>tokenization: BPE with sentencepiece</li>
+<li>vocab size: 8K BPE subwords (이전 실험들에서 이정도 사이즈로도 답변을 생성하기에 충분하다는걸 확인함)</li>
+<li>Final Meena dataset 크기: 341GB of text (40B words) (GPT-2의 경우 40GB of internet text(8 million web pages) 사용)</li>
+</ul>
+<h5 id="3-2-Model-Architecture"><a href="#3-2-Model-Architecture" class="headerlink" title="3.2 Model Architecture"></a>3.2 Model Architecture</h5><p><img src="/img/markdown-img-paste-20200206184512464.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>Meena model에서 가장 성능이 좋았던건, Evolved Transforemr (ET) (So et al., 2019) seq2seq model임 (with 2.6B parameters)</li>
+<li>1 ET encoder block + 13 ET decoder blocks 사용</li>
+<li>ET는 transformer를 기반으로한 evolutionary NAS architecture임</li>
+<li>largest ET 모델은 10.2 perplexity를 기록했고 largest vanilla transformer는 10.7 perplexity를 기록함 (모두 738k step으로 고정했을 때)</li>
+<li>vanilla Transformer는 32 decoder layer를 사용했고 나머지 hyper params는 동일함 (transformer 논문에선 6개, 버트에선 base가 12개 large가 24개임) (이러한 이유 때문에 이렇게 맞춰준듯 <code>An Evolved Transformer block is about twice as deep as a Transformer layer</code>)</li>
+<li>다른 모델과 비교하자면, extra-large GPT-2는 1.5B params을 갖고, LM 기반임(decoder only), DialoGPT의 경우엔 대화모델이고 762M params을 가짐</li>
+<li>Meena’s hyper Params<ul>
+<li>hidden size: 2,560</li>
+<li>attention head: 32</li>
+<li>share embeddings across the encoder and decoder</li>
+<li>encoder, decoder maxlen: 128 tokens (256 combined)</li>
+</ul>
+</li>
+<li>optim 방법: manual coordinate-descent search</li>
+</ul>
+<h5 id="3-3-Training-Details"><a href="#3-3-Training-Details" class="headerlink" title="3.3 Training Details"></a>3.3 Training Details</h5><ul>
+<li>TPU-v3 Pod (2,048 TPU cores)에서 30일간 (<del>또 이렇게 돈을 태웠..</del>) 학습함</li>
+<li>dataset: 40B words (or 61B BPE tokens)</li>
+<li>2.6B-param model이 61B-token dataset에도 overfit됨 (모델 capa가 엄청 크다는걸 보여줌)</li>
+<li>이러한 이유로 <code>add a small amount of 0.1 attention and feed-forward layer dropout</code> (<del>0.1 attention을 더했다는게 뭐지..</del>)</li>
+<li>메모리를 아끼기 위해, Adafactor optimizer (Shazeer and Stern, 2018)를 사용했음<ul>
+<li>init lr: 0.01 (0~10k steps)</li>
+<li><code>decaying lr with the inverse square root of number of steps</code>(10k step 이후 적용)</li>
+</ul>
+</li>
+<li>Tensor2Tensor codebase 사용함</li>
+<li>TPU 셋팅<ul>
+<li>TPU-v3의 core는 16GB of high-bandwidth memory를 가짐</li>
+<li>메모리 사용량 최대로하고 각 코어당 8 training examples를 할당시킴</li>
+<li>그 결과 1 step에 1초 정도 걸림</li>
+<li>full TPU-v3 Pod에서 4M tokens를 1초에 학습시킬 수 있음</li>
+<li>학습이 다 끝났을 때 모델은 164 epoch을 돌고 10T tokens을 봄(repeated tokens 포함)</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-4-Decoding"><a href="#3-4-Decoding" class="headerlink" title="3.4 Decoding"></a>3.4 Decoding</h5><ul>
+<li>generic and bland response를 생성하는건 neural conversational models에게 항상 문제였음</li>
+<li>이러한 문제를 해결하기위한 common approach는 더 좋은 decoding algorithm을 사용하는 것 (<code>reranking, conditioning, adversarial learning, variational autoencoding</code> 등등)</li>
+<li>제안 모델의 경우엔 충분히 low perplexity를 가지기 때문에 a simple sample-and-rank decoding strategy로도 diverse and high-quality responses 를 만들어낼 수 있음<ul>
+<li>Sample-and-rank<ul>
+<li><ol>
+<li>Sample N independent candidate response (using plain <strong>random sampling</strong> with temperature <em>T</em>)</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>candidate response중에서 highest probability를 갖는 걸 final output으로 선택</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Temperature <em>T</em>는 hyper param이고 the next token에 대한 확률분포 $ p_{i} $를 regulate함</li>
+<li>Hinton et al. (2015)이 했던것 처럼 logits $ z_{i} $ 를 softmax 계산하기 전에 <em>T</em> 나눴음<br>$$<br>p_{i}&#x3D;\frac{\exp \left(z_{i} &#x2F; T\right)}{\sum_{j} \exp \left(z_{j} &#x2F; T\right)}<br>$$</li>
+<li><em>T</em> 값에 따른 변화<ul>
+<li><em>T</em> &#x3D; 1 이면, unmodified distribution임</li>
+<li><em>T</em>가 커지면, contextually rare tokens 더 볼 수 있음 (relevant entity names)</li>
+<li><em>T</em>가 작아지면, common words가 더 많이 나옴, 안정적이나 specific은 떨어짐 (예: 관사, 전치사)</li>
+</ul>
+</li>
+<li><code>“Why do you like the ocean?”</code> 이라는 질문이 input으로 있을 때 결과<ul>
+<li>beam search는 반복적인 답변, uninteresting 답변이 많지만 sample-and-rank의 경우 다양한 답변 및 context-rich 답변이 가능</li>
+<li>예시<br><img src="/img/markdown-img-paste-20200206172821805.png">{: height&#x3D;”50%” width&#x3D;”50%”}<br><img src="/img/markdown-img-paste-20200206173112900.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+</li>
+<li>Key point!<ul>
+<li><code>with low perplexity so samples can be taken at high temperature to produce human-like content</code></li>
+</ul>
+</li>
+<li>sample-and-rank에서 <em>N</em> &#x3D; 20, <em>T</em> &#x3D; 0.88로 셋팅</li>
+<li>Figure 1을 보면, decoding strategy를 고정했을때 perplexity를 개선하면 SSA가 높아지는걸 볼 수 있음<br><img src="/img/markdown-img-paste-20200206173741526.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+<h5 id="3-5-Sample-conversations"><a href="#3-5-Sample-conversations" class="headerlink" title="3.5 Sample conversations"></a>3.5 Sample conversations</h5><ul>
+<li>Human과 Meena간의 대화 샘플 (<del>체리피킹이라고 저자가 직접 써놓았음</del>)</li>
+<li>대화 생성때는 sample-and-rank를 사용했음</li>
+<li>Meena가 open-domain에서 대화를 그럭저럭 잘하지만 “Is it indoors or outdoors?”라고 묻는 부분을 보면 not sensible한 부분도 있음을 확인할 수 있음</li>
+<li>첫번째 예제:<br><img src="/img/markdown-img-paste-20200206175349870.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+<li>두번째 예시: context 를 사용해서 대화하기도함 (내용이 실제로 맞음..)<br><img src="/img/markdown-img-paste-20200206175413116.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+<li>세번째 예시: 철학얘기하는 챗봇<br><img src="/img/markdown-img-paste-20200206175435154.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+<li>네번째 예시: 멀티턴 환경에서 농담하는 챗봇<br><img src="/img/markdown-img-paste-20200206175752805.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+<li>자세한 대화 데이터셋은 Github 참고: <a target="_blank" rel="noopener" href="https://github.com/google-research/google-research/tree/master/meena/">https://github.com/google-research/google-research/tree/master/meena/</a></li>
+</ul>
+<h4 id="4-Results"><a href="#4-Results" class="headerlink" title="4. Results"></a>4. Results</h4><ul>
+<li>test perplexity와 human evaluation metric, SSA 간의 correlation에 대해 다루려함</li>
+</ul>
+<h5 id="4-1-SSA-perplexity-correlation"><a href="#4-1-SSA-perplexity-correlation" class="headerlink" title="4.1 SSA-perplexity correlation"></a>4.1 SSA-perplexity correlation</h5><ul>
+<li>the number of layers, attention heads, total training steps 등을 바꾸기도 하고 ET쓸지 regular Transformer 쓸지, hard labels 쓸지 soft labels 등등 고민하며 실험했음</li>
+<li>static eval에서 correlation이 거의 선형으로 보였지만 lower values of perplexity에서도 잘되는지 확인하고 싶어서 interactive eval도 수행했고 잘나온걸 확인 (dataset으로 인한 bias 문제는 없다고 주장할 수 있게 됨)<br><img src="/img/markdown-img-paste-20200206180455314.png">{: height&#x3D;”100%” width&#x3D;”100%”}<br><img src="/img/markdown-img-paste-20200206180338161.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+<li><code>the lowest perplexity model was evaluated 7 times with static evaluations and also 7 times with interactive evaluations.</code></li>
+</ul>
+<h4 id="5-Further-Advancing-SSA"><a href="#5-Further-Advancing-SSA" class="headerlink" title="5. Further Advancing SSA"></a>5. Further Advancing SSA</h4><ul>
+<li>72% ± 1%, for Meena (base)의 성능을 얻었지만 decoding strategy와 rule 추가로 성능을 79% ± 1%, for Meena (full)까지 개선해보고자 함</li>
+</ul>
+<h5 id="5-1-Advancing-Decoding"><a href="#5-1-Advancing-Decoding" class="headerlink" title="5.1 Advancing Decoding"></a>5.1 Advancing Decoding</h5><ul>
+<li>temperature <em>T</em>와 top-k를 다르게 주면서 디코딩 영향을 평가해봄<ul>
+<li>top-k &#x3D; 40, <em>T</em> &#x3D; 1.0, <em>N</em> &#x3D; 20: SSA 72%</li>
+<li>top-k &#x3D; 40, <em>T</em> &#x3D; 0.88, <em>N</em> &#x3D; 20: SSA 74%</li>
+</ul>
+</li>
+<li>sample-and-rank에서 <em>N</em>을 {1,20,400}으로 바꿔가며 평가해봄<ul>
+<li><em>N</em> &#x3D; 1일 때보단 <em>N</em> &#x3D; 20일때 유의미하게 좋아짐 (SSA +10%)</li>
+<li><em>N</em> &#x3D; 400 일땐 오히려 sensibleness가 안좋아짐</li>
+</ul>
+</li>
+</ul>
+<h5 id="5-2-Addressing-Cross-turn-Repetitions"><a href="#5-2-Addressing-Cross-turn-Repetitions" class="headerlink" title="5.2 Addressing Cross-turn Repetitions"></a>5.2 Addressing Cross-turn Repetitions</h5><ul>
+<li>Cross-turn Repetitions이란 특정 턴에서 이전 턴의 결과를 반복하는걸 의미함</li>
+<li>이전껄 반복하기도하고, 답변안에서 모순이 있기도함 (<code>“I like pizza, but I don’t like it”</code>)</li>
+<li>perplexities가 안좋은 Meena 버전에서 잘 발견되는 현상임 (base 모델에서는 잘 안보이는 현상이긴 함)</li>
+<li>이를 해결하기 위해 rule을 도입했고 대화 중 2개의 턴에서 long comon sub-sequences를 갖고 있으면 해당 candidates를 제거하게 함</li>
+<li>이를 통해 SSA 성능이 74% -&gt; 79%로 올라감<br><img src="/img/markdown-img-paste-20200206182100400.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+<h5 id="5-3-Safty-Layer"><a href="#5-3-Safty-Layer" class="headerlink" title="5.3 Safty Layer"></a>5.3 Safty Layer</h5><ul>
+<li>full Meena 버전의 경우, 내용적으로 민감한 내용들은 filtering mechanism을 적용한 classifier layer를 추가해서 걸렀음 (evaluation 및 실제 대화할 때)</li>
+</ul>
+<h4 id="6-Related-Work"><a href="#6-Related-Work" class="headerlink" title="6. Related Work"></a>6. Related Work</h4><ul>
+<li>Human evaluation과 correlation을 갖는 automatic metric을 찾는건 open-domain conversational modeling에서 매우 중요한 goal이었음</li>
+<li>BLEU, ROUGE, 기타 등등이 있었지만 dialog에는 맞지 않음이 밝혀졌었음</li>
+<li>learnable metric을 구축하려는 시도도 있었지만 human labels이 필요하거나 unsupervised approaches를 사용했고 이는 더 복잡하거나 따로 training이 필요했음 (e.g. ranking system)</li>
+<li>본 연구에서는 any neural seq2seq model에서 사용 가능한 perplexity가 human evaluation과 강한 correlation을 갖는다는 걸 확인함</li>
+<li>DialoGPT 등에서 했던 evaluation setting은 single-turn dialog였지만 본 연구에서는 3 turns까지 가능한 static MTB benchmark와 14 turn까지 가능한 interactive setup으로 평가함</li>
+</ul>
+<h4 id="7-Discussion"><a href="#7-Discussion" class="headerlink" title="7. Discussion"></a>7. Discussion</h4><ul>
+<li>public domain social media conversations에 대한 perplexity가 good automatic proxy for human judgement (sensibleness and specificity 관점에서)가 될 수 있다는 걸 제안함</li>
+<li>MTB (one to three-turn context)는 first turn에 biased 될 수 있고 context도 많지 않음<ul>
+<li>주로 다루는 주제도 다음과 같음</li>
+<li>common sense, basic knowledge, asking&#x2F;sharing about personality, likes&#x2F;dislikes, opinions, feelings, hobbies, pleasantries, etc</li>
+<li>deeper question answering은 불가능 (e.g., how fast is a cheetah)</li>
+</ul>
+</li>
+<li>Human-likeness란 incredibly broad and abstract concept임</li>
+<li>이러한 이유로 interactive evaluation을 함 (14 to 28 turns)</li>
+<li>Sensible and specificity 외에 human-like conversation attribute를 확장할 필요가 있음<ul>
+<li>humor</li>
+<li>empathy</li>
+<li>deep reasoning</li>
+<li>question Answering</li>
+<li>knowledge discussion skills</li>
+</ul>
+</li>
+<li>Sensible and specificity 경우 sub-component로 쪼갤 수 있음<ul>
+<li>logical</li>
+<li>personality consistency</li>
+<li>common sense</li>
+<li>relevance</li>
+<li>basic factual correctness</li>
+</ul>
+</li>
+<li>Future work는 explore the continued optimization of sensibleness via the optimization of test set perplexity</li>
+</ul>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Towards a Human-like Open-Domain Chatbot</p><p><a href="https://eagle705.github.io/2020-02-06-Towards_a_Human_like_Open_Domain_Chatbot/">https://eagle705.github.io/2020-02-06-Towards_a_Human_like_Open_Domain_Chatbot/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2020-02-06</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-08-28</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020-02-10-Practical-Linux-Unix/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Linux, Unix 정리</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2019-12-19-Unified%20Language%20Model%20Pre-training%20for%20Natural%20Language%20Understanding%20and%20Generation/"><span class="level-item">Unified Language Model Pre-training for Natural Language Understanding and Generation</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/2020-02-06-Towards_a_Human_like_Open_Domain_Chatbot/';
+            this.page.identifier = '2020-02-06-Towards_a_Human_like_Open_Domain_Chatbot/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">28</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">16</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">17</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">1</span><span class="level-item">Author</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Who-is-an-Author"><span class="level-left"><span class="level-item">1.1</span><span class="level-item">Who is an Author?</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#느낀점"><span class="level-left"><span class="level-item">1.1.1</span><span class="level-item">느낀점</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">1.1.2</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#1-Introduction"><span class="level-left"><span class="level-item">1.1.3</span><span class="level-item">1. Introduction</span></span></a></li><li><a class="level is-mobile" href="#2-Evaluating-chatbots"><span class="level-left"><span class="level-item">1.1.4</span><span class="level-item">2. Evaluating chatbots</span></span></a></li><li><a class="level is-mobile" href="#3-Meena-chatbot"><span class="level-left"><span class="level-item">1.1.5</span><span class="level-item">3. Meena chatbot</span></span></a></li><li><a class="level is-mobile" href="#4-Results"><span class="level-left"><span class="level-item">1.1.6</span><span class="level-item">4. Results</span></span></a></li><li><a class="level is-mobile" href="#5-Further-Advancing-SSA"><span class="level-left"><span class="level-item">1.1.7</span><span class="level-item">5. Further Advancing SSA</span></span></a></li><li><a class="level is-mobile" href="#6-Related-Work"><span class="level-left"><span class="level-item">1.1.8</span><span class="level-item">6. Related Work</span></span></a></li><li><a class="level is-mobile" href="#7-Discussion"><span class="level-left"><span class="level-item">1.1.9</span><span class="level-item">7. Discussion</span></span></a></li></ul></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-10-22T03:00:00.000Z">2020-10-22</time></p><p class="title"><a href="/2020-10-22-DocumentExpansionByQueryPrediction/">Document Expansion by Query Prediction</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-06-18T03:00:00.000Z">2020-06-18</time></p><p class="title"><a href="/2020-06-18-bert_based_lexical_substitution/">BERT-based Lexical Substitution</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-27T03:00:00.000Z">2020-05-27</time></p><p class="title"><a href="/2020-05-27-elastic_search/">Elastic Search 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-26T03:00:00.000Z">2020-05-26</time></p><p class="title"><a href="/2020-05-26-Deeper%20Text%20Understanding%20for%20IR%20with%20Contextual%20Neural%20Language%20Modeling/">Deeper Text Understanding for IR with Contextual Neural Language Modeling&quot;</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-02-10T03:00:00.000Z">2020-02-10</time></p><p class="title"><a href="/2020-02-10-Practical-Linux-Unix/">Linux, Unix 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2022 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>

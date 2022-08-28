@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Unified Language Model Pre-training for Natural Language Understanding and Generation - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Author 저자: Li Dong∗ Nan Yang∗ Wenhui Wang∗ Furu Wei∗ † Xiaodong Liu Yu Wang Jianfeng Gao Ming Zhou Hsiao-Wuen Hon (Microsoft Research)    Who is an Author? 일단 쓴 논문들에 대한 기본 인용수가 높다 감성분석, MRC, Summariza"><meta property="og:type" content="blog"><meta property="og:title" content="Unified Language Model Pre-training for Natural Language Understanding and Generation"><meta property="og:url" content="https://eagle705.github.io/2019-12-19-Unified%20Language%20Model%20Pre-training%20for%20Natural%20Language%20Understanding%20and%20Generation/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="Author 저자: Li Dong∗ Nan Yang∗ Wenhui Wang∗ Furu Wei∗ † Xiaodong Liu Yu Wang Jianfeng Gao Ming Zhou Hsiao-Wuen Hon (Microsoft Research)    Who is an Author? 일단 쓴 논문들에 대한 기본 인용수가 높다 감성분석, MRC, Summariza"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191219150255284.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191219180921489.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191219181148913.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191220121421557.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191220225600149.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191220230538529.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191220235643261.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191221000237591.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191221000853984.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191221001042434.png"><meta property="article:published_time" content="2019-12-19T03:00:00.000Z"><meta property="article:modified_time" content="2022-08-28T12:44:47.884Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://eagle705.github.io/img/markdown-img-paste-20191219150255284.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/2019-12-19-Unified%20Language%20Model%20Pre-training%20for%20Natural%20Language%20Understanding%20and%20Generation/"},"headline":"Unified Language Model Pre-training for Natural Language Understanding and Generation","image":["https://eagle705.github.io/img/markdown-img-paste-20191219150255284.png","https://eagle705.github.io/img/markdown-img-paste-20191219180921489.png","https://eagle705.github.io/img/markdown-img-paste-20191219181148913.png","https://eagle705.github.io/img/markdown-img-paste-20191220121421557.png","https://eagle705.github.io/img/markdown-img-paste-20191220225600149.png","https://eagle705.github.io/img/markdown-img-paste-20191220230538529.png","https://eagle705.github.io/img/markdown-img-paste-20191220235643261.png","https://eagle705.github.io/img/markdown-img-paste-20191221000237591.png","https://eagle705.github.io/img/markdown-img-paste-20191221000853984.png","https://eagle705.github.io/img/markdown-img-paste-20191221001042434.png"],"datePublished":"2019-12-19T03:00:00.000Z","dateModified":"2022-08-28T12:44:47.884Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"Author 저자: Li Dong∗ Nan Yang∗ Wenhui Wang∗ Furu Wei∗ † Xiaodong Liu Yu Wang Jianfeng Gao Ming Zhou Hsiao-Wuen Hon (Microsoft Research)    Who is an Author? 일단 쓴 논문들에 대한 기본 인용수가 높다 감성분석, MRC, Summariza"}</script><link rel="canonical" href="https://eagle705.github.io/2019-12-19-Unified%20Language%20Model%20Pre-training%20for%20Natural%20Language%20Understanding%20and%20Generation/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-12-19T03:00:00.000Z" title="2019. 12. 19. 오후 12:00:00">2019-12-19</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-28T12:44:47.884Z" title="2022. 8. 28. 오후 9:44:47">2022-08-28</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">21분안에 읽기 (약 3121 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">Unified Language Model Pre-training for Natural Language Understanding and Generation</h1><div class="content"><h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>저자:<ul>
+<li>Li Dong∗ Nan Yang∗ Wenhui Wang∗ Furu Wei∗ † Xiaodong Liu Yu Wang Jianfeng Gao Ming Zhou Hsiao-Wuen Hon (<strong>Microsoft Research</strong>)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Who-is-an-Author"><a href="#Who-is-an-Author" class="headerlink" title="Who is an Author?"></a>Who is an Author?</h3><ul>
+<li>일단 쓴 논문들에 대한 기본 인용수가 높다</li>
+<li>감성분석, MRC, Summarization 등 태스크를 가리지 않고, EMNLP, AAAI, ACL 등에 논문을 엄청 많이 냄.. 그냥 고수</li>
+<li>이 논문은 NeurIPS 2019</li>
+<li>191219 기준으로 인용수 26회</li>
+</ul>
+<p><img src="/img/markdown-img-paste-20191219150255284.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h4 id="느낀점"><a href="#느낀점" class="headerlink" title="느낀점"></a>느낀점</h4><ul>
+<li>NLG에서 SOTA를 꽤 찍었는데 방식이 좀 신기</li>
+<li>shared param (같은 모델)로 NLU와 NLG를 할 수 있다는게 가장 큰 장점</li>
+<li>masking으로 장난치면서(?) 모델을 발전시킨건 어쩌면 자연스러운 수순인듯</li>
+<li>1st segment에서 passage와 answer를 concat하거나 conversation history를 concat 방식으로 집어넣는데, 잘되는게 좀 신기하긴함</li>
+<li>T5가 살아남을지 이 친구가 더 개량되서 살아남을지 궁금</li>
+<li>seq2seq LM을 fine-tuning하는 방법이 좀 신선했음 당연히 left-to-right 방식으로 teacher forcing할줄 알았는데.. ㅎㅎ</li>
+</ul>
+<h4 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h4><ul>
+<li>UNIfied pre-trained Language Model (UNILM) 이라는 모델을 제안함</li>
+<li>NLU와 NLG를 모두 할 수 있게 fine-tune이 가능한 모델임</li>
+<li>3가지 LM task로 pretraining함<ul>
+<li>unidirectional</li>
+<li>bidirectional</li>
+<li>sequence-to-sequence prediction</li>
+</ul>
+</li>
+<li>shared Transformer network와 specific self-attention masks(<code>to control what context the prediction conditions on</code>)를 통해서 unified modeling을 함</li>
+<li>UNILM은 GLUE, SQuAD 2.0, CoQA task도 좋은 성능을 낼 수 있고 NLG dataset에서도 5개 부분에서 SOTA를 기록함<ul>
+<li>CNN&#x2F;DailyMail abstractive summarization ROUGE-L 값은 40.51을 기록함 (2.04 개선)</li>
+<li>Gigaword abstractive summarization ROUGE-L은 35.75 기록함 (0.86 개선)</li>
+<li>CoQA generative question answering F1 score는 82.5 기록함 (37.1 개선)</li>
+<li>SQuAD question generation BLEU-4는 22.12 기록함 (3.75 개선)</li>
+<li>DSTC7 document-grounded dialog response generation NIST-4는 2.67 기록함 (사람이 한 점수는 2.65)</li>
+</ul>
+</li>
+<li>code &amp; pretrained models: <a target="_blank" rel="noopener" href="https://github.com/microsoft/unilm">https://github.com/microsoft/unilm</a></li>
+</ul>
+<h4 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h4><ul>
+<li>LM pre-training은 다양한 NLP task에서 SOTA를 찍을 수 있게 해줌 (substantially advanced)</li>
+<li>Pre-trained LMs은 contextualizaed text representations을 단어 주변의 context를 활용해서 단어를 예측함으로써 학습하고 이때 대량의 text 데이터를 사용함</li>
+<li>Pre-trained LMs은 Downstream task에 대해서 fine-tune 해서 쓸수 있음</li>
+<li>pre-training LMs의 타입에 따라 다양한 prediction task와 training objectives가 사용되왔음<ul>
+<li>ELMo의 경우엔 2가지의 unidirectional LMs을 사용함<ul>
+<li>left-to-right와 right-to-left로 배우기 때문임</li>
+</ul>
+</li>
+<li>GPT의 경우엔 left-to-right 임</li>
+<li>BERT의 경우는 bidrectional LM임</li>
+</ul>
+</li>
+</ul>
+<p><img src="/img/markdown-img-paste-20191219180921489.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>BERT가 성능이 매우 좋은 모델이지만 특성상 NLG task에 적용이 어려움</li>
+<li>본 연구에서는 UNIfied pre-trained Language Model (UNILM)을 제안하면서 모델을 NLU와 NLG task에 모두 적용하고자함</li>
+<li>UNILM은 multi-layer Transformer network이고 pre-train을 하면서 동시에 3가지 타입의 unsupervised language modeling objectives에 대해 학습함</li>
+</ul>
+<p><img src="/img/markdown-img-paste-20191219181148913.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>특별히 몇가지의 cloze tasks(빈칸 채우기)를 디자인했고 거기서 보는 context는 다음같음<ul>
+<li>unidirectional LM<ul>
+<li>left-to-right unidirectional LM<ul>
+<li>context는 왼쪽에 있는 모든 단어들이 됨</li>
+</ul>
+</li>
+<li>right-to-left unidirectional LM <ul>
+<li>반대로 오른쪽에 있는 모든 단어들이 됨</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>bidirectional LM <ul>
+<li>context는 왼쪽 오른쪽 방향을 모두 포함하는 단어 주변의 모든 단어들</li>
+</ul>
+</li>
+<li>sequence-to-sequence LM<ul>
+<li>context는 encoder의 정보와 target sequence에서 예측해야되는 단어의 앞에 있는 모든 단어들</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>BERT와 비슷하게 pre-trained UNILM은 fine-tuning이 가능하지만(<code>with additional task-specific layers if necessary</code>), NLU task가 메인인 BERT와 다르게 UNILM은 다른 종류의 LMs의 context를 결합하기 위해서 different self-attention masks를 사용하는 것으로 설계되었고 이는 NLU와 NLG task 모두를 가능하게 해줌</li>
+<li>제안하는 UNILM은 3가지 장점이 있음<ul>
+<li>the unified pre-training procedure는 single Transformer LM이 다양한 타입의 LMs을 위한 모델의 parameters와 architecture를 공유할 수 있게 해줌 (<code>alleviating the need of separately training and hosting multiple LMs</code>)</li>
+<li>context를 다르게 잡아내는 different LM objective를 학습하면 any sing LM task에서 발생할 수 있는 overfitting을 막아주기 때문에, 이러한 parameter sharing은 학습된 text representations을 더 general하게 해줌</li>
+<li>UNILM은 sequence-to-sequence LM을 사용하는데, 이는 NLG를 위한 자연스러운 선택이됨 (<code>such as abstractive summarization and question generation</code>)</li>
+<li>실험결과를 보면, bidirectional encoder를 사용한 제안모델이 GLUE에서 BERT와 비교할만하고 two extractive QA task에서도 좋은 결과를 냄 (NLU, NLG 둘다 잘한다)</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-Unified-Language-Model-Pre-training"><a href="#2-Unified-Language-Model-Pre-training" class="headerlink" title="2. Unified Language Model Pre-training"></a>2. Unified Language Model Pre-training</h4><ul>
+<li>주어진 input sequence ${ x&#x3D;x_{1} \cdot \cdot \cdot x_{n} }$에 대해서 UNILM은 각 token에 대해서 contextualized vector representation을 얻음</li>
+<li>pre-training 단계에서 shared Transformer network를 <code>unidirectional LM, bidirectional LM, and sequence-to-sequence LM</code> 라는 LM objectives로 학습함 </li>
+<li>이를 위해서 self-attention에 대해 different masks 를 도입함 (<code>use masking to control how much context the token should attend </code>)</li>
+<li>pre-training 끝나면 downstream task를 위해 task-specific data로 fine-tuning해서 쓸 수 있음</li>
+</ul>
+<p><img src="/img/markdown-img-paste-20191220121421557.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h5 id="2-1-Input-Representation"><a href="#2-1-Input-Representation" class="headerlink" title="2.1 Input Representation"></a>2.1 Input Representation</h5><ul>
+<li>Special token 추가함<ul>
+<li>[SOS]: start-of-sequence</li>
+<li>[EOS]: end-of-sequence</li>
+</ul>
+</li>
+<li>input representation은 BERT 형식을 따름</li>
+<li>WordPiece로 토큰화됨</li>
+<li>LM 종류에 따라 segment가 달라짐 (Figure 1 참고)</li>
+</ul>
+<h5 id="2-2-Backbone-Network-Multi-Layer-Transformer"><a href="#2-2-Backbone-Network-Multi-Layer-Transformer" class="headerlink" title="2.2 Backbone Network: Multi-Layer Transformer"></a>2.2 Backbone Network: Multi-Layer Transformer</h5><ul>
+<li>input vectors를 ${ H^{0}&#x3D;[x_{1}, \cdots, x_{n}] }$ 로 나타낼 수 있고 L-layer의 Transformer를 통해 different levels에서의 contextual representation으로 인코딩하면 ${ H^{l}&#x3D;[h_{1}^{l}, \cdots, h_{n}^{l}] }$ 으로 나타낼 수 있음</li>
+<li>$\mathbf{H}^{l}&#x3D;\operatorname{Transformer}_{l}(\mathbf{H}^{l-1}), l \in[1, L]$ 로 표현 가능함</li>
+<li>$l$ 번째 layer에서 self-attention Head $\mathbf{A}_{l}$ 의 output은 다음과 같이 계산됨</li>
+</ul>
+<p>$$<br>\begin{aligned} \mathbf{Q} &amp;&#x3D;\mathbf{H}^{l-1} \mathbf{W}<em>{l}^{Q}, \quad \mathbf{K}&#x3D;\mathbf{H}^{l-1} \mathbf{W}</em>{l}^{K}, \quad \mathbf{V}&#x3D;\mathbf{H}^{l-1} \mathbf{W}<em>{l}^{V} \ \mathbf{M}</em>{i j} &amp;&#x3D;\left{\begin{array}{ll}{0,} &amp; {\text { allow to attend }} \ {-\infty,} &amp; {\text { prevent from attending }}\end{array}\right.\ \mathbf{A}<em>{l} &amp;&#x3D;\operatorname{softmax}\left(\frac{\mathbf{Q K}^{\top}}{\sqrt{d</em>{k}}}+\mathbf{M}\right) \mathbf{V}_{l} \end{aligned}<br>$$</p>
+<ul>
+<li>이전 layer의 output인 ${ H^{l-1} \in R^{n \times d_{h}} }$ 은 parameter matrices ${ W_{l}^{Q}, W_{l}^{K}, W_{l}^{V} \in R^{d_{h} \times d_{k}} }$에 의해 queries, keys, vlaues로 linearly projected 됨</li>
+<li>mask matrix ${ \mathbf{M} \in \mathbb{R}^{n \times n} }$ 는 token의 contextualized representation을 계산하기 위해 어떤 token들에 attention할지를 결정하기 위해 사용됨</li>
+</ul>
+<h5 id="2-3-Pre-training-Objectives"><a href="#2-3-Pre-training-Objectives" class="headerlink" title="2.3 Pre-training Objectives"></a>2.3 Pre-training Objectives</h5><ul>
+<li><p>The parameters of UNILM are learned to minimize the cross-entropy loss computed using the predicted tokens and the original tokens</p>
+</li>
+<li><p>LM 종류</p>
+<ul>
+<li>Unidirectional LM:<ul>
+<li>use both left-to-right and right-to-left LM objectives</li>
+<li>For instance, to predict the masked token of “${x_{1}x_{2}}$ [MASK] ${x_{4}}$”, only tokens ${x_{1}, x_{2}}$ and itself can be used. This is done by using a triangular matrix for the self-attention mask ${M}$</li>
+</ul>
+</li>
+<li>Bidirectional LM:<ul>
+<li>the self-attention mask $M$ is a zero matrix, so that every token is allowed to attend across all positions in the input sequence.</li>
+</ul>
+</li>
+<li>Sequence-to-Sequence LM:<ul>
+<li>the tokens in the first (source) segment can attend to each other from both directions within the segment, while the tokens of the second (target) segment can only attend to the leftward context in the target segment and itself, as well as all the tokens in the source segment</li>
+<li>“[SOS] ${t_{1} t_{2}}$ [EOS] ${t_{3} t_{4} t_{5}}$ [EOS]” into the model. While both t1 and t2 have access to the first four tokens, including [SOS] and [EOS], t4 can only attend to the first six tokens</li>
+<li>sequence-to-sequence LM의 경우 bidirectional encoder와 unidirectional decoder를 학습한다고 보면 됨</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Next Sentence Prediction:</p>
+<ul>
+<li>Bidirectional LM에 대해서는 NSP를 적용함</li>
+</ul>
+</li>
+</ul>
+<h5 id="2-4-Pre-training-Setup"><a href="#2-4-Pre-training-Setup" class="headerlink" title="2.4 Pre-training Setup"></a>2.4 Pre-training Setup</h5><ul>
+<li>one training batch당, 1&#x2F;3은 bidrectional LM objective, 1&#x2F;3은 seq2seq LM objective, 나머지 1&#x2F;3은 unidirectional LM objective (left-to-right, right-to-left)를 사용함</li>
+<li>모델의 구조는 ${BERT_{LARGE}}$와 같음<ul>
+<li>gelu activation </li>
+<li>24-layer transformer (340M params)<ul>
+<li>with 1,024 hidden size</li>
+<li>16 attention heads</li>
+</ul>
+</li>
+<li><code>weight matrix of the softmax classifier is tied wtih token embeddings</code></li>
+<li>${BERT_{LARGE}}$의 weight로 initialize함</li>
+</ul>
+</li>
+<li>Corpus는 English Wikipedia와 BookCorpus 사용</li>
+<li>Vocab size: 28,996 </li>
+<li>Maximum lengths of input seq: 512 </li>
+<li>Masking Prob: 15%<ul>
+<li>80%: [MASK]</li>
+<li>10%: random token</li>
+<li>10%: original token</li>
+</ul>
+</li>
+<li>마스킹할때 80%는 one token으로 나머지 20%는 bigram or trigram으로 마스킹함</li>
+<li>Optimizer:<ul>
+<li>Adam: ${\beta_{1}&#x3D;0.9, \beta_{2}&#x3D;0.999}$</li>
+<li>lr: 3e-5</li>
+<li>warm up: first 40,000 steps (and linear decay)</li>
+<li>weight decay: 0.01</li>
+</ul>
+</li>
+<li>Dropout rate: 0.1</li>
+<li>Batch size: 330 (<del>특이하네</del>)</li>
+<li>pre-training procedure runs: 770,000 steps</li>
+<li>time: 7 hours for 10,000 steps </li>
+<li>GPUs: 8 Nvidia Telsa V100 32GB</li>
+</ul>
+<h5 id="2-5-Fine-tuning-on-Downstream-NLU-and-NLG-Tasks"><a href="#2-5-Fine-tuning-on-Downstream-NLU-and-NLG-Tasks" class="headerlink" title="2.5 Fine-tuning on Downstream NLU and NLG Tasks"></a>2.5 Fine-tuning on Downstream NLU and NLG Tasks</h5><ul>
+<li>NLU task에 대해서는 BERT처럼 fine-tuning하면 됨<ul>
+<li>[SOS] 토큰에 대한 vector $ \mathbf{h}_{1}^{L} $에 randomly initialized softmax classifier를 붙임 </li>
+<li>${ softmax(h_{1}^{L} W^{C}), \text { where } W^{C} \in R^{d_{h} \times C} }$ (C는 카테고리 개수(클래스 개수)임)</li>
+</ul>
+</li>
+<li>NLG task에 대해서는 seq2seq task와 비슷함<ul>
+<li>Notation<ul>
+<li>S1: source sequence</li>
+<li>S2: target sequence</li>
+</ul>
+</li>
+<li>하나로 합침(pack)<ul>
+<li>“[SOS] S1 [EOS] S2 [EOS]”</li>
+</ul>
+</li>
+<li>fine-tuning 방법:<ul>
+<li>target sequence에 있는 토큰을 특정 비율로 랜덤하게 마스킹한 후에 맞추도록 학습함(<code>masking some percentage of tokens in the target sequence at random, and learning to recover the masked words.</code>) </li>
+<li>The training objective is to maximize the likelihood of masked tokens given context</li>
+<li>생성을 끝내는 의미로도 사용되는 [EOS]에 대해서도 마스킹을 하는게 좋은데, 그 이유는 모델이 언제 generation process를 끝내야되는지도 학습할 수 있기 때문임(<code>It is worth noting that [EOS], which marks the end of the target sequence, can also be masked during fine-tuning, thus when this happens, the model learns when to emit [EOS] to terminate the generation process of the target sequence</code>)</li>
+<li>(<del>근데 이렇게 finetuning하면 fully generation하는게 아닌데 잘 되나..</del>)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-Experiments"><a href="#3-Experiments" class="headerlink" title="3. Experiments"></a>3. Experiments</h4><ul>
+<li>NLU는 GLUE, extractive question answering으로 평가</li>
+<li>NLG는 abstractive summarization, question generation, generative question answering, and dialog response generation등으로 평가</li>
+</ul>
+<h5 id="3-1-Abstractive-Summarization"><a href="#3-1-Abstractive-Summarization" class="headerlink" title="3.1 Abstractive Summarization"></a>3.1 Abstractive Summarization</h5><ul>
+<li>Dataset: <ul>
+<li>non-anonymized version of the CNN&#x2F;DailyMail dataset</li>
+<li>Gigaword for model fine-tuning and evaluation</li>
+</ul>
+</li>
+<li>Input representation:<ul>
+<li>by concatenating document (the first segment) and summary (the second segment)</li>
+</ul>
+</li>
+<li>Finetune process:<ul>
+<li>fine-tune our model on the training set for 30 epochs</li>
+<li>reuse most hyper-parameters from pre-training<ul>
+<li>Masking prob: 0.7 (<del>되게 높아졌기 때문에 generation이 가능한거군..!</del>)</li>
+<li>label smoothing with rate of 0.1</li>
+</ul>
+</li>
+<li>For CNN&#x2F;DailyMail:<ul>
+<li>batch size to 32, and maximum length to 768</li>
+</ul>
+</li>
+<li>For Gigaword:<ul>
+<li>batch size to 64, and maximum length to 256</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Decoding:<ul>
+<li>beam search with beam size of 5</li>
+<li>remove duplicated trigrams in beam search</li>
+</ul>
+</li>
+<li>The input document is truncated<ul>
+<li>first 640 for CNN&#x2F;DailyMail </li>
+<li>first 192 tokens for Gigaword</li>
+</ul>
+</li>
+</ul>
+<p><img src="/img/markdown-img-paste-20191220225600149.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>Evaluation<ul>
+<li>Metric:<ul>
+<li>F1 version of ROUGE</li>
+</ul>
+</li>
+<li>Table 3는 CNN&#x2F;DailyMail 에 대한 평가이고 Table 4는 Gigaword에 대한 평가임</li>
+<li>Other Models<ul>
+<li>LEAD-3 (Baseline): 첫 3문장을 문서의 summary로 보는 것</li>
+<li>PGNet: Pointer-generator network 기반의 seq2seq 모델 (copy mechanism)</li>
+<li>S2S-ELMo: pre-trained ELMo representation을 통해 seq2seq 모델을 개량한 것</li>
+<li>Bottom-Up: salient phrases를 선택하는 content selector를 사용</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-2-Question-Answering-QA"><a href="#3-2-Question-Answering-QA" class="headerlink" title="3.2 Question Answering (QA)"></a>3.2 Question Answering (QA)</h5><p><img src="/img/markdown-img-paste-20191220230538529.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>Extractive QA: 답이 passage안의 text span라고 가정<ul>
+<li>bidrectional encoder를 사용해서 접근함</li>
+<li>experiments<ul>
+<li>SQuAD 2.0 (Stanford Question Answering Dataset)  <ul>
+<li>hyper params<ul>
+<li>epoch: 3</li>
+<li>batch size: 24</li>
+<li>max len: 384</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>CoQA (Conversational Question Answering)      <ul>
+<li>SQuAD랑은 좀 다른데, 대화 내역에 기반한 답변을줘야함</li>
+<li>답변은 free-form texts 형태임 (yes&#x2F;no answer 포함)</li>
+<li>concatenate the question-answer histories to the first segment</li>
+<li>for yes&#x2F;no questions, we use the final hidden vector of the [SOS] token to predict whether the input is a yes&#x2F;no question, and whether the answer is yes or no</li>
+<li>for other examples, we select a passage subspan</li>
+<li>hyper params<ul>
+<li>epoch: 2</li>
+<li>batch size: 16</li>
+<li>max len: 512</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>결과를 보면 EM (Exact Match)이나 F1 모두 UNILM이 젤 높음</li>
+</ul>
+</li>
+<li>Generative QA: 답을 즉석으로 생성해야함<ul>
+<li>seq2seq model 방법 채택</li>
+<li>기존 vanilla seq2seq model은 extractive method 보다 성능이 낮았음 (Reddy et al. [2019])</li>
+<li>첫번째 segment에는 대화 이력을 concat해서 넣음(the input question and the passage)</li>
+<li>두번째 segment에서는 답변을 출력</li>
+<li>experiments<ul>
+<li>CoQA 데이터셋에 대해서 fine-tuning <ul>
+<li>epoch: 10</li>
+<li>batch size: 32</li>
+<li>mask prob: 0.5</li>
+<li>max len: 512</li>
+<li>label smoothing: 0.1</li>
+</ul>
+</li>
+<li>decoding에 beam search 적용 (with 3 beam size)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-3-Question-Generation"><a href="#3-3-Question-Generation" class="headerlink" title="3.3 Question Generation"></a>3.3 Question Generation</h5><p><img src="/img/markdown-img-paste-20191220235643261.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>passage와 answer가 주어졌을 때, question을 생성하는 것</li>
+<li>seq2seq 문제로 보고 풀겠음<ul>
+<li>1st seg: input passage + answer</li>
+<li>2nd seg: generated question</li>
+</ul>
+</li>
+<li>SQuAD 1.1 dataset을 평가셋으로 사용함</li>
+<li>선행 연구에서와 같이 original training set을 training과 test sets으로 쪼개서 사용하기로하고 original dev set은 그대로둠</li>
+<li>hyper params:<ul>
+<li>epoch: 10</li>
+<li>batch size: 32</li>
+<li>mask prob: 0.7</li>
+<li>lr: 2e-5</li>
+<li>label smoothing: 0.1</li>
+</ul>
+</li>
+</ul>
+<h6 id="Generated-Questions-Improve-QA"><a href="#Generated-Questions-Improve-QA" class="headerlink" title="Generated Questions Improve QA"></a>Generated Questions Improve QA</h6><p><img src="/img/markdown-img-paste-20191221000237591.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>Question generation model로 질문을 만들어서(data augmentation) 다시 학습시키면 기존의 question answering model의 성능이 올라감</li>
+</ul>
+<h5 id="3-4-Response-Generation"><a href="#3-4-Response-Generation" class="headerlink" title="3.4 Response Generation"></a>3.4 Response Generation</h5><p><img src="/img/markdown-img-paste-20191221000853984.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>document-grounded dialog response generation task로 UNILM을 평가해봄</li>
+<li>multi-turn conversation history와 a web document as the knowledge source가 주어진 상태에서 시스템은 대화에도 알맞고, web document contents도 반영하는 답변을 해야함</li>
+<li>UNILM을 seq2seq model로 사용함<ul>
+<li>1st seg: web document + conversation history</li>
+<li>2nd seg: response</li>
+</ul>
+</li>
+<li>dataset: DSTC7</li>
+<li>hyper params:<ul>
+<li>epoch: 20</li>
+<li>batch size: 64</li>
+<li>masking prob: 0.5</li>
+<li>max len: 512</li>
+</ul>
+</li>
+<li>decoding에 beam search 적용 (with 10 beam size)</li>
+</ul>
+<h5 id="3-5-GLUE-Benchmark"><a href="#3-5-GLUE-Benchmark" class="headerlink" title="3.5 GLUE Benchmark"></a>3.5 GLUE Benchmark</h5><p><img src="/img/markdown-img-paste-20191221001042434.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>(<del>버트보다 좋은 성능 가진 모델이 많이 나왔는데 버트랑만 비교하는건 좀 아쉽다</del>)</li>
+</ul>
+<h4 id="4-Conclusion-and-Future-Work"><a href="#4-Conclusion-and-Future-Work" class="headerlink" title="4. Conclusion and Future Work"></a>4. Conclusion and Future Work</h4><ul>
+<li>several LM objectives를 shared parameters로 학습하는 unified pre-training model인 UNILM을 제안함</li>
+<li>NLU와 NLG 둘다 가능함</li>
+<li>BERT와 GLUE 벤치마크에서 비교할만했음</li>
+<li>5가지 NLG dataset에서 SOTA를 달성함 (<code>CNN/DailyMail and Gigaword abstractive summarization, SQuAD question generation, CoQA generative question answering, and DSTC7 dialog response generation</code>)</li>
+<li>Future works:<ul>
+<li>training more epochs and larger models on web scale text corpora + ablation experiments</li>
+<li>support cross-lingual tasks</li>
+<li>multi-task fine-tuning on both NLU and NLG tasks (MT-DNN의 extension)</li>
+</ul>
+</li>
+</ul>
+<h4 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h4><p><a target="_blank" rel="noopener" href="https://github.com/microsoft/unilm">https://github.com/microsoft/unilm</a></p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Unified Language Model Pre-training for Natural Language Understanding and Generation</p><p><a href="https://eagle705.github.io/2019-12-19-Unified Language Model Pre-training for Natural Language Understanding and Generation/">https://eagle705.github.io/2019-12-19-Unified Language Model Pre-training for Natural Language Understanding and Generation/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2019-12-19</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-08-28</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020-02-06-Towards_a_Human_like_Open_Domain_Chatbot/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Towards a Human-like Open-Domain Chatbot</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2019-12-10-Distilling_Task-Specific_Knowledge_from_BERT_into_Simple_Neural_Networks/"><span class="level-item">Distilling Task-Specific Knowledge from BERT into Simple Neural Networks</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/2019-12-19-Unified%20Language%20Model%20Pre-training%20for%20Natural%20Language%20Understanding%20and%20Generation/';
+            this.page.identifier = '2019-12-19-Unified Language Model Pre-training for Natural Language Understanding and Generation/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">28</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">16</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">17</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">1</span><span class="level-item">Author</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Who-is-an-Author"><span class="level-left"><span class="level-item">1.1</span><span class="level-item">Who is an Author?</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#느낀점"><span class="level-left"><span class="level-item">1.1.1</span><span class="level-item">느낀점</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">1.1.2</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#1-Introduction"><span class="level-left"><span class="level-item">1.1.3</span><span class="level-item">1. Introduction</span></span></a></li><li><a class="level is-mobile" href="#2-Unified-Language-Model-Pre-training"><span class="level-left"><span class="level-item">1.1.4</span><span class="level-item">2. Unified Language Model Pre-training</span></span></a></li><li><a class="level is-mobile" href="#3-Experiments"><span class="level-left"><span class="level-item">1.1.5</span><span class="level-item">3. Experiments</span></span></a></li><li><a class="level is-mobile" href="#4-Conclusion-and-Future-Work"><span class="level-left"><span class="level-item">1.1.6</span><span class="level-item">4. Conclusion and Future Work</span></span></a></li><li><a class="level is-mobile" href="#Code"><span class="level-left"><span class="level-item">1.1.7</span><span class="level-item">Code</span></span></a></li></ul></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-10-22T03:00:00.000Z">2020-10-22</time></p><p class="title"><a href="/2020-10-22-DocumentExpansionByQueryPrediction/">Document Expansion by Query Prediction</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-06-18T03:00:00.000Z">2020-06-18</time></p><p class="title"><a href="/2020-06-18-bert_based_lexical_substitution/">BERT-based Lexical Substitution</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-27T03:00:00.000Z">2020-05-27</time></p><p class="title"><a href="/2020-05-27-elastic_search/">Elastic Search 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-26T03:00:00.000Z">2020-05-26</time></p><p class="title"><a href="/2020-05-26-Deeper%20Text%20Understanding%20for%20IR%20with%20Contextual%20Neural%20Language%20Modeling/">Deeper Text Understanding for IR with Contextual Neural Language Modeling&quot;</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-02-10T03:00:00.000Z">2020-02-10</time></p><p class="title"><a href="/2020-02-10-Practical-Linux-Unix/">Linux, Unix 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2022 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>

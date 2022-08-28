@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Deeper Text Understanding for IR with Contextual Neural Language Modeling&quot; - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="목차 Author Abstract Introduction Related Work Document Search with BERT Experimental Setup Results and Discussion Conclusion  Author CMU 박사괴정 (https:&amp;#x2F;&amp;#x2F;www.cs.cmu.edu&amp;#x2F;~zhuyund&amp;#x2F;) IR에 적용하는 Language Unders"><meta property="og:type" content="blog"><meta property="og:title" content="Deeper Text Understanding for IR with Contextual Neural Language Modeling&quot;"><meta property="og:url" content="https://eagle705.github.io/2020-05-26-Deeper%20Text%20Understanding%20for%20IR%20with%20Contextual%20Neural%20Language%20Modeling/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="목차 Author Abstract Introduction Related Work Document Search with BERT Experimental Setup Results and Discussion Conclusion  Author CMU 박사괴정 (https:&amp;#x2F;&amp;#x2F;www.cs.cmu.edu&amp;#x2F;~zhuyund&amp;#x2F;) IR에 적용하는 Language Unders"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://eagle705.github.io/img/2020-05-14-03-05-21.png"><meta property="og:image" content="https://eagle705.github.io/img/2020-05-14-01-47-55.png"><meta property="og:image" content="https://eagle705.github.io/img/2020-05-14-02-17-12.png"><meta property="og:image" content="https://eagle705.github.io/img/2020-05-14-02-21-41.png"><meta property="og:image" content="https://eagle705.github.io/img/2020-05-14-02-32-54.png"><meta property="og:image" content="https://eagle705.github.io/img/2020-05-14-02-49-20.png"><meta property="og:image" content="https://eagle705.github.io/img/2020-05-14-02-55-48.png"><meta property="article:published_time" content="2020-05-26T03:00:00.000Z"><meta property="article:modified_time" content="2022-08-27T15:51:49.512Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://eagle705.github.io/img/2020-05-14-03-05-21.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/2020-05-26-Deeper%20Text%20Understanding%20for%20IR%20with%20Contextual%20Neural%20Language%20Modeling/"},"headline":"Deeper Text Understanding for IR with Contextual Neural Language Modeling\"","image":["https://eagle705.github.io/img/2020-05-14-03-05-21.png","https://eagle705.github.io/img/2020-05-14-01-47-55.png","https://eagle705.github.io/img/2020-05-14-02-17-12.png","https://eagle705.github.io/img/2020-05-14-02-21-41.png","https://eagle705.github.io/img/2020-05-14-02-32-54.png","https://eagle705.github.io/img/2020-05-14-02-49-20.png","https://eagle705.github.io/img/2020-05-14-02-55-48.png"],"datePublished":"2020-05-26T03:00:00.000Z","dateModified":"2022-08-27T15:51:49.512Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"목차 Author Abstract Introduction Related Work Document Search with BERT Experimental Setup Results and Discussion Conclusion  Author CMU 박사괴정 (https:&#x2F;&#x2F;www.cs.cmu.edu&#x2F;~zhuyund&#x2F;) IR에 적용하는 Language Unders"}</script><link rel="canonical" href="https://eagle705.github.io/2020-05-26-Deeper%20Text%20Understanding%20for%20IR%20with%20Contextual%20Neural%20Language%20Modeling/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-05-26T03:00:00.000Z" title="2020. 5. 26. 오후 12:00:00">2020-05-26</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T15:51:49.512Z" title="2022. 8. 28. 오전 12:51:49">2022-08-28</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">14분안에 읽기 (약 2071 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">Deeper Text Understanding for IR with Contextual Neural Language Modeling&quot;</h1><div class="content"><h2 id="목차"><a href="#목차" class="headerlink" title="목차"></a>목차</h2><ul>
+<li>Author</li>
+<li>Abstract</li>
+<li>Introduction</li>
+<li>Related Work</li>
+<li>Document Search with BERT</li>
+<li>Experimental Setup</li>
+<li>Results and Discussion</li>
+<li>Conclusion</li>
+</ul>
+<h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>CMU 박사괴정 (<a target="_blank" rel="noopener" href="https://www.cs.cmu.edu/~zhuyund/">https://www.cs.cmu.edu/~zhuyund/</a>)</li>
+<li>IR에 적용하는 Language Understanding쪽 연구</li>
+<li><code>Three papers in deep retrieval and conversational search got accepted into SIGIR 2020!</code></li>
+</ul>
+<p><img src="/img/2020-05-14-03-05-21.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
+<li>뉴럴넷은 복잡한 언어 패턴과 query-document relation을 자동으로 학습할 수 있는 새로운 가능성을 제공하고 있음</li>
+<li>Neural IR models은 query-document relevance pattern을 학습하는데 좋은 결과를 보여주지만, query 또는 document의 text content를 이해하는 것에 대한 연구는 많지 않았음 (?)</li>
+<li>본 논문에서는 최근에 제안되었던 contextual neural LM, BERT 등이 IR에서 deeper text understanding에 얼마나 효과 있는지를 알아보고함</li>
+<li>실험 결과는 전통적인 word embedding보다 BERT가 제공하는 contextual text representations이 더 효과있음을 보여주었음</li>
+<li>BoW retrieval 모델에 비해 contextual LM은 더 나은 language structure를 사용하고, 자연어 형태의 query에 대해 큰 성능향상을 가져올 수 있음</li>
+<li>text understanding ability를 search knowledge와 결합시키는 것은 제한적인 학습셋을 갖는 조건에서 search task를 Ptr BERT가 더 잘할 수 있게 해줌 (정확한해석은 아닌데 대략 이런의미)</li>
+</ul>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
+<li>Text retrieval은 문서의 의미를 이해하고 search task를 이해하는게 요구됨</li>
+<li>뉴럴넷은 raw document text와 학습셋으로부터 understanding을 얻어내기 때문에 매력적인 솔루션임</li>
+<li>대부분의 뉴럴 IR 방법은 query-document relevance patterns을 학습하는데 초점을 맞춤 (다른 말론 search task에 대한 knowledge)</li>
+<li>하지만 relevance patterns만을 학습한다는 것은 많은양의 학습 데이터를 필요로 한다는 의미이고, 여전히 <code>tail queries</code>나 <code>new search domain</code>에 generalize되기 어려움</li>
+<li>Ptr word representation (such as word2vec) 등은 뉴럴 IR에서 많이 사용되어왔음</li>
+<li>하지만 이런 word co-occurrence 방법론은 text에 대해 shallow bag-of-words 정도의 정보임</li>
+<li>최근엔 ELMo, BERT 같은 Ptr neural LM 등의 발전이 있었고 기존의 전통적인 word embeddings과 달리 contextual representation을 제공함</li>
+<li>이런 contextual LM은 전통적인 word embeddings들의 성능보다 뛰어남을 여러 NLP task에서 보여줌</li>
+<li>이런 모델은 IR에 새로운 가능성을 가져다줌</li>
+<li>본 논문에서는 BERT를 이용해서 ad-hoc document retrieval 에 적용해봄 (two ad-hoc retrieval datasets에 적용)</li>
+<li>적은 데이터로 finetuning해도 기존 baseline을 크게 뛰어넘음을 보여줌</li>
+<li>전통 retrieval models과 다르게 <code>longer natural language queries</code>가 <code>short keywords queires</code>보다 좋은 성능을 보여줄 수도 있었음(<code>by large margines with BERT</code>)</li>
+<li>더 분석해본 결과, stopwords, punctuation등 전통 IR 방법에선 무시했던 것들이 문법적 요소와 단어 의존성으로 인해 natural langauge queries를 이해하는데 핵심 역할을 한다는 것도 드러남</li>
+<li>최종적으로, BERT를 search knowledge from a large search log 로 개선(?)해서 text understanding도 하고 search task도 하게 만듬 (labeled data가 제한적인 경우에 도움됨)</li>
+</ul>
+<h2 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h2><ul>
+<li>query-document relevance patterns<ul>
+<li>approach 1<ul>
+<li>text presentations tailored for the search task [1, 2, 9] with search signals from click logs</li>
+<li>pseudo-relevance feedback</li>
+</ul>
+</li>
+<li>approach 2<ul>
+<li>neural architecture로 다양한 matching feature를 잡아내는 것</li>
+<li>exact match</li>
+<li>passage-level signals</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>위와 다르게, query&#x2F;document의 text content를 어떻게 이해하는가에 대한 연구는 많이 없는 상태임<ul>
+<li>사용해도 word2vec 정도였음</li>
+<li>BERT가 잘되니 적용해보겠음 (open-domain document에 학습하다보니 general pattern 학습함)</li>
+</ul>
+</li>
+</ul>
+<h2 id="Document-Search-with-BERT"><a href="#Document-Search-with-BERT" class="headerlink" title="Document Search with BERT"></a>Document Search with BERT</h2><p><img src="/img/2020-05-14-01-47-55.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>본 논문에서는 off-the-shelf BERT architecture를 사용<ul>
+<li>sentence pair classification architecture를 의미</li>
+</ul>
+</li>
+<li>마지막 레이어에서 binary classification을 통해 relevance의 확률을 예측함</li>
+</ul>
+<h3 id="Passage-Level-Evidence"><a href="#Passage-Level-Evidence" class="headerlink" title="Passage-Level Evidence"></a>Passage-Level Evidence</h3><ul>
+<li>BERT를 긴 문서들에 적용하면 메모리와 복잡도 등이 증가하게됨</li>
+<li>senence-trained model이니 long text에 효과가 덜할 수도 있음</li>
+<li>이 때문에 문서를 overlapping passages로 나눔</li>
+<li>neural ranker는 각각의 passage에 대해 독립적으로 relevance를 예측함 (같은 문서지만 쪼갰으니 여러번 계산하는 듯..?!)</li>
+<li>document score is the score of <code>the first passage (BERT-FirstP), the best passage (BERT-MaxP), or the sum of all passage scores (BERT-SumP)</code></li>
+</ul>
+<h3 id="Augmenting-BERT-with-Search-Knowledge"><a href="#Augmenting-BERT-with-Search-Knowledge" class="headerlink" title="Augmenting BERT with Search Knowledge"></a>Augmenting BERT with Search Knowledge</h3><ul>
+<li>search task는 다음 두가지를 모두 요구함<ul>
+<li>general text understanding<ul>
+<li>e.g. Honda is a motor company</li>
+</ul>
+</li>
+<li>more-specific search knowledge<ul>
+<li>e.g. people want to see special offers about Honda</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>BERT는 genral langauge patterns을 배우긴 했지만, search knowledge는 labeld search data로부터 학습해야만함<ul>
+<li>이런 종류의 데이터는 매우 expensive하고 모으는데 시간이 걸림</li>
+<li>이는 pre-trained ranking model (언어 이해지식과 검색 지식 모두 갖고 있는) 을 요구하게함</li>
+</ul>
+</li>
+<li>BERT를 large search log 를 통해 튜닝해서 search knowledge를 포함하도록 augmentation함<ul>
+<li>이렇게하면 데이터가 검색에서 적은 케이스에 도움이 될 것으로 기대함</li>
+</ul>
+</li>
+</ul>
+<h2 id="Experimental-Setup"><a href="#Experimental-Setup" class="headerlink" title="Experimental Setup"></a>Experimental Setup</h2><ul>
+<li><p>Datasets</p>
+<ul>
+<li>Robust04<ul>
+<li>news corpus (article, ptr corpus에 가까움)</li>
+<li>0.5M documents and 249 queres</li>
+<li>두가지 버전의 queries로 구성됨<ul>
+<li>short keyword query (title)</li>
+<li>longer natural language query (description)</li>
+</ul>
+</li>
+<li>relevance assessment에 대한 narrative 포함</li>
+</ul>
+</li>
+<li>ClueWeb09-B<ul>
+<li>web pages (tables, navigation bars, discontinuous text)</li>
+<li>50M web pages and 200 queries</li>
+</ul>
+</li>
+<li>For augmenting BERT with search data, we follow the domain adaptation setting from Dai et al. [1] and use the same Bing search log sample. The sample contains 0.1M queries and 5M query-document pairs.<br><img src="/img/2020-05-14-02-17-12.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+</li>
+<li><p>Baselines and Implementations</p>
+<ul>
+<li>Unsupervised baselines<ul>
+<li>Indri’s bag of words (BOW)</li>
+<li>sequential dependency model queries (SDM)</li>
+</ul>
+</li>
+<li>Learning-to-rank baselines<ul>
+<li>RankSVM</li>
+<li>Coor-Ascent with bag-of-words features</li>
+</ul>
+</li>
+<li>Neural baselines<ul>
+<li>DRMM<ul>
+<li>word2vec 사용함</li>
+<li>2개의 데이터셋에선 성능이 젤 잘 나왔던 neural models임</li>
+</ul>
+</li>
+<li>Conv-KNRM<ul>
+<li>n-gram embeddings for search task</li>
+<li>large search log로 학습할때 좋은 성능 나옴</li>
+<li>Bing search log 이용해서 만들면 SOTA임 (<del>근데 왜 표엔 없지</del>)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>baseline들은 stopword 지우고 stemming 했지만 BERT는 raw text 사용함</li>
+<li>Supervised models은 BOW with 5-fold cross-validation을 사용해서 검색된 top 100 documents를 re-rank함 (<del>정확히 어떻게 한다는거지</del>)</li>
+</ul>
+</li>
+</ul>
+<h2 id="Results-and-Discussion"><a href="#Results-and-Discussion" class="headerlink" title="Results and Discussion"></a>Results and Discussion</h2><h3 id="Pre-trained-BERT-for-Document-Retrieval"><a href="#Pre-trained-BERT-for-Document-Retrieval" class="headerlink" title="Pre-trained BERT for Document Retrieval"></a>Pre-trained BERT for Document Retrieval</h3><ul>
+<li>Robust04에서 BERT는 지속적으로 베이스라인보다 tite query에 대해서는 10% margin으로 description query에 대해서는 20% margin으로 더 나은 성능을 보여줌</li>
+<li>ClueWeb09-B에서는 BERT는 Coor-Ascent와 title query에서는 비슷하지만 description query에서는 더 좋은 성능을 보여줌</li>
+<li>위 결과를 종합하면 description queries에서는 BERT가 효과가 있음</li>
+</ul>
+<p><img src="/img/2020-05-14-02-21-41.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h4 id="Sources-of-effectiveness"><a href="#Sources-of-effectiveness" class="headerlink" title="Sources of effectiveness"></a>Sources of effectiveness</h4><ul>
+<li>two layers from the BERT-MaxP model when predicting the relevance between a description query ‘Where are wind power installations located?’ and a sentence ‘There were 1,200 wind power installations in Germany’</li>
+<li>layer에서 exact match, Bigram (prev, next) 등을 학습한 걸 볼 수 있음</li>
+<li>where-in 매칭은 context를 고려한다고 할 수 있음 (전통 IR에서는 이런 단어들은 무시함 (IDF가 낮아서))</li>
+<li>이런걸 보면 stopwords도 사실 relevance에 중요한 단서가 될 수 있음을 보여줌</li>
+</ul>
+<p><img src="/img/2020-05-14-02-32-54.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h4 id="Title-queries-vs-description-queries"><a href="#Title-queries-vs-description-queries" class="headerlink" title="Title queries vs. description queries"></a>Title queries vs. description queries</h4><ul>
+<li>정리하면, description queries가 title queries를 이번 연구처럼 large margin을 갖고 이긴게 거의 처음임</li>
+<li>On Robust04, using description queries with BERT-MaxP brings a 23% improvement over the best title query baseline (SDM)</li>
+<li>Most other ranking methods only get similar or worse performance on descriptions compared to titles. To the best of our knowledge, this is the first time we see that description queries outperform title queries with such a large margin</li>
+</ul>
+<h3 id="Understanding-Natural-Language-Queries"><a href="#Understanding-Natural-Language-Queries" class="headerlink" title="Understanding Natural Language Queries"></a>Understanding Natural Language Queries</h3><ul>
+<li>3가지 종류의 질의로 text understanding을 검사함<ul>
+<li>title</li>
+<li>description</li>
+<li>narrative (removing stopwords and punctuation)</li>
+</ul>
+</li>
+<li><code>BERT-MaxP</code> makes large improvement on longer queries by modeling word meaning and context.</li>
+</ul>
+<p><img src="/img/2020-05-14-02-49-20.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h3 id="Understanding-the-Search-Task"><a href="#Understanding-the-Search-Task" class="headerlink" title="Understanding the Search Task"></a>Understanding the Search Task</h3><ul>
+<li>Corpus-trained text representation이 꼭 search task와 align되는건 아님</li>
+<li><code>Its pre-trained language model encodes general word associations like (‘Honda’, ‘car’), but lacks search-specifc knowledge like (‘Honda’, ‘special offer’)</code></li>
+<li>search specific knowledge가 요구됨</li>
+<li>데이터가 부족할 수 있음 이걸 해결해야함</li>
+<li>if BERT’s language modeling knowledge can be stacked with additional search knowledge to build a better ranker, and if <code>the search knowledge can be learned</code> in a domain-adaptation manner <code>to alleviate cold-start problems</code></li>
+<li>BERT를 Bing search log with 0.1M queries 샘플에서 학습시키고 ClueWeb09-B에 finetuning시킴</li>
+<li><code>결과적으로 Bing search log로 학습하면 성능이 더 개선됨</code></li>
+</ul>
+<p><img src="/img/2020-05-14-02-55-48.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><ul>
+<li>Text understanding is a long-desired feature for text retrieval</li>
+<li>Contextual neural language models open new possibilities for understanding word context and modeling language structures</li>
+<li>BERT가 search task에서 적용 잘되고 성능도 높여줌</li>
+<li><code>We found that queries written in natural language actually enable better search results when the system can model language structures</code></li>
+</ul>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Deeper Text Understanding for IR with Contextual Neural Language Modeling&quot;</p><p><a href="https://eagle705.github.io/2020-05-26-Deeper Text Understanding for IR with Contextual Neural Language Modeling/">https://eagle705.github.io/2020-05-26-Deeper Text Understanding for IR with Contextual Neural Language Modeling/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2020-05-26</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-08-28</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020-05-27-elastic_search/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Elastic Search 정리</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020-02-10-Practical-Linux-Unix/"><span class="level-item">Linux, Unix 정리</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/2020-05-26-Deeper%20Text%20Understanding%20for%20IR%20with%20Contextual%20Neural%20Language%20Modeling/';
+            this.page.identifier = '2020-05-26-Deeper Text Understanding for IR with Contextual Neural Language Modeling/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">28</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">16</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">17</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#목차"><span class="level-left"><span class="level-item">1</span><span class="level-item">목차</span></span></a></li><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">2</span><span class="level-item">Author</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">3</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#Introduction"><span class="level-left"><span class="level-item">4</span><span class="level-item">Introduction</span></span></a></li><li><a class="level is-mobile" href="#Related-Work"><span class="level-left"><span class="level-item">5</span><span class="level-item">Related Work</span></span></a></li><li><a class="level is-mobile" href="#Document-Search-with-BERT"><span class="level-left"><span class="level-item">6</span><span class="level-item">Document Search with BERT</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Passage-Level-Evidence"><span class="level-left"><span class="level-item">6.1</span><span class="level-item">Passage-Level Evidence</span></span></a></li><li><a class="level is-mobile" href="#Augmenting-BERT-with-Search-Knowledge"><span class="level-left"><span class="level-item">6.2</span><span class="level-item">Augmenting BERT with Search Knowledge</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Experimental-Setup"><span class="level-left"><span class="level-item">7</span><span class="level-item">Experimental Setup</span></span></a></li><li><a class="level is-mobile" href="#Results-and-Discussion"><span class="level-left"><span class="level-item">8</span><span class="level-item">Results and Discussion</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Pre-trained-BERT-for-Document-Retrieval"><span class="level-left"><span class="level-item">8.1</span><span class="level-item">Pre-trained BERT for Document Retrieval</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Sources-of-effectiveness"><span class="level-left"><span class="level-item">8.1.1</span><span class="level-item">Sources of effectiveness</span></span></a></li><li><a class="level is-mobile" href="#Title-queries-vs-description-queries"><span class="level-left"><span class="level-item">8.1.2</span><span class="level-item">Title queries vs. description queries</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Understanding-Natural-Language-Queries"><span class="level-left"><span class="level-item">8.2</span><span class="level-item">Understanding Natural Language Queries</span></span></a></li><li><a class="level is-mobile" href="#Understanding-the-Search-Task"><span class="level-left"><span class="level-item">8.3</span><span class="level-item">Understanding the Search Task</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Conclusion"><span class="level-left"><span class="level-item">9</span><span class="level-item">Conclusion</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-10-22T03:00:00.000Z">2020-10-22</time></p><p class="title"><a href="/2020-10-22-DocumentExpansionByQueryPrediction/">Document Expansion by Query Prediction</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-06-18T03:00:00.000Z">2020-06-18</time></p><p class="title"><a href="/2020-06-18-bert_based_lexical_substitution/">BERT-based Lexical Substitution</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-27T03:00:00.000Z">2020-05-27</time></p><p class="title"><a href="/2020-05-27-elastic_search/">Elastic Search 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-26T03:00:00.000Z">2020-05-26</time></p><p class="title"><a href="/2020-05-26-Deeper%20Text%20Understanding%20for%20IR%20with%20Contextual%20Neural%20Language%20Modeling/">Deeper Text Understanding for IR with Contextual Neural Language Modeling&quot;</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-02-10T03:00:00.000Z">2020-02-10</time></p><p class="title"><a href="/2020-02-10-Practical-Linux-Unix/">Linux, Unix 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2022 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>

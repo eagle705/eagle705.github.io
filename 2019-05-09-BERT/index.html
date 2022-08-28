@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>BERT- Pre-training of Deep Bidirectional Transformers for Language Understanding - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Author 저자:Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova (Google AI Language, Google AI니 말다했지)  Who is an Author?Jacob Devlin is a Senior Research Scientist at Google. At Google, his pri"><meta property="og:type" content="blog"><meta property="og:title" content="BERT- Pre-training of Deep Bidirectional Transformers for Language Understanding"><meta property="og:url" content="https://eagle705.github.io/2019-05-09-BERT/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="Author 저자:Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova (Google AI Language, Google AI니 말다했지)  Who is an Author?Jacob Devlin is a Senior Research Scientist at Google. At Google, his pri"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190509155558988.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190513184541935.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190510154828348.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190513151046718.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190513185008832.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190514140956159.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190514143432222.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190514150300422.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190514154340513.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190514154745775.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190514161210252.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190514161749947.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190514162210101.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20190514163030887.png"><meta property="article:published_time" content="2019-05-09T03:00:00.000Z"><meta property="article:modified_time" content="2022-08-27T15:53:27.015Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://eagle705.github.io/img/markdown-img-paste-20190509155558988.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/2019-05-09-BERT/"},"headline":"BERT- Pre-training of Deep Bidirectional Transformers for Language Understanding","image":["https://eagle705.github.io/img/markdown-img-paste-20190509155558988.png","https://eagle705.github.io/img/markdown-img-paste-20190513184541935.png","https://eagle705.github.io/img/markdown-img-paste-20190510154828348.png","https://eagle705.github.io/img/markdown-img-paste-20190513151046718.png","https://eagle705.github.io/img/markdown-img-paste-20190513185008832.png","https://eagle705.github.io/img/markdown-img-paste-20190514140956159.png","https://eagle705.github.io/img/markdown-img-paste-20190514143432222.png","https://eagle705.github.io/img/markdown-img-paste-20190514150300422.png","https://eagle705.github.io/img/markdown-img-paste-20190514154340513.png","https://eagle705.github.io/img/markdown-img-paste-20190514154745775.png","https://eagle705.github.io/img/markdown-img-paste-20190514161210252.png","https://eagle705.github.io/img/markdown-img-paste-20190514161749947.png","https://eagle705.github.io/img/markdown-img-paste-20190514162210101.png","https://eagle705.github.io/img/markdown-img-paste-20190514163030887.png"],"datePublished":"2019-05-09T03:00:00.000Z","dateModified":"2022-08-27T15:53:27.015Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"Author 저자:Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova (Google AI Language, Google AI니 말다했지)  Who is an Author?Jacob Devlin is a Senior Research Scientist at Google. At Google, his pri"}</script><link rel="canonical" href="https://eagle705.github.io/2019-05-09-BERT/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-05-09T03:00:00.000Z" title="2019. 5. 9. 오후 12:00:00">2019-05-09</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T15:53:27.015Z" title="2022. 8. 28. 오전 12:53:27">2022-08-28</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">30분안에 읽기 (약 4430 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">BERT- Pre-training of Deep Bidirectional Transformers for Language Understanding</h1><div class="content"><h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>저자:Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova (<strong>Google AI Language</strong>, <del>Google AI니 말다했지</del>)</li>
+</ul>
+<h3 id="Who-is-an-Author"><a href="#Who-is-an-Author" class="headerlink" title="Who is an Author?"></a>Who is an Author?</h3><p>Jacob Devlin is a Senior Research Scientist at Google. At Google, his primary research interest is developing fast, powerful, and scalable deep learning models for information retrieval, question answering, and other language understanding tasks. From 2014 to 2017, he worked as a Principle Research Scientist at Microsoft Research, where he led Microsoft Translate’s transition from phrase-based translation to neural machine translation (NMT). He also developed state-of-the-art on-device models for mobile NMT. Mr. Devlin was the recipient of the ACL 2014 Best Long Paper award and the NAACL 2012 Best Short Paper award. He received his Master’s in Computer Science from the University of Maryland in 2009, advised by Dr. Bonnie Dorr.</p>
+<p><img src="/img/markdown-img-paste-20190509155558988.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h4 id="느낀점"><a href="#느낀점" class="headerlink" title="느낀점"></a>느낀점</h4><ul>
+<li>Masking 기반의 Language Model과 context 추출을 위한 문장 연관성 (NSP) Task를 동시에 학습시켜서 Rich representation을 얻는다는 아이디어가 참신했음. 두마리 토끼를 한번에..!</li>
+<li>Bidirectional feature가 상당히 중요함</li>
+<li>pre-train 중요함</li>
+<li>NSP도 매우 중요함</li>
+<li>여기서도 Loss Masking이 중요함</li>
+<li>CLS Loss와 LM Loss를 따로 떼서 계산해야함</li>
+<li>gelu, masking scheme 썼을때와 안썼을때 성능차이가 꽤 남</li>
+<li>segment embedding 처리하는게 은근 귀찮음, 전처리 할때 아예 생성해버리는게 편하긴함</li>
+<li>CLS acc 올리기보다 LM acc 올리는게 더 쉬움</li>
+</ul>
+<h4 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h4><ul>
+<li><strong>BERT</strong>는 <strong>B</strong>idirectional <strong>E</strong>ncoder <strong>R</strong>epresentations from <strong>T</strong>ransformers의 약자임</li>
+<li>최근의 language representation models과 다르게 BERT는 Bidirectional representations을 pre-train하기 위해 디자인됨</li>
+<li>결과적으로는 pre-trained BERT representations는 단지 output layer 한개만 추가해도 다양한 영역에서 SOTA를 찍는 fine-tune이 가능함</li>
+<li>11개의 NLP Task에서 new SOTA기록하고, SQuAD v1.1 QA에서 사람보다 2.0 높은 F1 성능 기록함<ul>
+<li>GLUE benchmark에서 <strong>80.4%</strong> 달성함 기존 것보다 <strong>7.6%</strong> 향상시킴</li>
+</ul>
+</li>
+</ul>
+<h4 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h4><ul>
+<li>pre-trained LM은 예로부터 NLP의 성능을 올리기에 효과적인 방법이었음</li>
+<li>Pre-trained Language Representation을 적용하는데는 2가지 전략이 있음 (<em>feature-based</em> and <em>fine-tuning</em>)</li>
+<li><strong>feature-based: ELMo</strong> (Peters al., 2018), 특정 아키텍처를 사용하는데 이때, pre-trained representation이 addtional features로 얻어짐</li>
+<li><strong>fine-tuning: GPT</strong> (Generative Pre-trained Transformer) (Radford et al., 2018; OpenAI)</li>
+<li>기존 연구에선 두 접근법 모두 같은 objective function을 사용함; pre-trainining시에 <strong>unidirectional LM</strong>이 language representation을 학습하기 위해 쓰는 objective function</li>
+<li>본 연구에서는 그러한 현재의 기법이 특별히 fine-tuning approach에서는 pre-trained representation의 power를 매우 제한(<strong>serverly restrict</strong>)한다고 주장함</li>
+<li>주된 한계는 Standard LM이 unidirectional하다는 것임. 이는 아키텍처의 선택을 제한하게됨.</li>
+<li>예를들면, OpenAI의 GPT의 경우 left-to-right 구조로써, self-attetnion에서 모든 토큰들이 previous token에만 attention을 갖게됨 (Vaswani et al., 2017)</li>
+<li>이러한 제한들은 sentence level에서 sub-optimal에 도달할 수 밖에 없게 함(SQuAD같은 token-level task에서 이러한 구조의 fine-tuning은 안좋을 수 있음(could be devastating))</li>
+<li>결론: Bidirectional 하게 해야함. <code>it is crucial to incorporate context from both directions</code></li>
+<li>본 논문에서는 fine-tuning based approach를 BERT를 제안함으로써 개선시킴! (현재로썬 살짝 GPT에 숟가락 얹은것 같기도..)</li>
+<li>BERT에서는 기존에 비판했던 objective function을 쓰진 않음(left-to-right 구조에 dependent했던). 대신에 <strong>MLM(Masked Language Model</strong>; Taylor, 1953)의 objective function을 사용함</li>
+<li>MLM은 랜덤하게 input token의 일부를 masking처리 후 그 부분을 예측하는 것을 목표로함.</li>
+<li><code>MLM objective allows the representation to fuse the left and the right context</code> (해석보단 원문으로)</li>
+<li>본 논문의 contribution은<ul>
+<li>Bidirectional pre-training for LM by MLM (maksed language models)</li>
+<li>task-specific architecture에 대한 model engineering 안해도됨. BERT는 fine-tuning based representation model로는 sentence-level, token-level tasks에서 첫번째로 SOTA 찍은 모델임</li>
+<li>11개의 NLP Task에서 SOTA 찍었음. 코드도 공개함(<a target="_blank" rel="noopener" href="https://github.com/google-research/bert">https://github.com/google-research/bert</a>)</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-Related-work"><a href="#2-Related-work" class="headerlink" title="2. Related work"></a>2. Related work</h4><h5 id="2-1-Feature-based-Approaches"><a href="#2-1-Feature-based-Approaches" class="headerlink" title="2.1. Feature-based Approaches"></a>2.1. Feature-based Approaches</h5><ul>
+<li>non-neural과 neural(word2vec)한 방법으로 나뉨</li>
+<li>pre-trained word embedding은 learned from scratch로부터 얻은 embedding보다 확연히 개선된 결과를 보였었음</li>
+<li>ELMo는 traditional word embeddign research를 different dimension에 따라 일반화시킴</li>
+<li>ELMo는 context-sensitive features를 LM으로부터 추출함</li>
+<li>contextual word embedding과 task-specific architectures의 결합으로 ELMo는 여러 NLP task(QA on SQuAD, SA, NER)에서 SOTA를 기록함</li>
+</ul>
+<h5 id="2-2-Fine-tuning-Approaches"><a href="#2-2-Fine-tuning-Approaches" class="headerlink" title="2.2. Fine-tuning Approaches"></a>2.2. Fine-tuning Approaches</h5><ul>
+<li>최근 트렌드라고 할 수 있음, LM에 transfer learning을 적용하는 것임</li>
+<li>LM Objective에 대해서 pre-training 후에 fine-tuning하는 것임</li>
+<li>장점중 하나는 few parameter만 다시 learning이 필요하다는것임</li>
+<li>이러한 기법을 사용한 OpenAI GPT가 GLUE bechmark에서 SOTA 찍었었음 (Wang et al., 2018)</li>
+</ul>
+<h5 id="2-3-Transfer-Learning-from-Supervised-Data"><a href="#2-3-Transfer-Learning-from-Supervised-Data" class="headerlink" title="2.3. Transfer Learning from Supervised Data"></a>2.3. Transfer Learning from Supervised Data</h5><ul>
+<li>unsupervised pre-training의 장점은 거의 unlimited한 data를 쓸 수 있다는 것이지만, 최근 supervised task with large datasets로부터 transfer 하는 연구도 제안됨<ul>
+<li>Natural Language Inference</li>
+<li>Machine Translation</li>
+</ul>
+</li>
+<li>CV에서는 transfer learning이 이미 많이 사용됨 (to fine-tune models pre-trained on ImageNet)</li>
+</ul>
+<h4 id="3-BERT"><a href="#3-BERT" class="headerlink" title="3. BERT"></a>3. BERT</h4><ul>
+<li>본 섹션에서는 아래와 같은 항목을 다룸<ul>
+<li>Model architecture</li>
+<li>input representation</li>
+<li>pre-training tasks</li>
+<li>pre-training procedures</li>
+<li>fine-tuning procedures</li>
+<li>differences between BERT and OpenAI GPT</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-1-Model-Architecture"><a href="#3-1-Model-Architecture" class="headerlink" title="3.1 Model Architecture"></a>3.1 Model Architecture</h5><ul>
+<li>BERT는 multi-layer Bidirectional Transformer <code>encoder</code>를 기반으로 함 (tensor2tensor에 배포된 코드 참고)</li>
+<li>Transformer 자체는 요즘 어디에서나 쓰임 (the use of Transformer has become ubiquitous)</li>
+<li>Transformers의 상세한 구조는 본 논문에서 스킵함(다음 링크 참고: <a target="_blank" rel="noopener" href="http://nlp.seas.harvard.edu/2018/04/03/attention.html">http://nlp.seas.harvard.edu/2018/04/03/attention.html</a>)</li>
+<li>notations<ul>
+<li>$L$ : the number of layers (Transformer blocks)</li>
+<li>$H$ : the hidden size</li>
+<li>$A$ : the number of self-attention heads</li>
+</ul>
+</li>
+<li>Hyper params in all cases<ul>
+<li>the feed-forward&#x2F;filter size &#x3D; 4$H$, i.e,. 4x768 &#x3D; 3072, 4x1024 &#x3D; 4096</li>
+<li><strong>BERT<sub>BASE</sub></strong>: $L$&#x3D;12, $H$&#x3D;768, $A$&#x3D;12, ToTal Params&#x3D;110M</li>
+<li><strong>BERT<sub>LARGE</sub></strong>: $L$&#x3D;24, $H$&#x3D;1024, $A$&#x3D;16, ToTal Params&#x3D;340M</li>
+</ul>
+</li>
+<li>BERT<sub>BASE</sub>는 OpenAI GPT랑 같은 모델 사이즈를 갖게함</li>
+<li>BERT Transformer는 Bidirectional self-attention을 쓰고, GPT는 constrained self-attention(left의 context만 볼 수 있음)을 씀</li>
+<li>Transformer Encoder: the Bidirectional Transformer</li>
+<li>Transformer Decoder: the left-context-only version Transformer</li>
+</ul>
+<p><img src="/img/markdown-img-paste-20190513184541935.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h5 id="3-2-Input-Representation"><a href="#3-2-Input-Representation" class="headerlink" title="3.2 Input Representation"></a>3.2 Input Representation</h5><ul>
+<li>BERT의 Input Reresentation은 sigle text sentence와 pair of text sentences([Qeustion, Answer])을 모두 하나의 토큰 시퀀스(one token sequence)에 담아서 처리함<ul>
+<li>WordPiece embeddings 사용함 (with a 30,000 token vocabulary) (Wu et al., 2016)<ul>
+<li>split word peices 는 ## 으로 처리함</li>
+</ul>
+</li>
+<li>learned positional embeddings 사용함 (sequence lengths up to 512 tokens)</li>
+<li>모든 sequence의 첫 토큰은 항상 the speical classification embedding([CLS])로 함. 이 토큰에 대응되는 output vector를 classification할 때 사용함</li>
+<li>Sentence pairs는 single sequence에 들어가게 됨. <ul>
+<li>Speical token ([SEP])로 sentences를 분리함</li>
+<li>첫번째 sentence에는 every tokens마다 learned sentence A embedding을 더함</li>
+<li>두번째 sentence에는 every tokens마다 learned sentence B embedding을 더함</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Single-sentence inputs에 대해서는 sentence A embeddings만 사용함<br><img src="/img/markdown-img-paste-20190510154828348.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+<h5 id="3-3-Pre-training-Tasks"><a href="#3-3-Pre-training-Tasks" class="headerlink" title="3.3 Pre-training Tasks"></a>3.3 Pre-training Tasks</h5><ul>
+<li>traditional left-to-right or right-to-left language model 방식으로 BERT를 pre-train 하지 않음</li>
+<li>대신에, two novel unsupervised prediction task로 BERT를 pre-train함</li>
+</ul>
+<h5 id="3-3-1-Task-1-Masked-LM"><a href="#3-3-1-Task-1-Masked-LM" class="headerlink" title="3.3.1 Task #1: Masked LM"></a>3.3.1 Task #1: Masked LM</h5><ul>
+<li><p>Deep Bidirectional model이 left-to-right model 같은 단방향 모델보다, left-to-right와 right-to-left를 얕게 concat한 모델보다 더 powerful하다는건 reasonable 함</p>
+</li>
+<li><p>하지만, Standard conditional language models은 left-to-right or right-to-left 처럼 한 방향만 학습이 가능함</p>
+<ul>
+<li>왜냐하면 Bidirectional condition은 결국 multi-layered context 안에서 각각의 단어가 자기 자신을 간접적으로 보기는게 가능하기 때문임 (<code>since bidirectional conditioning would allow each word to indirectly “see itself” in a multi-layered context</code>)</li>
+</ul>
+</li>
+<li><p>Deep bidirectional representation을 학습시키기 위해, input tokens을 랜덤하게 특정 비율로 마스킹하고, 마스킹된 토큰을 맞추는 방법을 사용하고자 함(<code>a straightforward approach of mask- ing some percentage of the input tokens at random, and then predicting only those masked tokens</code>)</p>
+</li>
+<li><p>이러한 procedure를 <code>&quot;masked LM&quot; (MLM)</code>이라 칭하겠음</p>
+</li>
+<li><p>이는 마치 <em>Cloze</em> task (빈칸 채우기)와 비슷함</p>
+</li>
+<li><p>mask token에 대응되는 hidden vector를 output softmax로 보내서 계산하는건 Standard LM과 같음</p>
+</li>
+<li><p>각 sequence안에 있는 <code>All WordPiece tokens</code>에 <code>15%</code>를 마스킹함</p>
+</li>
+<li><p>denoising auto-encoder (Vincent et al., 2008)처럼 entire input을 reconstruct하기보다, masked word 만 예측함</p>
+</li>
+<li><p>mismatch between pre-training and finetuning</p>
+<ul>
+<li>[MASK] token은 fine-tuning시에 안나옴</li>
+<li>이 문제를 해결하기 위해 마스킹 해야하는 단어를 항상 [MASK]토큰으로 바꾸진 않음</li>
+<li>다음과 같은 방식으로 적용 (<code>이게 LM 성능 향상에 효과가 좋음!!</code>)<ul>
+<li>80%: Replace the word with the [MASK] token, e.g., <code>my dog is hairy -&gt; my do is [MASK]</code></li>
+<li>10%: Replace thw rod with a random word, e.g., <code>my dog is hairy -&gt; my dog is apple</code>(Noise 주고 정답 맞추게!)</li>
+<li>10%: Keep the word unchange, e.g., <code>my dog is hairy -&gt; my dog is hairy</code></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> random.random() &lt; <span class="number">0.8</span>:  </span><br><span class="line">  copy_training_ids[mask_LM_position_index_elm] = tokenizer.piece_to_id(<span class="string">&#x27;[MASK]&#x27;</span>)</span><br><span class="line">  masked_training_ids_batch.append(copy_training_ids)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="comment"># 10% of time, keep original</span></span><br><span class="line">    <span class="keyword">if</span> random.random() &lt; <span class="number">0.5</span>:</span><br><span class="line">        masked_training_ids_batch.append(copy_training_ids)</span><br><span class="line">    <span class="comment"># 10% of time, replace with random word</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        copy_training_ids[mask_LM_position_index_elm] = <span class="built_in">list</span>(vocab_word2idx.values())[random.randint(<span class="number">0</span>, <span class="built_in">len</span>(vocab_word2idx) - <span class="number">1</span>)]</span><br><span class="line">        masked_training_ids_batch.append(copy_training_ids)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Transformer의 encoder는 어떤 단어를 예측하게 될지, 어떤 단어가 랜덤하게 대체될지는 모름</p>
+<ul>
+<li>그렇기 때문에 distributional contextual representation of every input token을 유지할 수 있음 (모든 토큰의 컨텍스트에 대한 분산 표현)</li>
+</ul>
+</li>
+<li><p>MLM의 단점은, 15%정도만 예측에 사용하기 때문에, 모델이 학습을 통해 분포에 수렴하기 위한 pre-training step이 일반적인 LM보다 더 많이 필요함</p>
+</li>
+</ul>
+<h5 id="3-3-2-Task-2-Next-Sentence-Prediction"><a href="#3-3-2-Task-2-Next-Sentence-Prediction" class="headerlink" title="3.3.2 Task #2: Next Sentence Prediction"></a>3.3.2 Task #2: Next Sentence Prediction</h5><ul>
+<li>QA나 NLI (Natural Language Inference)는 두 문장간의 관계를 이해하는것에 기초해 있음</li>
+<li>이런 것들은 LM에서는 배울 수 없는 것임</li>
+<li>이러한 문장간의 관계를 배우기 위해, <code>binarized next sentence prediction</code>task를 pre-train 시켜봄</li>
+<li>corpus에서 랜덤으로 50%는 임의의 문장, 나머지 50%는 다음문장으로 구성되도록 학습셋을 만듬<br><img src="/img/markdown-img-paste-20190513151046718.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+<li>pre-trained model은 97~98% Accuracy를 기록함</li>
+</ul>
+<h5 id="3-4-Pre-training-Procedure"><a href="#3-4-Pre-training-Procedure" class="headerlink" title="3.4 Pre-training Procedure"></a>3.4 Pre-training Procedure</h5><ul>
+<li><p>Corpus</p>
+<ul>
+<li>BooksCorpus (800M words) (Zhu et al., 2015) + English Wikipedia (2,500M words)</li>
+</ul>
+</li>
+<li><p>Next Sentence Prediction task를 위해 문장 2개씩 샘플링함</p>
+<ul>
+<li>50%는 진짜 다음 문장, 나머지 50%는 랜덤한 문장</li>
+</ul>
+</li>
+<li><p>첫번째 문장엔 $A$ embedding 더하고 두번째 문장엔 $B$ embedding 더함</p>
+</li>
+<li><p>combined length is $\leq$ 512 tokens</p>
+</li>
+<li><p>LM masking은 WordPiece tokenization 적용 후 적용됨 (15%)</p>
+</li>
+<li><p>speicial token에 대해서는 partial word pieces 없음 ( <code>&lt;s&gt; 이런 애들은 word piece로 나누지 않았다는 뜻인듯?</code>)</p>
+</li>
+<li><p>Hyper Params</p>
+<ul>
+<li>Batch Size<ul>
+<li>256 sentences (256 sequences * 512 tokens &#x3D; 128,000 tokens&#x2F;batch)</li>
+</ul>
+</li>
+<li>Steps<ul>
+<li>1,000,000 steps &#x3D;&#x3D; 40 epochs over the 3.3 billion word corpus</li>
+</ul>
+</li>
+<li>Adam<ul>
+<li>lr &#x3D; 1e-4</li>
+<li>$\beta_{1}$ &#x3D; 0.9</li>
+<li>$\beta_{2}$ &#x3D; 0.999</li>
+<li>L2 weight decay &#x3D; 0.01 </li>
+<li>learning rate warmup : first 10,000 steps and linear decay of the learning rate</li>
+</ul>
+</li>
+<li>Dropout prob: 0.1 on all layers</li>
+<li>Activation: <code>gelu(Gaussian Error Linear Units) activation</code> (OpenAI GPT 따라함, <code>이게 은근 성능 향상에 효과가 좋음!</code>)</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">gelu</span>(<span class="params">x</span>):</span><br><span class="line">  <span class="string">&quot;&quot;&quot;Gaussian Error Linear Unit.</span></span><br><span class="line"><span class="string">  This is a smoother version of the RELU.</span></span><br><span class="line"><span class="string">  Original paper: https://arxiv.org/abs/1606.08415</span></span><br><span class="line"><span class="string">  Args:</span></span><br><span class="line"><span class="string">    x: float Tensor to perform activation.</span></span><br><span class="line"><span class="string">  Returns:</span></span><br><span class="line"><span class="string">    `x` with the GELU activation applied.</span></span><br><span class="line"><span class="string">  &quot;&quot;&quot;</span></span><br><span class="line">  <span class="comment"># ref: https://github.com/google-research/bert/blob/master/modeling.py#L264</span></span><br><span class="line"></span><br><span class="line">  cdf = <span class="number">0.5</span> * (<span class="number">1.0</span> + tf.tanh(</span><br><span class="line">      (np.sqrt(<span class="number">2</span> / np.pi) * (x + <span class="number">0.044715</span> * tf.<span class="built_in">pow</span>(x, <span class="number">3</span>)))))</span><br><span class="line">  <span class="keyword">return</span> x * cdf</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Training loss: <code>sum of (the mean masked LM likelihood) and (mean next setence prediction likelihood)</code></li>
+<li>GPUs<ul>
+<li>BERT<sub>BASE</sub>: 4 Cloud TPUs in Pod configuration (16 TPU chips total)</li>
+<li>BERT<sub>LARGE</sub>: 16 Cloud TPUs (64 TPU chips total)</li>
+<li>4 days to complete</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-5-Fine-tuning-Procedure"><a href="#3-5-Fine-tuning-Procedure" class="headerlink" title="3.5 Fine-tuning Procedure"></a>3.5 Fine-tuning Procedure</h5><ul>
+<li>sequence-level classification task: fixed-dimensional pooled representation을 얻기 위해 [CLS] 토큰에 대응되는 final hidden state를 사용함<ul>
+<li>[CLS] 토큰에 대응되는 output vector를 $C \in \mathbb{R}^{H}$라 표현하겠음</li>
+<li>약간의 파라미터만 추가되는데, classification layer $W \in \mathbb{R}^{K \times H}$ 만 추가된다고 보면됨. $K$는 classifier의 labels 개수임</li>
+<li>Label prob: $P &#x3D; softmax(CW^{T})$</li>
+<li>BERT의 모든 params + $W$가 함께 학습됨</li>
+</ul>
+</li>
+<li>span-level, token-level prediction task: Section 4 참조</li>
+<li>대부분의 hyper parms은 pre-training 때와 같지만(dropout은 항상 0.1로~!) 3가지가 다름<ul>
+<li>Batch size: 16, 32</li>
+<li>Learning rate(Adam): 5e-5, 3e-5, 2e-5</li>
+<li>Number of epcohs: 3, 4</li>
+</ul>
+</li>
+<li>Dataset 크면 hyper params 선택에 영향 덜 받음</li>
+<li>Fine-tuning은 대게 되게 빨리됨, 그러므로 validation set에 대해서 exhaustive search를 해서 최적의 hyper parms을 갖는 모델을 고르는게 좋음</li>
+</ul>
+<h5 id="3-6-Comparison-of-BERT-and-OpenAI-GPT"><a href="#3-6-Comparison-of-BERT-and-OpenAI-GPT" class="headerlink" title="3.6 Comparison of BERT and OpenAI GPT"></a>3.6 Comparison of BERT and OpenAI GPT</h5><ul>
+<li>기존에 존재하는 pre-training 방법과 비교하면, OpenAI GPT가 가장 유사함<ul>
+<li>GPT는 left-to-right Transfomer LM 사용</li>
+</ul>
+</li>
+<li>Dataset<ul>
+<li>GPT is trained on the BooksCorpus (800M words)</li>
+<li>BERT is trained on the BooksCorpus (800M words) and Wikipedia (2,500M words)</li>
+</ul>
+</li>
+<li>Sentence Separator<ul>
+<li>GPT uses a sentence separator ([SEP]) and classifier token ([CLS]) which are only introduced at <code>fine-tuning time</code>;</li>
+<li>BERT learns [SEP], [CLS] and sentence A&#x2F;B embed- dings during pre-training</li>
+</ul>
+</li>
+<li>Batch Size<ul>
+<li>GPT was trained for 1M steps with a batch size of 32,000 words</li>
+<li>BERT was trained for 1M steps with a batch size of 128,000 words</li>
+</ul>
+</li>
+<li>Learning Rate <ul>
+<li>GPT used the same learning rate of 5e-5 for all fine-tuning experiments</li>
+<li>BERT chooses a task-specific fine-tuning learning rate which performs the best on the development set</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-Experiments"><a href="#4-Experiments" class="headerlink" title="4 Experiments"></a>4 Experiments</h4><p>BERT를 fine-tuning해서 11개의 NLP Task에 적용함</p>
+<h5 id="4-1-GLUE-Datasets"><a href="#4-1-GLUE-Datasets" class="headerlink" title="4.1 GLUE Datasets"></a>4.1 GLUE Datasets</h5><ul>
+<li>The General Langauge Understanding Evaluation (GLUE) benchmark (Wang et al., 2018)는 여러개의 NLU task의 모음임<ul>
+<li>MNLI: <code>Multi-Genre Natural Language Inference</code>는 주어진 문장들을 entailment, contradiction, or neutral로 분류</li>
+<li>QQP: <code>Quora Question Pairs</code>는 문장이 semantically 일치하는지 여부를 이진분류</li>
+<li>QNLI: <code>Question Natural Language Inference</code>는 SQuAD를 binary classification task로 답을 포함한 문장인지 아닌지를 분류</li>
+<li>SST-2: <code>The Stanford Sentiment Treebank</code>는 single-sentence에 대한 감성분석 이진 분류</li>
+<li>CoLA: <code>The Corpus of Linguistic Acceptability</code>는 single-sentence classification task로써 영어 문장이 언어적으로 acceptable한지 아닌지 분류</li>
+<li>STS-B: <code>The Semantic Textual Similarity Benchmark</code>는 문장 페어가 얼마나 유사한지 1~5점으로 스코어링 해놓은 데이터셋임. 의미적으로 얼마나 유사한지 분류</li>
+<li>MRPC: <code>Microsoft Research Paraphrase Corpus</code>도 문장페어가 얼마나 의미적으로 유사한지를 판단하는 데이터셋 </li>
+<li>RTE: <code>Recognizing Textual Entailment</code>MNLI의 binary 분류 버전</li>
+<li>WNLI: <code>Winograd NLI</code>는 natural language inference dataset임</li>
+</ul>
+</li>
+</ul>
+<p><img src="/img/markdown-img-paste-20190513185008832.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h5 id="4-1-1-GLUE-Results"><a href="#4-1-1-GLUE-Results" class="headerlink" title="4.1.1 GLUE Results"></a>4.1.1 GLUE Results</h5><ul>
+<li><a target="_blank" rel="noopener" href="https://gluebenchmark.com/leaderboard">GLUE Leaderboard가 궁금한다면 클릭</a></li>
+<li><a target="_blank" rel="noopener" href="https://openai.com/blog/language-unsupervised/">OpenAI, Language-unsupervised</a></li>
+<li>fine-tune option<ul>
+<li>batch size: 32</li>
+<li>epoch: 3 </li>
+<li>lr: 5e-5, 4e-5, 3e-5, 2e-5</li>
+</ul>
+</li>
+<li>BERT<sub>LARGE</sub>의 경우 small dataset에서 finetune 할 경우 unstable한 현상이 있음</li>
+<li>BERT는 4.4~6.7% 정도의 견고한 차이로 SOTA보다 높은 결과를 얻음<br><img src="/img/markdown-img-paste-20190514140956159.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+<h5 id="4-2-SQuAD-v1-1"><a href="#4-2-SQuAD-v1-1" class="headerlink" title="4.2 SQuAD v1.1"></a>4.2 SQuAD v1.1</h5><ul>
+<li>Wikipedia로부터 만든 100k의 question&#x2F;answer pairs</li>
+<li>Input paragraph에서 Input Question에 대한 정답찾기<br><img src="/img/markdown-img-paste-20190514143432222.png" alt="center 50%">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+<li>Classification Task와는 좀 달리, Start Token $S \in \mathbb{R}^{H}$, End Token $E \in \mathbb{R}^{H}$찾기임</li>
+<li>fine-tuning때는 새로 도입되는 param은 Start, End token뿐임</li>
+<li>input token $i$에 대한 Final hidden vector를 $T_{i} \in \mathbb{R}^{H}$라 할 때, word $i$가 Start token이 될 확률은 $T_{i}$와 $S$의 dot-product의 softmax로 계산함</li>
+<li>$P_{i} &#x3D;  {e^{S \cdot T_{i}} \over \Sigma_{j}e^{S \cdot T_{j}}}$</li>
+<li>End token도 똑같이 적용함</li>
+<li>Start, End token의 position 일치 여부에 대한 log-likelihood를 objective로 두고 학습시킴</li>
+<li>Hyper params: 3 epoch, 5e-5 lr, 32 batch size </li>
+<li><del>START, END token에 대한 vector를 새로 생성해서 따로 갖고 있다가 기존 seq token과 Attention 만 비교하는건가..이러면 self-attention은 아니고 기존에 알고 있던 attention vector를 쓰는 해석인데.. 체크해봐야겠음</del></li>
+<li>SQuAD는 testing procedure가 매우 까다로워서 submitter가 직접 SQuAD organizers에게 컨택해서 hidden test set에 대해 테스트해야함. 본 논문에서는 자체 평가기준으로 best system만 제출함</li>
+<li>결과는 <strong>TOP</strong>을 갱신함. Public data인 TriviaQA도 학습시켰더니 점수 더 높아짐<br><img src="/img/markdown-img-paste-20190514150300422.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+<h5 id="4-3-Named-Entity-Recognition"><a href="#4-3-Named-Entity-Recognition" class="headerlink" title="4.3 Named Entity Recognition"></a>4.3 Named Entity Recognition</h5><ul>
+<li>CoNLL 2003 NER dataset (200k training words)에 대해서 fine-tune함</li>
+<li>Person, Organization, Location, Miscellaneous, Other 로 나뉨</li>
+<li>Final hidden representation $T_{i} \in \mathbb{R}^{H}$를 NER label set에 대한 classification layer에 feed 시킴</li>
+<li>CRF 없음, non-autoregressive임 (<del>이런 상황에서 NER은 사실 굉장히 어려움</del>)</li>
+<li>BERT는 WordPeiece tokenizer쓰기 때문에 특성상 NER 라벨과 align이 틀어질 수 있음</li>
+<li>이를 해결하기 위해 CoNLL-tokenized input word를 WordPiece tokenizer로 다시 tokenization함<br><img src="/img/markdown-img-paste-20190514154340513.png" alt="center 50%">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+<li>X 라고 표시된 곳은 prediction하지 않음 (<del>loss를 계산하지 않는건가?</del>)</li>
+<li>결과는 ELMo+BiLSTM+CRF 같이 기존의 LSTM 계열의 NER 끝판왕 모델을 이기고 SOTA 찍음<br><img src="/img/markdown-img-paste-20190514154745775.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+<h5 id="4-4-SWAG"><a href="#4-4-SWAG" class="headerlink" title="4.4 SWAG"></a>4.4 SWAG</h5><ul>
+<li>생략</li>
+</ul>
+<h4 id="5-Ablation-Studies"><a href="#5-Ablation-Studies" class="headerlink" title="5. Ablation Studies"></a>5. Ablation Studies</h4><ul>
+<li>BERT의 요소를 한개씩 분해해서 실험해봄으로써 관계적인 중요성을 이해하고자함</li>
+<li>parameter나 pre-training 데이터는 같은거 씀</li>
+</ul>
+<h5 id="5-1-Effect-of-Pre-training-Tasks"><a href="#5-1-Effect-of-Pre-training-Tasks" class="headerlink" title="5.1 Effect of Pre-training Tasks"></a>5.1 Effect of Pre-training Tasks</h5><ul>
+<li><strong>No NSP</strong>: “masked LM” (MLM)은 적용했지만, “next sentence prediction” (NSP)는 적용 안함</li>
+<li><strong>LTR &amp; No NSP</strong>: Left-to-Right (LTR) LM 적용, every input word를 예측하고 masking은 따로 안함. left-only constraint 적용함, fine-tuning때 bidirectional context를 적용하면 성능이 항상 떨어졌기 떄문 (<del>left-only constraint가 뭘까? look-ahead masking 같은건가</del>). NSP도 적용 안함. <strong>GPT와 directly하게 비슷함!</strong></li>
+<li>LTR과 RTL 모델을 각각 학습시키고, ELMo처럼 concat하면 성능 오르지만<ul>
+<li>비용이 2배가 되고</li>
+<li>QA 같은 태스크에서 직관적이지 않고 (RTL이 적합하지 않음)</li>
+<li>Deep bidirectional model에 비해서 less powerful함 (deep 에서는 left or right context 쓰는 것에 대해서 선택이 가능하기 때문)</li>
+</ul>
+</li>
+</ul>
+<p><img src="/img/markdown-img-paste-20190514161210252.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h5 id="5-2-Effect-of-Model-Size"><a href="#5-2-Effect-of-Model-Size" class="headerlink" title="5.2 Effect of Model Size"></a>5.2 Effect of Model Size</h5><ul>
+<li>Deep하고 params 많은게 좋음<br><img src="/img/markdown-img-paste-20190514161749947.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+<h5 id="5-3-Effect-of-Number-of-Training-Steps"><a href="#5-3-Effect-of-Number-of-Training-Steps" class="headerlink" title="5.3 Effect of Number of Training Steps"></a>5.3 Effect of Number of Training Steps</h5><ul>
+<li>정말 100만 스텝이나 필요한가요? Yes!<br><img src="/img/markdown-img-paste-20190514162210101.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+<h5 id="5-4-Feature-based-Approach-with-BERT"><a href="#5-4-Feature-based-Approach-with-BERT" class="headerlink" title="5.4 Feature-based Approach with BERT"></a>5.4 Feature-based Approach with BERT</h5><ul>
+<li>모든 NLP task를 Transformer Encoder architecture로 표현하는게 쉬운건 아님</li>
+<li>pre-compute 할 수 있으면 비용이 절약될 것임</li>
+<li>ELMo가 contextual representation을 만든것 처럼 BERT도 얼마나 잘 만들었는지 CoNLL-2003 NER Task에 대해서 평가함</li>
+<li>BERT의 어떤 param도 fine-tuning하지 않고 two-layer 768-dim BiLSTM을 추가해서 테스트함</li>
+<li>BERT 전체를 fine-tune한게 96.4인데 BERT는 건드리지 않고 마지막 Layer 4개를 concat한게 96.1이 나옴</li>
+<li>BERT는 fine-tuning해서도 잘 쓰이지만, feature-based approach에서도 효과적임이 입증됨<br><img src="/img/markdown-img-paste-20190514163030887.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+<h4 id="6-Conclusion"><a href="#6-Conclusion" class="headerlink" title="6. Conclusion"></a>6. Conclusion</h4><ul>
+<li>Transfer learning with language models이 뜨고 있음, 많이 개선됨</li>
+<li>Unsupervised pre-training이 NLU system에 합쳐질 수 있음</li>
+<li>Contribution은 deep <em>bidirectional</em> architecture를 갖는 pre-trained model이 generalization 될 수 있음을 보인 것임</li>
+<li>실험결과는 매우 뛰어남, 어떤 케이스는 사람보다 잘 함. 앞으론 BERT가 잡아내거나 그러지 못한 liguistic phenomena에 대해서 연구할 것임</li>
+</ul>
+</div><div class="article-licensing box"><div class="licensing-title"><p>BERT- Pre-training of Deep Bidirectional Transformers for Language Understanding</p><p><a href="https://eagle705.github.io/2019-05-09-BERT/">https://eagle705.github.io/2019-05-09-BERT/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2019-05-09</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-08-28</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2019-05-16-SentencePiece/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">SentencePiece: A simple and language independent subword tokenizer and detokenizer for Neural Text Processing</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2019-05-01-Attention_is_All_you_need/"><span class="level-item">Attention Is All You Need</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/2019-05-09-BERT/';
+            this.page.identifier = '2019-05-09-BERT/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">28</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">16</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">17</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">1</span><span class="level-item">Author</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Who-is-an-Author"><span class="level-left"><span class="level-item">1.1</span><span class="level-item">Who is an Author?</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#느낀점"><span class="level-left"><span class="level-item">1.1.1</span><span class="level-item">느낀점</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">1.1.2</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#1-Introduction"><span class="level-left"><span class="level-item">1.1.3</span><span class="level-item">1. Introduction</span></span></a></li><li><a class="level is-mobile" href="#2-Related-work"><span class="level-left"><span class="level-item">1.1.4</span><span class="level-item">2. Related work</span></span></a></li><li><a class="level is-mobile" href="#3-BERT"><span class="level-left"><span class="level-item">1.1.5</span><span class="level-item">3. BERT</span></span></a></li><li><a class="level is-mobile" href="#4-Experiments"><span class="level-left"><span class="level-item">1.1.6</span><span class="level-item">4 Experiments</span></span></a></li><li><a class="level is-mobile" href="#5-Ablation-Studies"><span class="level-left"><span class="level-item">1.1.7</span><span class="level-item">5. Ablation Studies</span></span></a></li><li><a class="level is-mobile" href="#6-Conclusion"><span class="level-left"><span class="level-item">1.1.8</span><span class="level-item">6. Conclusion</span></span></a></li></ul></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-10-22T03:00:00.000Z">2020-10-22</time></p><p class="title"><a href="/2020-10-22-DocumentExpansionByQueryPrediction/">Document Expansion by Query Prediction</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-06-18T03:00:00.000Z">2020-06-18</time></p><p class="title"><a href="/2020-06-18-bert_based_lexical_substitution/">BERT-based Lexical Substitution</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-27T03:00:00.000Z">2020-05-27</time></p><p class="title"><a href="/2020-05-27-elastic_search/">Elastic Search 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-26T03:00:00.000Z">2020-05-26</time></p><p class="title"><a href="/2020-05-26-Deeper%20Text%20Understanding%20for%20IR%20with%20Contextual%20Neural%20Language%20Modeling/">Deeper Text Understanding for IR with Contextual Neural Language Modeling&quot;</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-02-10T03:00:00.000Z">2020-02-10</time></p><p class="title"><a href="/2020-02-10-Practical-Linux-Unix/">Linux, Unix 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2022 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>

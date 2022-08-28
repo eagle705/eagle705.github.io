@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Universal Language Model Fine-tuning for Text Classification (ULMFiT) - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Author 저자:Jeremy Howard, Sebastian Ruder (fast.ai University of San Francisco)  Who is an Author? Google Scholar에 안나와서.. Author’s Twitter  느낀점"><meta property="og:type" content="blog"><meta property="og:title" content="Universal Language Model Fine-tuning for Text Classification (ULMFiT)"><meta property="og:url" content="https://eagle705.github.io/2019-10-11-UniversalLMFinetuneforTextClf/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="Author 저자:Jeremy Howard, Sebastian Ruder (fast.ai University of San Francisco)  Who is an Author? Google Scholar에 안나와서.. Author’s Twitter  느낀점"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191011222956536.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191014140750231.png"><meta property="article:published_time" content="2019-10-11T03:00:00.000Z"><meta property="article:modified_time" content="2022-08-27T15:53:01.316Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://eagle705.github.io/img/markdown-img-paste-20191011222956536.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/2019-10-11-UniversalLMFinetuneforTextClf/"},"headline":"Universal Language Model Fine-tuning for Text Classification (ULMFiT)","image":["https://eagle705.github.io/img/markdown-img-paste-20191011222956536.png","https://eagle705.github.io/img/markdown-img-paste-20191014140750231.png"],"datePublished":"2019-10-11T03:00:00.000Z","dateModified":"2022-08-27T15:53:01.316Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"Author 저자:Jeremy Howard, Sebastian Ruder (fast.ai University of San Francisco)  Who is an Author? Google Scholar에 안나와서.. Author’s Twitter  느낀점"}</script><link rel="canonical" href="https://eagle705.github.io/2019-10-11-UniversalLMFinetuneforTextClf/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-10-11T03:00:00.000Z" title="2019. 10. 11. 오후 12:00:00">2019-10-11</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T15:53:01.316Z" title="2022. 8. 28. 오전 12:53:01">2022-08-28</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">10분안에 읽기 (약 1447 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">Universal Language Model Fine-tuning for Text Classification (ULMFiT)</h1><div class="content"><h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>저자:Jeremy Howard, Sebastian Ruder (<strong>fast.ai</strong> University of San Francisco)</li>
+</ul>
+<h3 id="Who-is-an-Author"><a href="#Who-is-an-Author" class="headerlink" title="Who is an Author?"></a>Who is an Author?</h3><ul>
+<li>Google Scholar에 안나와서..</li>
+<li><a target="_blank" rel="noopener" href="https://twitter.com/jeremyphoward">Author’s Twitter</a></li>
+</ul>
+<h4 id="느낀점"><a href="#느낀점" class="headerlink" title="느낀점"></a>느낀점</h4><ul>
+<li>pretrained model을 범용적으로 쓰려고 시도하려는 시기의 초기 논문인것 같다</li>
+<li>저자가 어필을 되게 많이 하는 듯</li>
+<li>각 레이어마다 feature가 다르니 다르게 finetune시켜줘야한다는 아이디어가 검증하긴 좀 어렵지만 직관적으론 꽤 설득력있었음. 한편으론 꼭 그래야되나 싶긴하면서도 나쁘지 않았던?</li>
+<li>warm up등 테크닉이 여기서부터 점점 변형되면서 제안되는 듯</li>
+</ul>
+<h4 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h4><ul>
+<li>transfer learning(CV에서 큰 임팩트를 줬던)이 NLP에서는 task-specific modification이 필요하거나 scratch에서 다시 학습해야했음 (2018년이라는걸 기억하자)</li>
+<li>이를 개선하기 위해 Universal한 구조로 모델을 만듬 (ULMFiT)</li>
+<li>6개의 텍스트 분류문제에서 SOTA 찍고, 18-24% error를 낮춤</li>
+<li>오직 100개의 라벨된 데이터로 100배는 많은 데이터로 학습한 모델과 비슷한 성능을 냄</li>
+</ul>
+<h4 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h4><ul>
+<li>기존 NLP 에서는 transductive learning (semi-supervised learning)에 집중해왔음 (<a target="_blank" rel="noopener" href="https://www.quora.com/What-is-the-difference-between-inductive-and-transductive-learning">transductive vs inductive</a>)</li>
+<li>inductive learning의 예로 pretrained word embedding은 좋은 성과를 냈음</li>
+<li>inductive learning의 핵심은 좋은 random initialization이지만 이게 NLP에서 잘 안돼왔음</li>
+<li>Dai and Le (2015)은 처음으로 LM을 fine-tune하는 방법을 제안해지만 이 방법을 위해선 수백만의 코퍼스가 필요했음</li>
+<li>CV쪽 모델에 비해 NLP쪽은 Shallow한 모델이니 다른 방법의 finetune이 요구됨</li>
+<li>Universal Language Model Fine-tuning (ULMFiT) 모델을 제안함</li>
+<li>3-layer LSTM architecture로 다른 engineered models를 이김</li>
+<li>예를 들면, <code>On IMDb, with 100 labeled examples, ULMFiT matches the performance of training from scratch with 10× and—given 50k unlabeled examples—with 100× more data</code></li>
+<li>Contribution:<ul>
+<li>propose Universal Language Model Fine-tuning (ULMFiT), a method that can be used to achieve <code>CV-like transfer learning</code></li>
+<li>propose discriminative fine-tuning, slanted triangular learning rates, and gradual unfreezing, novel techniques <code>to retain previous knowledge and avoid catastrophic forgetting</code> during fine-tuning</li>
+<li><code>outperform the state-of-the-art on six representative text classification</code> datasets, with an error reduction of 18-24% on the majority of datasets</li>
+<li>extremely sample-efficient transfer learning and perform an extensive ablation analysis</li>
+<li>make the pretrained models and our code available to enable wider adoption</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-Related-work"><a href="#2-Related-work" class="headerlink" title="2. Related work"></a>2. Related work</h4><ul>
+<li>Transfer learning in CV</li>
+<li>Hypercolumns</li>
+<li>Multi-task learning</li>
+<li>Fine-tuning</li>
+</ul>
+<h4 id="3-Universal-Language-Model-Fine-tuning"><a href="#3-Universal-Language-Model-Fine-tuning" class="headerlink" title="3. Universal Language Model Fine-tuning"></a>3. Universal Language Model Fine-tuning</h4><p><img src="/img/markdown-img-paste-20191011222956536.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>Given static source task  $ \mathcal{T}<em>{S} $ 가 있고 any target task $ \mathcal{T}</em>{T} $ 가 있다고 할 때, $ \mathcal{T}<em>{S} \neq \mathcal{T}</em>{T} $ 라고 정의</li>
+<li>이때 우리의 목표는 $ \mathcal{T}_{T} $의 성능을 높이는 것이다.(도메인 다르다고 생각하면 됨, 언어모델 태스크 -&gt; 텍스트분류 태스크)</li>
+<li><code>a pretrained LM can be easily adapted to the idiosyncrasies of a target</code></li>
+<li>제안하는 모델은 large general-domain corpus에서 LM을 pretrain하고 target task에 대해서 몇가지 기술들을 적용해서 fine-tune함</li>
+<li>SOTA LM 모델인 AWD-LSTM (Merity et al., 2017a), a regular LSTM (with no attention, short-cut connections, or other sophisticated ad- ditions) 모델을 사용함</li>
+<li>제안 모델을 구성하는 스텝들<ul>
+<li>일반 도메인에 대해 LM 학습</li>
+<li>사용하려는 도메인에 대해 LM 튜닝</li>
+<li>사용하려는 도메인에 대해 classifier 붙여서 튜닝</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-1-General-domain-LM-pretraining"><a href="#3-1-General-domain-LM-pretraining" class="headerlink" title="3.1 General-domain LM pretraining"></a>3.1 General-domain LM pretraining</h5><ul>
+<li>LM 학습 데이터: Wikitext-103 (Merity et al., 2017b) consisting of 28,595 preprocessed Wikipedia articles and 103 million words</li>
+<li>특징: <ul>
+<li>단점: While this stage is the most expensive,</li>
+<li>장점: it only needs to be performed once and improves perfor- mance and convergence of downstream models</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-2-Target-task-LM-fine-tuning"><a href="#3-2-Target-task-LM-fine-tuning" class="headerlink" title="3.2 Target task LM fine-tuning"></a>3.2 Target task LM fine-tuning</h5><ul>
+<li>general domain에 대해서 pretrain해도 target data는 다른 분포를 갖고 있음</li>
+<li>그러므로 target data에 대해서 fine-tune 해야함</li>
+<li>이 작업 수행하면 small dataset에 대해서도 잘 학습됨</li>
+<li>본 논문에서는 discriminative fine-tuning and slanted triangular learning rates for fine-tuning the LM 기법을 제안함</li>
+</ul>
+<h6 id="Discriminative-fine-tuning"><a href="#Discriminative-fine-tuning" class="headerlink" title="Discriminative fine-tuning"></a>Discriminative fine-tuning</h6><ul>
+<li><p>다른 레이어는 다른 타입의 정보를 캐치함 (<code>As different layers capture different types of information (Yosinski et al., 2014)</code>)</p>
+</li>
+<li><p>그러므로 다르게 fine-tune 되야한다고 주장</p>
+</li>
+<li><p><code>모든 레이어에 같은 lr 을 적용하는게 아니라 다르게 적용!</code> (<del>실제로 이게 의미 있는지 궁금하긴 하네</del>)</p>
+</li>
+<li><p>보통 SGD 식은 아래와 같음<br>$$<br>\theta_{t}&#x3D;\theta_{t-1}-\eta \cdot \nabla_{\theta} J(\theta)<br>$$</p>
+</li>
+<li><p>제안하는 방법의 식은 아래와 같음<br>$$<br>\theta_{t}^{l}&#x3D;\theta_{t-1}^{l}-\eta^{l} \cdot \nabla_{\theta^{l}} J(\theta)<br>$$</p>
+</li>
+<li><p>모델의 파라미터를 다음과 같이   $<br>\theta \text { into }\left{\theta^{1}, \ldots, \theta^{L}\right} $ 각 레이어에 해당되는 파라미터로 레이어 notation을 통해 나타낼 수 있음</p>
+</li>
+<li><p>각 레이어의 모델 파라미터는 각 레이어에 맞는 lr로 업데이트 된다는게 위에서 제안하는 방법임</p>
+</li>
+<li><p>$ {\eta^{l-1}&#x3D;} {\eta^{l} &#x2F; 2.6}  $ 공식으로 lr을 실험적으로 정함</p>
+</li>
+</ul>
+<h6 id="Slanted-triangular-learning-rates"><a href="#Slanted-triangular-learning-rates" class="headerlink" title="Slanted triangular learning rates"></a>Slanted triangular learning rates</h6><ul>
+<li><p>빠르게 수렴시키기 위해서 고정된 lr을 쓰거나 annealed lr을 사용하는건 best way가 아닐 수 있음</p>
+</li>
+<li><p>Slanted triangular learning rates(STLR)을 제안함</p>
+<ul>
+<li>처음엔 linear하게 증가했다가 추후 작아짐 (<del>warm up이랑 거의 똑같네?</del>)</li>
+<li>T: num of training iteration </li>
+<li>cut_frac: the fraction of iterations</li>
+<li><code>cut: the iteration when we switch from increasing to decreasing the LR</code></li>
+<li>p: the fraction of the number of iterations we have increased or will decrease the LR respectively</li>
+<li>STLR modifies triangular learning rates (Smith, 2017) with a short increase and a long decay period  (CV에서 썼던 기법)</li>
+</ul>
+<p> $$<br> \begin{aligned} c u t &amp;&#x3D;\left\lfloor T \cdot c u t_{-} f r a c\right\rfloor \ p &amp;&#x3D;\left{\begin{array}{ll}{t &#x2F; c u t,} &amp; {\text { if } t&lt;c u t} \ {1-\frac{t-c u t}{c u t \cdot(1 &#x2F; 1 c u t-f r a c-1)},} &amp; {\text { otherwise }} \end{array} \right. \ {\eta_{t}} &amp; {&#x3D;\eta_{\max } \cdot \frac{1+p \cdot(\text {ratio }-1)}{\text {ratio}}} \end{aligned}<br> $$</p>
+</li>
+</ul>
+<p><img src="/img/markdown-img-paste-20191014140750231.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<hr>
+<h4 id="7-Conclusion"><a href="#7-Conclusion" class="headerlink" title="7. Conclusion"></a>7. Conclusion</h4><ul>
+<li>transfer learning에 효과적이고 효율적인 모델인 ULMFiT을 제안함</li>
+<li>몇가지 fine-tuneing technique도 제안함 (prevent catastrophic forgetting, enable robust learning)</li>
+<li>기존 transfer learning technique보다 낫고, 6개 분류 태스크에서 SOTA 찍음</li>
+</ul>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Universal Language Model Fine-tuning for Text Classification (ULMFiT)</p><p><a href="https://eagle705.github.io/2019-10-11-UniversalLMFinetuneforTextClf/">https://eagle705.github.io/2019-10-11-UniversalLMFinetuneforTextClf/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2019-10-11</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-08-28</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2019-10-14-MassivelyMultilingualSentenceEmbeddigns/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Massively Multilingual Sentence Embeddings for Zero-Shot Cross-Lingual Transfer and Beyond</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2019-10-08-SAN_for_NLI/"><span class="level-item">Stochastic Answer Networks for Natural Language Inference (SAN)</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/2019-10-11-UniversalLMFinetuneforTextClf/';
+            this.page.identifier = '2019-10-11-UniversalLMFinetuneforTextClf/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">28</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">16</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">17</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">1</span><span class="level-item">Author</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Who-is-an-Author"><span class="level-left"><span class="level-item">1.1</span><span class="level-item">Who is an Author?</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#느낀점"><span class="level-left"><span class="level-item">1.1.1</span><span class="level-item">느낀점</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">1.1.2</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#1-Introduction"><span class="level-left"><span class="level-item">1.1.3</span><span class="level-item">1. Introduction</span></span></a></li><li><a class="level is-mobile" href="#2-Related-work"><span class="level-left"><span class="level-item">1.1.4</span><span class="level-item">2. Related work</span></span></a></li><li><a class="level is-mobile" href="#3-Universal-Language-Model-Fine-tuning"><span class="level-left"><span class="level-item">1.1.5</span><span class="level-item">3. Universal Language Model Fine-tuning</span></span></a></li><li><a class="level is-mobile" href="#7-Conclusion"><span class="level-left"><span class="level-item">1.1.6</span><span class="level-item">7. Conclusion</span></span></a></li></ul></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-10-22T03:00:00.000Z">2020-10-22</time></p><p class="title"><a href="/2020-10-22-DocumentExpansionByQueryPrediction/">Document Expansion by Query Prediction</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-06-18T03:00:00.000Z">2020-06-18</time></p><p class="title"><a href="/2020-06-18-bert_based_lexical_substitution/">BERT-based Lexical Substitution</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-27T03:00:00.000Z">2020-05-27</time></p><p class="title"><a href="/2020-05-27-elastic_search/">Elastic Search 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-26T03:00:00.000Z">2020-05-26</time></p><p class="title"><a href="/2020-05-26-Deeper%20Text%20Understanding%20for%20IR%20with%20Contextual%20Neural%20Language%20Modeling/">Deeper Text Understanding for IR with Contextual Neural Language Modeling&quot;</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-02-10T03:00:00.000Z">2020-02-10</time></p><p class="title"><a href="/2020-02-10-Practical-Linux-Unix/">Linux, Unix 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2022 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>

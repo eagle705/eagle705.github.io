@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Distilling Task-Specific Knowledge from BERT into Simple Neural Networks - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Author 저자: Raphael Tang∗, Yao Lu∗, Linqing Liu∗, Lili Mou, Olga Vechtomova, and Jimmy Lin (University of Waterloo)    Who is an Author? ICASSP를 들고 있는 NLP 하던 분인 듯 보통은 문서분류쪽 많이 한듯  {: height&amp;#x3D;”50%”"><meta property="og:type" content="blog"><meta property="og:title" content="Distilling Task-Specific Knowledge from BERT into Simple Neural Networks"><meta property="og:url" content="https://eagle705.github.io/2019-12-10-Distilling_Task-Specific_Knowledge_from_BERT_into_Simple_Neural_Networks/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="Author 저자: Raphael Tang∗, Yao Lu∗, Linqing Liu∗, Lili Mou, Olga Vechtomova, and Jimmy Lin (University of Waterloo)    Who is an Author? ICASSP를 들고 있는 NLP 하던 분인 듯 보통은 문서분류쪽 많이 한듯  {: height&amp;#x3D;”50%”"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191210174547954.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191211110706719.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191211112320170.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191211144319362.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191211144754536.png"><meta property="article:published_time" content="2019-12-10T03:00:00.000Z"><meta property="article:modified_time" content="2022-08-27T15:52:39.315Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://eagle705.github.io/img/markdown-img-paste-20191210174547954.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/2019-12-10-Distilling_Task-Specific_Knowledge_from_BERT_into_Simple_Neural_Networks/"},"headline":"Distilling Task-Specific Knowledge from BERT into Simple Neural Networks","image":["https://eagle705.github.io/img/markdown-img-paste-20191210174547954.png","https://eagle705.github.io/img/markdown-img-paste-20191211110706719.png","https://eagle705.github.io/img/markdown-img-paste-20191211112320170.png","https://eagle705.github.io/img/markdown-img-paste-20191211144319362.png","https://eagle705.github.io/img/markdown-img-paste-20191211144754536.png"],"datePublished":"2019-12-10T03:00:00.000Z","dateModified":"2022-08-27T15:52:39.315Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"Author 저자: Raphael Tang∗, Yao Lu∗, Linqing Liu∗, Lili Mou, Olga Vechtomova, and Jimmy Lin (University of Waterloo)    Who is an Author? ICASSP를 들고 있는 NLP 하던 분인 듯 보통은 문서분류쪽 많이 한듯  {: height&#x3D;”50%”"}</script><link rel="canonical" href="https://eagle705.github.io/2019-12-10-Distilling_Task-Specific_Knowledge_from_BERT_into_Simple_Neural_Networks/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-12-10T03:00:00.000Z" title="2019. 12. 10. 오후 12:00:00">2019-12-10</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T15:52:39.315Z" title="2022. 8. 28. 오전 12:52:39">2022-08-28</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">15분안에 읽기 (약 2193 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">Distilling Task-Specific Knowledge from BERT into Simple Neural Networks</h1><div class="content"><h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>저자:<ul>
+<li>Raphael Tang∗, Yao Lu∗, Linqing Liu∗, Lili Mou, Olga Vechtomova, and Jimmy Lin (<strong>University of Waterloo</strong>)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Who-is-an-Author"><a href="#Who-is-an-Author" class="headerlink" title="Who is an Author?"></a>Who is an Author?</h3><ul>
+<li>ICASSP를 들고 있는 NLP 하던 분인 듯</li>
+<li>보통은 문서분류쪽 많이 한듯</li>
+</ul>
+<p><img src="/img/markdown-img-paste-20191210174547954.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h4 id="느낀점"><a href="#느낀점" class="headerlink" title="느낀점"></a>느낀점</h4><ul>
+<li>아이디어는 간단함</li>
+<li>Data Augmentation을 넣은건 좋았음</li>
+<li>그러나 성능이 좋아진게 Distillation 때문인지 Data Augmentation 때문인지를 정확히 다루지 않아서.. 이 부분이 이 논문의 최대 에러임</li>
+</ul>
+<h4 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h4><ul>
+<li>요즘엔 BERT, ELMo, and GPT 같은 deep language representation model이 대세임</li>
+<li>이러한 발전은 예전에 쓰던 shallower neural networks 를 안쓰게 만듬</li>
+<li>본 논문에서는 lightweight neural network도 구조 변경, 추가 데이터, 추가 feature 없이도 아직 쓸만하다는걸 보여주려고함</li>
+<li>BERT에서 Knowledge distillation 해서 성능을 높여보려고함</li>
+<li>setence classification, sentence-pair task 등으로 테스트 할 것임</li>
+<li>ELMo보다 100배 적은 파리미터, 15배 빠른 추론속도로 비슷한 성능을 얻음</li>
+</ul>
+<h4 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h4><ul>
+<li>BERT등이 등장하면서 “first-generation” neural network가 잘 안쓰이게됨</li>
+<li>본 논문에서는 간단하지만 효과적인 transfer 기법을 제안하고자함 (task-specific knowledge from BERT) </li>
+<li>single-layer BiLSTM을 사용할거고, BERT로부터 배울 것임</li>
+<li>효율적인 knowledge transfer 를 위해선 데이터가 많이 필요하니, unlabled dataset으로부터 teacher output을 만들어서 student로 학습하게 할 것임</li>
+</ul>
+<h4 id="2-Related-Work"><a href="#2-Related-Work" class="headerlink" title="2. Related Work"></a>2. Related Work</h4><ul>
+<li>NLP에서 CNN, RNN 등이 발달됨</li>
+<li>최근엔, ELMo(6가지 task SOTA 찍었음), BERT등이 등장함</li>
+<li>Model Compression:<ul>
+<li>local error-based method for pruning unimportant weights (LeCun et al. (1990))</li>
+<li>Han et al. (2015) propose a simple compression pipeline, achieving 40 times reduction in model size without hurting accuracy. Unfortunately, these techniques induce irregular weight sparsity, which precludes highly optimized computation routines</li>
+<li>quantizing neural networks (Wu et al., 2018); in the extreme, Courbariaux et al. (2016) propose binarized networks with both binary weights and binary activations</li>
+</ul>
+</li>
+<li>위에서 소개된 Model Compression과는 다르게 본 논문에서는 knowledge distillation appoach (Ba and Caruana, 2014; Hinton et al., 2015) 를 사용하고자함</li>
+<li>NLP에서 이미 이것에 대해 적용된 연구들이 있음(In the NLP literature, it has previously been used in neural machine translation (Kim and Rush, 2016) and language model- ing (Yu et al., 2018))</li>
+</ul>
+<h4 id="3-Our-Approach"><a href="#3-Our-Approach" class="headerlink" title="3. Our Approach"></a>3. Our Approach</h4><ul>
+<li>First, teacher model과 student model을 선택 후 학습</li>
+<li>Second, 저자의 distillation procedure로 학습<ul>
+<li>logits-regression objective 사용</li>
+<li>transfer dataset 구축</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-1-Model-Architecture"><a href="#3-1-Model-Architecture" class="headerlink" title="3.1 Model Architecture"></a>3.1 Model Architecture</h5><ul>
+<li><p>Teacher network : pretrained, fine-tuned BERT </p>
+<ul>
+<li>feature vector ${ \boldsymbol{h} \in \mathbb{R}^{d} }$ 위에 우리가 사용할 classifier를 task에 맞게 추가해서 쓸것임</li>
+<li>For single-sentence classification<ul>
+<li>다음과 같이 softmax 추가해서 쓸 것임(${k}$ is the number of label) ${ \boldsymbol{y}^{(B)}&#x3D;\operatorname{softmax}(W \boldsymbol{h}), \text { where } W \in \mathbb{R}^{k \times d} }$</li>
+</ul>
+</li>
+<li>For sentence-pair task<ul>
+<li>두 문장에 대한 BERT features를 concat후 softmax layer에 넣는 방식으로 함</li>
+</ul>
+</li>
+<li>학습시에는 BERT와 classifier에 대한 param을 둘다 업데이트하고 cross-entropy loss 사용함</li>
+</ul>
+</li>
+<li><p>Student model: single-layer BiLSTM with a non-linear classifier</p>
+<ul>
+<li><p>For classification</p>
+<ul>
+<li>last step의 값을 concat 후 fc layer with ReLU 에 feed해서 softmax layer로 분류함<br><img src="/img/markdown-img-paste-20191211110706719.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+</li>
+<li><p>For Sentence-pair tasks</p>
+<ul>
+<li>BiLSTM encoder weights를 share해서 siamese architecture로 사용 ${ \text { sentence vectors } \boldsymbol{h}<em>{s 1} \text { and } \boldsymbol{h}</em>{s 2} }$ 를 만들어냄</li>
+<li>${ \begin{array}{l}{f\left(\boldsymbol{h}<em>{s 1}, \boldsymbol{h}</em>{s 2}\right)&#x3D;\left[\boldsymbol{h}<em>{s 1}, \boldsymbol{h}</em>{s 2}, \boldsymbol{h}<em>{s 1} \odot\right.}  {\left.\boldsymbol{h}</em>{s 2},\left|\boldsymbol{h}<em>{s 1}-\boldsymbol{h}</em>{s 2}\right|\right], \text { where } \odot \text { denotes elementwise multiplication}}\end{array} }$<br><img src="/img/markdown-img-paste-20191211112320170.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+<li>attenion이나, layer norm 같은 스킬은 최대한 제외하고 BiLSTM의 representation Power에만 국한하는 설계를 함</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-2-Distillation-Objective"><a href="#3-2-Distillation-Objective" class="headerlink" title="3.2 Distillation Objective"></a>3.2 Distillation Objective</h5><ul>
+<li>In addition to a one-hot predicted label, the teacher’s predicted probability is also important. In binary sentiment classifica- tion, for example, some sentences have a strong sentiment polarity, whereas others appear neutral. </li>
+<li>If we use only the teacher’s predicted one-hot label to train the student, we may lose valuable information about the prediction uncertainty.</li>
+</ul>
+<p>$$<br>\widetilde{y}<em>{i}&#x3D;\operatorname{softmax}(\boldsymbol{z})&#x3D;\frac{\exp \left{\boldsymbol{w}</em>{i}^{\top} \boldsymbol{h}\right}}{\sum_{j} \exp \left{\boldsymbol{w}_{j}^{\top} \boldsymbol{h}\right}}<br>$$</p>
+<p>$$<br>\begin{array}{l}{\text { where } w_{i} \text { denotes the } i^{\mathrm{th}} \text { row of softmax weight }} \ {W, \text { and } z \text { is equivalent to } \boldsymbol{w}^{\top} \boldsymbol{h} .}\end{array}<br>$$</p>
+<ul>
+<li><p>Training on logits makes learning easier for the student model since the relationship learned by the teacher model across all of the targets are equally emphasized (Ba and Caruana, 2014).</p>
+</li>
+<li><p>student network’s logits과 teacher’s logits의 MSE로 distillation objective를 만듬 (Cross entropy등도 사용하능하나, 저자의 실험에서 MSE가 좀 더 결과가 좋았다고함)<br>$$<br>\mathcal{L}<em>{\text {distill }}&#x3D;\left|z^{(B)}-z^{(S)}\right|</em>{2}^{2}<br>$$</p>
+</li>
+<li><p>최종적인 Loss는 기존의 one-hot에 대한 CE loss와 distill Loss를 weighted sum해서 사용함 (${t}$는 one-hot label)<br>$$<br>\begin{array}{l}{\mathcal{L}&#x3D;\alpha \cdot \mathcal{L}<em>{\mathrm{CE}}+(1-\alpha) \cdot \mathcal{L}</em>{\text {distill }}} \ {&#x3D;-\alpha \sum_{i} t_{i} \log y_{i}^{(S)}-(1-\alpha)\left|z^{(B)}-z^{(S)}\right|_{2}^{2}}\end{array}<br>$$</p>
+<ul>
+<li>unlabeld data의 경우엔 teacher가 예측한걸 기준으로 사용함 ${ \begin{array}{l}{\text { i.e., } t_{i}&#x3D;1 \text { if } i&#x3D;\arg \max y^{(B)} \text { and } 0 \text { otherwise. }}\end{array} }$</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-3-Data-Augmentation-for-Distillation"><a href="#3-3-Data-Augmentation-for-Distillation" class="headerlink" title="3.3 Data Augmentation for Distillation"></a>3.3 Data Augmentation for Distillation</h5><ul>
+<li>데이터 셋 작으면 티쳐한테 배울때 효과가 별로 없음</li>
+<li>그렇기 때문에 데이터셋 키우기로함 (with pseudo-labels provided by the teacher)</li>
+<li>하지만.. NLP에서의 Data augmentation은 Computer vision에 비해 어려움<ul>
+<li>CV는 비슷한 이미지들이 매우 많음 (CIFAR-10 is a subset of the 80 million tiny images dataset)</li>
+<li>CV는 이미지 회전이나 노이즈 추가등.. 방법이 많음 (Second, it is possible to synthesize a near-natural image by rotating, adding noise, and other distortions)<ul>
+<li>NLP에서 이 방법 쓰면 not be fluent되기 때문에 쓸 수 없음 ㅠ</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>본 논문에서는 약간의 휴리스틱으로 task-agnostic data augmentation을 하려고함 (image distortion과 같진 않고, 비슷하다고 생각하면됨)<ul>
+<li>Masking:<ul>
+<li>${p_{mask}}$ 의 확률로 랜덤하게 단어를 [MASK]로 바꿈</li>
+<li>Intuitively, this rule helps to clarify <strong>the contribution of each word toward the label</strong> (각 단어의 contribution을 파악하는데 도움이 된다고 주장)</li>
+<li>e.g., the teacher network produces less confident logits for “I [MASK] the comedy” than for “I loved the comedy.”</li>
+</ul>
+</li>
+<li>POS-guided word replacement:<ul>
+<li>${p_{pos}}$ 의 확률로 단어를 같은 pos 태그를 갖는 다른 단어로 교체함 (<del>허허 요상한 방법일세</del>)</li>
+<li>이러한 룰은 semantic을 방해하기도 함 (This rule perturbs the semantics of each example, e.g., “What do pigs eat?” is different from “How do pigs eat?”)</li>
+</ul>
+</li>
+<li>n-gram sampling:<ul>
+<li>${p_{ng}}$ 의 확률로 예시 문장에서 n-gram을 샘플링함 (n is randomly selected from {1,2,…,5})</li>
+<li>n-gram 외의 단어는 드랍해버리는것과 비슷한 효과고 마스킹보다 더 공격적인 방법임 (This rule is conceptually equivalent to dropping out all other words in the example, which is a more aggressive form of masking)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Data augmentation procedure:<ul>
+<li>training example  ${w_{1}, …, w_{n}}$</li>
+<li>단어에 대해서 iteration 하면서 각 단어에 대해서 유니폼 분포로 확률을 계산함 ${ X_{i} \sim \text { UNIFORM }[0,1] \text { for each } w_{i} }$</li>
+<li>${ \text{if } X_{i}&lt;p_{\text {mask }}, \text { we apply masking to } w_{i} }$</li>
+<li>${ \text{if } p_{\text {mask}}&lt;X_{i}&lt;p_{\text {mask }} + p_{\text {pos }}, \text { we apply POS-guided word replace to } w_{i} }$</li>
+<li>masking과 POS-guided swapping은 mutuially exclusive하게 진행해서 한개가 적용되면 나머지는 적용안함</li>
+<li>iteration이 끝나면, ${p_{ng}}$의 확률로 n-gram sampling을 synthetic example(위에서 만든 문장)에 적용하면 final synthetic example이 완성됨</li>
+<li>이러한 전체 프로세스를 한 문장당 $ n_{iter} $번 적용해서 총  $ n_{iter} $개의 문장을 만듬 (중복은 제거)</li>
+<li>For sentence-pair datasets, we cycle through augmenting <code>the first sentence only (holding the second fixed)</code>, <code>the second sentence only (holding the first fixed)</code>, and <code>both sentences</code>.</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-Experimental-Setup"><a href="#4-Experimental-Setup" class="headerlink" title="4. Experimental Setup"></a>4. Experimental Setup</h4><ul>
+<li>Teacher Network으로써의 BERT는 large 버전 사용<ul>
+<li>BERT fine-tuning 할 땐 Adam opt with lr {2,3,4,5} X ${10^{-5}}$ 적용</li>
+<li>val set 기준 best model 선택</li>
+<li>여기선 data augmentation 안씀</li>
+</ul>
+</li>
+<li>Student model 학습할 땐 data augmentation 사용<ul>
+<li>soft logit target을 사용한 모델을 ${\text BiLSTM_{SOFT}}$ 로 표기하겠음</li>
+<li>3.2 세션에서 weighted sum으로 기존 CE와 distillation Loss를 추가해서 만들었는데 ${\alpha &#x3D; 0}$으로 셋팅해서 distillation objective만 사용한게 젤 잘나왔음</li>
+</ul>
+</li>
+</ul>
+<h5 id="4-1-Datasets"><a href="#4-1-Datasets" class="headerlink" title="4.1 Datasets"></a>4.1 Datasets</h5><ul>
+<li>GLUE에서 3개 뽑아서 씀<ul>
+<li>SST-2: movie reviews for binary sentiment classification (positive vs. negative)</li>
+<li>MNLI: to predict the relationship between a pair of sentences as one of entailment, neutrality, or contradiction </li>
+<li>QQP: binary label of each question pair indicates redundancy</li>
+</ul>
+</li>
+</ul>
+<h5 id="4-2-Hyperparameters"><a href="#4-2-Hyperparameters" class="headerlink" title="4.2 Hyperparameters"></a>4.2 Hyperparameters</h5><ul>
+<li>Student Model<ul>
+<li>BiLSTM hidden: 150 or 300</li>
+<li>RelLU activated hidden: 200 or 400</li>
+<li>Optim: AdaDelta (lr: 1.0 ${\rho}$: 0.95)</li>
+<li>Batch size: 50 (SST2), 256 (MNLI, QQP)</li>
+</ul>
+</li>
+<li>Data Augmentation<ul>
+<li>${p_{mask} &#x3D; p_{pos} &#x3D; 0.1 \text{ and } p_{ng} &#x3D; 0.25}$</li>
+<li>${n_{iter}} &#x3D; 20$ (SST), ${n_{iter}} &#x3D; 10$ (MNLI, QQP)</li>
+</ul>
+</li>
+</ul>
+<h5 id="4-3-Baseline-Models"><a href="#4-3-Baseline-Models" class="headerlink" title="4.3 Baseline Models"></a>4.3 Baseline Models</h5><ul>
+<li>BERT</li>
+<li>OpenAI GPT </li>
+<li>GLUE ELMo baselines</li>
+</ul>
+<h4 id="5-Results-and-Discussion"><a href="#5-Results-and-Discussion" class="headerlink" title="5. Results and Discussion"></a>5. Results and Discussion</h4><h5 id="5-1-Model-Quality"><a href="#5-1-Model-Quality" class="headerlink" title="5.1 Model Quality"></a>5.1 Model Quality</h5><p><img src="/img/markdown-img-paste-20191211144319362.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>our distillation approach of matching logits using the augmented training dataset, and achieve an absolute improvement of 1.9– 4.5 points against our base BiLSTM.</li>
+<li><del>data augmentation 없이 distillation한 것도 보여줘야.. 설득력이 더 있을텐데 음..</del></li>
+</ul>
+<h5 id="5-2-Inference-Efficiency"><a href="#5-2-Inference-Efficiency" class="headerlink" title="5.2 Inference Efficiency"></a>5.2 Inference Efficiency</h5><ul>
+<li>On a single NVIDIA V100 GPU</li>
+<li>with a batch size of 512 on all 67350 sentences of the SST-2 training set</li>
+<li>our single-sentence model uses 98 and 349 times fewer parameters than ELMo and BERTLARGE, respectively</li>
+<li><strong>15 and 434 times faster</strong></li>
+</ul>
+<p><img src="/img/markdown-img-paste-20191211144754536.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h4 id="6-Conclusion-and-Future-Work"><a href="#6-Conclusion-and-Future-Work" class="headerlink" title="6. Conclusion and Future Work"></a>6. Conclusion and Future Work</h4><ul>
+<li>Explore distilling the knowledge from BERT into a simple BiLSTM-based model</li>
+<li>The distilled model achieves comparable results with ELMo, while using much fewer parameters and less inference time</li>
+<li>Future work로는 더 단순한 모델로 KD하거나 더 복잡한 모델로 KD하거나..(<del>이거 넘 당연한 발상아닌가..</del>)</li>
+</ul>
+<h4 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h4><p>ref: <a target="_blank" rel="noopener" href="https://github.com/qiangsiwei/bert_distill">https://github.com/qiangsiwei/bert_distill</a></p>
+<h4 id="Note"><a href="#Note" class="headerlink" title="Note:"></a>Note:</h4><ul>
+<li>marp syntax 변경: <a target="_blank" rel="noopener" href="https://marpit.marp.app/image-syntax">https://marpit.marp.app/image-syntax</a></li>
+</ul>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Distilling Task-Specific Knowledge from BERT into Simple Neural Networks</p><p><a href="https://eagle705.github.io/2019-12-10-Distilling_Task-Specific_Knowledge_from_BERT_into_Simple_Neural_Networks/">https://eagle705.github.io/2019-12-10-Distilling_Task-Specific_Knowledge_from_BERT_into_Simple_Neural_Networks/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2019-12-10</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-08-28</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2019-12-19-Unified%20Language%20Model%20Pre-training%20for%20Natural%20Language%20Understanding%20and%20Generation/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Unified Language Model Pre-training for Natural Language Understanding and Generation</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2019-11-28-DistilBERT/"><span class="level-item">DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/2019-12-10-Distilling_Task-Specific_Knowledge_from_BERT_into_Simple_Neural_Networks/';
+            this.page.identifier = '2019-12-10-Distilling_Task-Specific_Knowledge_from_BERT_into_Simple_Neural_Networks/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">28</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">16</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">17</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">1</span><span class="level-item">Author</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Who-is-an-Author"><span class="level-left"><span class="level-item">1.1</span><span class="level-item">Who is an Author?</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#느낀점"><span class="level-left"><span class="level-item">1.1.1</span><span class="level-item">느낀점</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">1.1.2</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#1-Introduction"><span class="level-left"><span class="level-item">1.1.3</span><span class="level-item">1. Introduction</span></span></a></li><li><a class="level is-mobile" href="#2-Related-Work"><span class="level-left"><span class="level-item">1.1.4</span><span class="level-item">2. Related Work</span></span></a></li><li><a class="level is-mobile" href="#3-Our-Approach"><span class="level-left"><span class="level-item">1.1.5</span><span class="level-item">3. Our Approach</span></span></a></li><li><a class="level is-mobile" href="#4-Experimental-Setup"><span class="level-left"><span class="level-item">1.1.6</span><span class="level-item">4. Experimental Setup</span></span></a></li><li><a class="level is-mobile" href="#5-Results-and-Discussion"><span class="level-left"><span class="level-item">1.1.7</span><span class="level-item">5. Results and Discussion</span></span></a></li><li><a class="level is-mobile" href="#6-Conclusion-and-Future-Work"><span class="level-left"><span class="level-item">1.1.8</span><span class="level-item">6. Conclusion and Future Work</span></span></a></li><li><a class="level is-mobile" href="#Code"><span class="level-left"><span class="level-item">1.1.9</span><span class="level-item">Code</span></span></a></li><li><a class="level is-mobile" href="#Note"><span class="level-left"><span class="level-item">1.1.10</span><span class="level-item">Note:</span></span></a></li></ul></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-10-22T03:00:00.000Z">2020-10-22</time></p><p class="title"><a href="/2020-10-22-DocumentExpansionByQueryPrediction/">Document Expansion by Query Prediction</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-06-18T03:00:00.000Z">2020-06-18</time></p><p class="title"><a href="/2020-06-18-bert_based_lexical_substitution/">BERT-based Lexical Substitution</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-27T03:00:00.000Z">2020-05-27</time></p><p class="title"><a href="/2020-05-27-elastic_search/">Elastic Search 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-26T03:00:00.000Z">2020-05-26</time></p><p class="title"><a href="/2020-05-26-Deeper%20Text%20Understanding%20for%20IR%20with%20Contextual%20Neural%20Language%20Modeling/">Deeper Text Understanding for IR with Contextual Neural Language Modeling&quot;</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-02-10T03:00:00.000Z">2020-02-10</time></p><p class="title"><a href="/2020-02-10-Practical-Linux-Unix/">Linux, Unix 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2022 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>

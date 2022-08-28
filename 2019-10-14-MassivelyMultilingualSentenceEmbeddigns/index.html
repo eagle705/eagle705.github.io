@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Massively Multilingual Sentence Embeddings for Zero-Shot Cross-Lingual Transfer and Beyond - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Author 저자: Mikel Artetxe (University of the Basque Country (UPV&amp;#x2F;EHU)) Holger Schwenk (Facebook AI Research)    Who is an Author?Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 같고 조경현 교수님하고도 co-author 이력"><meta property="og:type" content="blog"><meta property="og:title" content="Massively Multilingual Sentence Embeddings for Zero-Shot Cross-Lingual Transfer and Beyond"><meta property="og:url" content="https://eagle705.github.io/2019-10-14-MassivelyMultilingualSentenceEmbeddigns/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="Author 저자: Mikel Artetxe (University of the Basque Country (UPV&amp;#x2F;EHU)) Holger Schwenk (Facebook AI Research)    Who is an Author?Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 같고 조경현 교수님하고도 co-author 이력"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191014145614237.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191016105021495.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-2019101612003189.png"><meta property="og:image" content="https://camo.githubusercontent.com/b897558046365450b4b49fd23f2bc72adbd3b0bd/68747470733a2f2f646c2e666261697075626c696366696c65732e636f6d2f584e4c492f786e6c695f6578616d706c65732e706e67"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191016140026843.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191016150630714.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191016143025472.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191016145258214.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191016150710706.png"><meta property="og:image" content="https://eagle705.github.io/img/markdown-img-paste-20191016151215723.png"><meta property="article:published_time" content="2019-10-14T03:00:00.000Z"><meta property="article:modified_time" content="2022-08-27T15:52:49.837Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://eagle705.github.io/img/markdown-img-paste-20191014145614237.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/2019-10-14-MassivelyMultilingualSentenceEmbeddigns/"},"headline":"Massively Multilingual Sentence Embeddings for Zero-Shot Cross-Lingual Transfer and Beyond","image":["https://eagle705.github.io/img/markdown-img-paste-20191014145614237.png","https://eagle705.github.io/img/markdown-img-paste-20191016105021495.png","https://eagle705.github.io/img/markdown-img-paste-2019101612003189.png","https://eagle705.github.io/img/markdown-img-paste-20191016140026843.png","https://eagle705.github.io/img/markdown-img-paste-20191016150630714.png","https://eagle705.github.io/img/markdown-img-paste-20191016143025472.png","https://eagle705.github.io/img/markdown-img-paste-20191016145258214.png","https://eagle705.github.io/img/markdown-img-paste-20191016150710706.png","https://eagle705.github.io/img/markdown-img-paste-20191016151215723.png"],"datePublished":"2019-10-14T03:00:00.000Z","dateModified":"2022-08-27T15:52:49.837Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"Author 저자: Mikel Artetxe (University of the Basque Country (UPV&#x2F;EHU)) Holger Schwenk (Facebook AI Research)    Who is an Author?Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 같고 조경현 교수님하고도 co-author 이력"}</script><link rel="canonical" href="https://eagle705.github.io/2019-10-14-MassivelyMultilingualSentenceEmbeddigns/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-10-14T03:00:00.000Z" title="2019. 10. 14. 오후 12:00:00">2019-10-14</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-27T15:52:49.837Z" title="2022. 8. 28. 오전 12:52:49">2022-08-28</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">25분안에 읽기 (약 3760 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">Massively Multilingual Sentence Embeddings for Zero-Shot Cross-Lingual Transfer and Beyond</h1><div class="content"><h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>저자:<ul>
+<li>Mikel Artetxe (<strong>University of the Basque Country (UPV&#x2F;EHU)</strong>)</li>
+<li>Holger Schwenk (<strong>Facebook AI Research</strong>)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Who-is-an-Author"><a href="#Who-is-an-Author" class="headerlink" title="Who is an Author?"></a>Who is an Author?</h3><p>Mikel Artetxe 라는 친구인데 주로 번역쪽 태스크를 많이 한 것 같고 조경현 교수님하고도 co-author 이력이 있음. 페북에서 인턴할때 쓴 논문임.</p>
+<p><img src="/img/markdown-img-paste-20191014145614237.png" alt="author">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h4 id="느낀점"><a href="#느낀점" class="headerlink" title="느낀점"></a>느낀점</h4><ul>
+<li>결국 이 논문도 parallel corpus가 필요하다고함. 이걸 통해 multilingual sentence embedding을 얻는 것임</li>
+<li>Translation이 되게 학습시켜서 encoder를 훈련함</li>
+<li>대신에 그 양이 좀 적어도 다양한 언어에 대해서 얻을 수 있게 하는 것</li>
+<li>영어로만 transfer learning 시켰는데도 다른언어도 적용된다는 점은 의미있음</li>
+<li>encoder가 BPE를 통해 language independent하게 모델링했다는게 좀 의미가 있긴한데 한편으로는 universal한 구조다보니 좀 개별언어에 대해서 성능이 최적화되진 않겠다는 생각(<del>이지만 논문에선 결과가 괜찮음</del>)</li>
+<li>language ID로 decoder에 언어정보를 주는건 꽤 괜찮은 아이디어였다고 생각</li>
+<li>parallel corpus alignment하는거 어떻게하니.. 고생이 눈에 훤함 (꼭 다할 필요가 없다고 했지만서도)</li>
+<li>이번 논문은 약간 Scaling 으로 승부한 케이스인것 같음 (제목 자체가 그렇지만)</li>
+<li>Scaling을 키워서 실험할 줄 아는것도 결국 연구자의 역량..이라면 인프라가 중요하고 인프라가 중요하다면 configuration 잘하는건 기본이고, <del>실험비가 많거나 회사가 좋아야(?) 너무 스케일 싸움으로 가는것 같은 논문을 보면 왠지 모르게 아쉽고 씁쓸하다(?)</del></li>
+<li>보통 transfer랑 one-shot, few-shot 등의 용어가 나오는데 fine-tune 안한다고해서 zero-shot이라고 한듯</li>
+<li><code>Language-Agnostic</code> 라는 용어: 언어에 구애받지 않는다라는 뜻</li>
+<li>BERT 등 최신 논문과도 비교했지만(<del>1년이 지났으니 최신이라고 이제 할수있을지..</del>) 본 논문의 기법 자체는 좀 옛날 기법이라는 생각이 듬</li>
+<li><del>논문의 설명이 잘나와있으나 몇가지 좀 생략되어있음 (은근 불친절한)</del></li>
+</ul>
+<h4 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h4><ul>
+<li>93개의 언어에 대해 joint multilingual sentence embedding representation을 학습하는 아키텍처를 제안함</li>
+<li>single BiLSTM encoder에 shared BPE vocab을 사용함 (cover all language)</li>
+<li>auxiliary decoder와 결합시켜서 parallel corpora에 대해 학습시킴</li>
+<li>이러한 방식으로 English annotated data만 사용해서 분류기를 학습시킨 후 93개 언어에 대해 모델 구조 변경없이 transfer가 가능하게 함</li>
+<li>실험에 사용한 데이터셋에서는 의미있는 결과를 얻었음<ul>
+<li>cross-lingual natural language inference (XNLI dataset)</li>
+<li>cross-lingual document classification (ML- Doc dataset)</li>
+<li>parallel corpus mining (BUCC dataset)</li>
+</ul>
+</li>
+<li>112개의 언어가 aligned setence되어있는 새로운 테스트셋(Tatoeba)도 소개함</li>
+<li>적은 언어 자원으로도 multilingual similarity search가 꽤 잘나오는 sentence embedding을 얻은 것을 보여줌</li>
+<li>trained encoder &amp; test set: <a target="_blank" rel="noopener" href="https://github.com/facebookresearch/LASER">https://github.com/facebookresearch/LASER</a></li>
+</ul>
+<h4 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h4><ul>
+<li>딥러닝 나와서 NLP가 발전했지만 이런 방법은 data hungry하고 많은 현실적인 시나리오에서 응용되기에 제약이 있음</li>
+<li>여러 인기있는 방법들은 이런 이슈를 없애려했고, 그중 첫번째가 unlabeled data로 general langauge representation을 만드는 것임<ul>
+<li>가장 대표적인게 word embeddings (Mikolov et al., 2013b; Pennington et al., 2014)</li>
+<li>최근엔 sentence-level representation에 대해서 연구가 이를 대체했음 ex. BERT (Peters et al., 2018; Devlin et al., 2019)</li>
+</ul>
+</li>
+<li>이런 연구들은 각 언어에 대해 따로 모델을 학습시킴</li>
+<li>그러므로 다른 언어들에 대해 연관된(?) 정보를 얻을 순 없음(<code>these works learn a separate model for each language and are thus unable to leverage information across different languages</code>) (<del>BERT의 multilingual도 결국 따로따로 학습한거라서 안된다고 지적하는건가</del>)</li>
+<li>low-resource language에 대해서 성능에 잠재적 제약이 있음 </li>
+<li>본 논문에서는 <code>universal language agnostic sentence embeddings</code> 을 제안함<ul>
+<li>input langauge와</li>
+<li>NLP task에<br> general한 vector representation</li>
+</ul>
+</li>
+<li>Motive<ul>
+<li>제한된 언어 자원을 가질때, 다른 언어들과 joint training을 통한 benefit이 있게 하기 위함</li>
+<li>특정언어에서 다른 언어로 zero-shot transfer 를 하기 위함</li>
+<li>code-switching 을 핸들링 하기 위함 (<del>Robust하게 만들자는 뜻인가</del>)</li>
+</ul>
+</li>
+<li>이러한 동기때문에, single encoder로 multi langauge를 handling하도록 다른 언어가 embedding space에서 가까워지도록 학습시킴</li>
+<li>93개의 언어 대해 학습한 single pre-trained BiLSTM encoder로 어떠한 <code>fine-tuning 없이</code> XNLI, MLDoc, BUCC, 그리고 새로운 multilingual similarity search 데이터셋에 대해서 매우 의미 있는 결과를 얻음</li>
+<li>여러가지 태스크에 대해 다룬 ‘massively’ multilingual sentence representation으로는 첫번째 시도라고 주장</li>
+</ul>
+<h4 id="2-Related-work"><a href="#2-Related-work" class="headerlink" title="2. Related work"></a>2. Related work</h4><ul>
+<li>single langauge<ul>
+<li>word embeddings (Mikolov et al., 2013b; Pennington et al., 2014)<ul>
+<li>이후 사람들이 continuous vector representation 학습에 관심 갖게됨</li>
+</ul>
+</li>
+<li>sentence embeddings <ul>
+<li>unsupervised 방법으로 대량의 corpora에서 RNN encoder 로 학습</li>
+<li>skip-thought model of Kiros et al. (2015)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Multilingual representation<ul>
+<li>cross-lingual word embeddings <ul>
+<li><ol>
+<li>parallel corpora에서 jointly 학습 (Ruder et al., 2017)</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>각각 언어에 대해서 학습 후 bilingual dictionary안에서 shared space로 맵핑 (Mikolov et al., 2013a; Artetxe et al., 2018a)</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>좀 더 괜찮은건, seq2seq encoder-decoder architecture! (Schwenk and Douze, 2017; Hassan et al., 2018)<ul>
+<li>end-to-end on parallel corpora에서 학습</li>
+<li>어떤 연구에서는 언어마다 encoder 다르게 해야한다고 했지만 그냥 언어에 상관없이 encoder share해도 괜찮은 결과 나왔음</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>하지만 대부분의 결과는 적은 언어자원을 가진 언어에 대해서는 한계가 있음</code></li>
+<li>기존의 large number of langauges에 대한 multilingual representation 연구는 word embeddings, typology prediction, machine translation 등의 영역에서 한계가 있음</li>
+<li>대부분의 sentence embedding에대한 선행 연구는 fixed-length representation을 학습하는 거였음</li>
+<li>최근엔 variable-length representation을 다루고 더 강력한(?) 좋은 결과를 냄 (contextualized embeddings of word!!) (Dai and Le, 2015; Peters et al., 2018; Howard and Ruder, 2018; Devlin et al., 2019) -&gt; BERT (<del>사실 결국엔 하나의 벡터로 들어가는걸 보면 fixed length라고도 볼수 있을거같은데 context를 봐서 variable-length라고 하는건가.. 근데 이전 RNN seq2seq도 context를 본다고 할수도있을거같은데 음..한번에 다보는거랑 이전꺼에 의존하는거랑 좀 다르다고 봐야되나</del>)<ul>
+<li>이러한 이유로, RNN or self-attentional encoder를 unlabeled corpora에 대해서 학습시킴(LM)</li>
+<li>classification 할 때는 top layer 하나 (붙여서) fine-tune해서 씀</li>
+<li><code>제안하는 방법은 task-specific fine-tuning이 필요없음</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="3-Proposed-method"><a href="#3-Proposed-method" class="headerlink" title="3. Proposed method"></a>3. Proposed method</h4><p><img src="/img/markdown-img-paste-20191016105021495.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>langauge agnostic BiLSTM encoder 사용 (to build sentence embeddings)</li>
+<li>auxiliary decoder와 묶어서 parallel corpora에 대해 학습함<ul>
+<li>우리가 결국 사용하려는건 인코더고 디코더는 인코더 학습을 위한 보조적인 용도로만 쓰겠다는 것</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-1-Architecture"><a href="#3-1-Architecture" class="headerlink" title="3.1 Architecture"></a>3.1 Architecture</h5><ul>
+<li>본 구조는 Schewenk (2018) 논문의 모델을 기반으로함</li>
+<li>sentence embedding은 BiLSTM output에 대해 max-pooling해서 얻음</li>
+<li>sentence embedding에 W를 곱해서(linear transformation) LSTM decoder에 init hidden 값으로 사용함</li>
+<li>input 값에 대해서도 매 time step마다 sentence embed를 concat해서 사용함</li>
+<li><code>Note: relevant information을 sentence embed에서만 얻게하려고 encoder와 decoder간의 connection은 주지 않음</code>(<del>그래서 사실 사뭇 옛날 모델의 구조와..같다는 생각</del>)</li>
+<li>encoder, decoder는 모든 언어에 대해서 share 됨 (기존 연구중에는 각각 다르게 하는 연구가 있었음, 어떻게 다르게 하는지는 논문봐야알듯)<ul>
+<li><strong>encoder는 어떤 langauge인지 모르게 하자</strong><ul>
+<li>모든 언어에 대해 training corpora를 concat해서 joint byte-pair encoding (BPE) vocab을 얻었고 50k operation정도 사용했음</li>
+<li>BPE를 통해 encoder는 language independent representation을 학습할 수 있게 되었다고함 (vocab의 중요성인가)</li>
+</ul>
+</li>
+<li><strong>decoder에서는 어떤 langauge인지 알 수 있게 하자</strong><ul>
+<li>decoder에서는 langauge ID를 embedding해서 input에 concat함</li>
+<li>특정 언어를 생성해낼 수 있게하기 위해서</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>Scaling up to almost 100 langauges for an encoder!</code><ul>
+<li>encoder<ul>
+<li>stacked layer: 1 to 5</li>
+<li>each dim: 512</li>
+<li>sentence embed representation dim: 1024</li>
+</ul>
+</li>
+<li>decoder<ul>
+<li>one layer</li>
+<li>dim: 2048</li>
+<li>input embed size: 320<ul>
+<li>language ID embed: 32</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-2-Training-strategy"><a href="#3-2-Training-strategy" class="headerlink" title="3.2 Training strategy"></a>3.2 Training strategy</h5><ul>
+<li>기존 연구에서는 each input sentence가 모든 언어에 대해서 번역되게 했음 (Schwenk and Douze, 2017; Schwenk, 2018)</li>
+<li>하지만 이런 방법은 scaling up할때 두가지의 명확한 단점이 있음<ul>
+<li>N-way parallel corpus가 필요함 (모든 언어에 대해서 번역하니까)</li>
+<li>language 개수에 대해 quadratic cost가 발생함 (학습도 느려짐)</li>
+</ul>
+</li>
+<li>제안 방법은 2개의 target langauges로도 비슷한 성능을 냄<ul>
+<li><code>Note that, if we had a single target language, the only way to train the encoder for that language would be auto-encoding, which we observe to work poorly. Having two target languages avoids this problem.</code></li>
+</ul>
+</li>
+<li>제안 방법은 N-way parallel corpus 조건을 각각 언어간의 alignments 조합 개수만큼만 필요하도록 완화시킴 (<del>이 말이 정확한가</del>)</li>
+<li>학습 스펙<ul>
+<li>Loss: cross entropy! alternating over all combinations of the langauges involved.</li>
+<li>Optim: Adam<ul>
+<li>lr: 0.001</li>
+</ul>
+</li>
+<li>dropout: 0.1</li>
+<li>implementation: based on fiarseq</li>
+<li>gpus: 16 NVIDIA V100 GPUs</li>
+<li>batch size: 128,000 tokens </li>
+<li>epcohs: 17</li>
+<li>days: 5</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-3-Training-data-and-pre-processing"><a href="#3-3-Training-data-and-pre-processing" class="headerlink" title="3.3 Training data and pre-processing"></a>3.3 Training data and pre-processing</h5><p><img src="/img/markdown-img-paste-2019101612003189.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>3.2에서 2개의 target languages를 정하자고 했으니 English와 Spanish로 해보겠음</li>
+<li>대부분의 데이터를 위 두가지 언어에 대해서 aligned 처리함<ul>
+<li><code>Note that it is not necessary that all input languages are systematically aligned with both target languages. Once we have several languages with both alignments, the joint embedding is well conditioned, and we can add more languages with one alignment only, usually English.</code></li>
+</ul>
+</li>
+<li>93개 언어에 대한 학습데이터는 <code>the Europarl, United Nations, OpenSubtitles2018, Global Voices, Tanzil and Tatoeba corpus</code> 를 조합해서 만듬</li>
+<li>학습을 위해 총 223 million parallel sentences를 구성함</li>
+<li>전처리:<ul>
+<li>Moses tools 사용 (대부분의 언어)<ul>
+<li>punctuation normalization</li>
+<li>removing non-printing characters and tokenization</li>
+</ul>
+</li>
+<li>Jieba and Mecab 사용 (Chinese, Japanese)</li>
+</ul>
+</li>
+<li><code>It is important to note that the joint encoder itself has no information on the language or writing script of the tokenized input texts. It is even possible to mix multiple languages in one sentence.</code></li>
+</ul>
+<h4 id="4-Experimental-evaluation"><a href="#4-Experimental-evaluation" class="headerlink" title="4. Experimental evaluation"></a>4. Experimental evaluation</h4><ul>
+<li>English sentence representation에 대한 evaluation frameworks는 잘되어있지만 multilingual sentence embeddings에 대해서는 스탠다드한 평가방법이 없음</li>
+<li>그래도 가장 영향력있다고 여겨지는게 XNLI dataset임 (Conneau et al., 2018b)<ul>
+<li>영어를 14개 언어에 대해서 테스트함</li>
+<li>BERT를 baseline으로 함</li>
+</ul>
+</li>
+<li>추가로 corss-lingual document classification 에 적용해봄<ul>
+<li>MLDocs, BUCC</li>
+</ul>
+</li>
+<li>하지만 이 데이터셋이 93개의 언어를 커버하지못하니 내가 112개의 언어에 대응되는 테스트셋 만들어서 테스트하겠음 (<del>이런식으로 말을 풀면 자기가 만든 테스트 셋을 벤치마크로 쓸수 있구나</del>)</li>
+</ul>
+<h5 id="4-1-XNLI-cross-lingual-NLI"><a href="#4-1-XNLI-cross-lingual-NLI" class="headerlink" title="4.1 XNLI: cross-lingual NLI"></a>4.1 XNLI: cross-lingual NLI</h5><ul>
+<li><p>데이터셋<br><img src="https://camo.githubusercontent.com/b897558046365450b4b49fd23f2bc72adbd3b0bd/68747470733a2f2f646c2e666261697075626c696366696c65732e636f6d2f584e4c492f786e6c695f6578616d706c65732e706e67"></p>
+</li>
+<li><p>결과</p>
+<ul>
+<li>Notation중에 EN -&gt; XX가 있는데, 이것 때문임. <code>we train a classifier on top of our multilingual encoder using the English training data</code><br><img src="/img/markdown-img-paste-20191016140026843.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+</li>
+<li><p>Given two sentences, <code>a premise and a hypothesis</code>, the task consists in deciding whether there is an <code>entailment, contradiction or neutral</code> relationship between them</p>
+</li>
+<li><p>Dataset</p>
+<ul>
+<li>development: 2,500</li>
+<li>test: 5,000 </li>
+<li>translated from English into 14 languages by professional translators</li>
+</ul>
+</li>
+<li><p>multilingual encoder위에 classifier하나 놓고 two sentence embedding에 대해  ($p, h, p \cdot h$,|$p-h$|) 와 같이 feature로 바꿔서 분류함</p>
+</li>
+<li><p><code>All hyperparameters were optimized on the English XNLI development corpus only</code></p>
+</li>
+<li><p><code>the same classifier was applied to all languages of the XNLI test set</code></p>
+</li>
+<li><p>two hidden layer 사용: concat_sent_dim -&gt; 512 -&gt; 384 -&gt; 3</p>
+</li>
+<li><p>Swahili 같은 자원이 적은 언어에 대해서 잘나옴</p>
+</li>
+<li><p>BERT 는 영어에 대해서는 매우 훌륭한 점수를 냄 (transfer는 약함)</p>
+</li>
+<li><p>Translation은 약간 다른 방법으로 테스트하는 것임</p>
+<ul>
+<li>test set을 영어로 번역해서 영어로 NLI 하거나</li>
+<li>train set을 각 언어로 번역해서 각 언어에 맞게 NLI함</li>
+<li>이건 multilingual embedding 테스트가아니라 MT system과 monolingual model 퀄리티 평가하는 것임 (<code>Note that we are not evaluating multilingual sentence embeddings anymore, but rather the quality of the MT system and a monolingual model</code>) (<del>굳이 왜 넣었나 싶긴한데 그냥 번역해서 쓰는것보다 적은 데이터에 대해선 multilingual embedding이 성능이 좋다는걸 비교해서 나타내고 싶었던게 아닐까함</del>)</li>
+</ul>
+</li>
+</ul>
+<p><img src="/img/markdown-img-paste-20191016150630714.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<h5 id="4-2-MLDoc-cross-lingual-classification"><a href="#4-2-MLDoc-cross-lingual-classification" class="headerlink" title="4.2 MLDoc: cross-lingual classification"></a>4.2 MLDoc: cross-lingual classification</h5><p><img src="/img/markdown-img-paste-20191016143025472.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>Schwenk and Li (2018) 논문에서 제안되었는데 Reuters benchmark의 개선된 버전이라고함</li>
+<li>Dataset<ul>
+<li>for each language, divided in 4 different genres</li>
+<li>training: 1,000 </li>
+<li>development: 1,000 </li>
+<li>test: 4,000</li>
+</ul>
+</li>
+<li>encoder의 top layer에 10 units 갖는 hidden layer 한개 쌓아서 사용</li>
+<li><code>we train a classifier on top of our multilingual encoder using the English training data</code></li>
+</ul>
+<h5 id="4-3-BUCC-bitext-mining"><a href="#4-3-BUCC-bitext-mining" class="headerlink" title="4.3 BUCC: bitext mining"></a>4.3 BUCC: bitext mining</h5><p><img src="/img/markdown-img-paste-20191016145258214.png">{: height&#x3D;”50%” width&#x3D;”50%”}</p>
+<ul>
+<li>Dataset:<ul>
+<li>150K to 1.2M sentences for each langauges</li>
+</ul>
+</li>
+<li>Given two comparable corpora in different languages, the task consists in <code>identifying sentence pairs that are translations of each other</code><ul>
+<li>말이 identifying이지 extracting이라고 보면됨 (검색해서 점수 높은 것 뽑음)</li>
+</ul>
+</li>
+<li><code>score sentence pairs</code> by taking the <code>cosine similarity</code> of their respective embeddings</li>
+<li>parallel sentence는 threshold를 넘는 cosine similarity를 스코어로해서 nearest neighbor retrieval 로 찾아냄 (<del>어려울듯</del>)<ul>
+<li>이러한 방법이 scale inconsistency issues (Guo et al., 2018) 때문에 문제가 있다고 해서 Artetxe and Schwenk (2018) 논문에서 새로운 score 방법이 제안됨</li>
+<li>$score(x, y) &#x3D; margin(\cos (x, y), \sum_{z \in \mathrm{NN}<em>{k}(x)} \frac{\cos (x, z)}{2 k}+\sum</em>{z \in \mathrm{NN}_{k}(y)} \frac{\cos (y, z)}{2 k})$</li>
+<li>$ \begin{array}{l}{ \mathrm{NN}_{k}(x) \text { denotes the } k \text { nearest neighbors of } x} {\text { in the other language. }}\end{array} $</li>
+<li>margin functions에 대해서 여러개를 테스트 해봤는데 ratio가 젤 결과가 좋았음 <em>ratio</em>: $ \operatorname{margin}(a, b)&#x3D;\frac{a}{b} $</li>
+<li>본 논문에서는 위의 metric으로 평가했음</li>
+<li>(<del>결과가 저정도면 이상하다 싶을정도로 결과가 잘나온것 같긴함</del>)</li>
+</ul>
+</li>
+</ul>
+<h5 id="4-4-Tatoeba-similarity-search"><a href="#4-4-Tatoeba-similarity-search" class="headerlink" title="4.4 Tatoeba: similarity search"></a>4.4 Tatoeba: similarity search</h5><ul>
+<li>93개 언어 평가하려면 기존 데이터셋으로 못하니 저자가 만듦</li>
+<li>112개 언어 대응</li>
+<li>1,000 English-aligned sentence pairs for each langauge</li>
+<li>평가는 다른언어에서 가장 비슷한 문장(nearest neighbor)을 cosine similarity로 찾고 error rate를 계산하는 것으로 함 (<del>4.3이랑 비슷한듯</del>)<br><img src="/img/markdown-img-paste-20191016150710706.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+<h4 id="5-Ablation-experiments"><a href="#5-Ablation-experiments" class="headerlink" title="5. Ablation experiments"></a>5. Ablation experiments</h4><ul>
+<li><del>요즘 유행(?)하고있는 것중 하나인 Ablation experiments..필요하지만 논문 정리하는 입장에서는..</del></li>
+<li>요약<ul>
+<li>인코더 깊이 쌓으면 잘됨</li>
+<li>multitask learning으로 NLI loss를 추가하면 가중치에 따라서 더 잘 되기도함</li>
+<li>18개보다 93개 언어에 대해서 학습할때 결과가 더 좋았음 (<del>많은 언어에 대해서 하는데도 결과가 좋은거 보면 모델 capa가 괜찮은듯</del>)<br><img src="/img/markdown-img-paste-20191016151215723.png">{: height&#x3D;”50%” width&#x3D;”50%”}</li>
+</ul>
+</li>
+</ul>
+<h4 id="6-Conclusion"><a href="#6-Conclusion" class="headerlink" title="6. Conclusion"></a>6. Conclusion</h4><ul>
+<li>93개의 언어에 대해서 multilingual fixed-length sentence embeddings을 학습하는 모델을 제안함</li>
+<li>Single language-agnostic BiLSTM encoder로 모든 언어를 커버함</li>
+<li>fine-tuning 없어도 되는 모델임</li>
+<li>새로운 테스트 데이터셋도 만들어서 제공함(112개 언어 커버)</li>
+<li><strong>Massive</strong> 관점에서 general purpose multilingual sentence representation 을 다룬 첫번째 연구임</li>
+<li>Future work:<ul>
+<li>self-attention 쓴 encoder 쓰겠음</li>
+<li>monolingual data 쓴 모델로 시도해보겠음 (pre-trained word embeddigns, back-translation, unsupervised MT) </li>
+<li>전처리때 쓴 토크나이저를 SentencePiece로 바꾸고 싶음</li>
+</ul>
+</li>
+</ul>
+<h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1812.10464">본 논문</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.aclweb.org/anthology/D18-1269.pdf">XNLI 데이터셋 논문</a></li>
+</ul>
+<h4 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h4><ul>
+<li>latex 문법중 \operatorname, \ 이거 두개가 latex에서 안될때가 있군..</li>
+</ul>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Massively Multilingual Sentence Embeddings for Zero-Shot Cross-Lingual Transfer and Beyond</p><p><a href="https://eagle705.github.io/2019-10-14-MassivelyMultilingualSentenceEmbeddigns/">https://eagle705.github.io/2019-10-14-MassivelyMultilingualSentenceEmbeddigns/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2019-10-14</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-08-28</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2019-11-11-Albert/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">ALBERT: A Lite BERT for Self-supervised Learning of Language Representations</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2019-10-11-UniversalLMFinetuneforTextClf/"><span class="level-item">Universal Language Model Fine-tuning for Text Classification (ULMFiT)</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/2019-10-14-MassivelyMultilingualSentenceEmbeddigns/';
+            this.page.identifier = '2019-10-14-MassivelyMultilingualSentenceEmbeddigns/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">28</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">16</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">17</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">1</span><span class="level-item">Author</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Who-is-an-Author"><span class="level-left"><span class="level-item">1.1</span><span class="level-item">Who is an Author?</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#느낀점"><span class="level-left"><span class="level-item">1.1.1</span><span class="level-item">느낀점</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">1.1.2</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#1-Introduction"><span class="level-left"><span class="level-item">1.1.3</span><span class="level-item">1. Introduction</span></span></a></li><li><a class="level is-mobile" href="#2-Related-work"><span class="level-left"><span class="level-item">1.1.4</span><span class="level-item">2. Related work</span></span></a></li><li><a class="level is-mobile" href="#3-Proposed-method"><span class="level-left"><span class="level-item">1.1.5</span><span class="level-item">3. Proposed method</span></span></a></li><li><a class="level is-mobile" href="#4-Experimental-evaluation"><span class="level-left"><span class="level-item">1.1.6</span><span class="level-item">4. Experimental evaluation</span></span></a></li><li><a class="level is-mobile" href="#5-Ablation-experiments"><span class="level-left"><span class="level-item">1.1.7</span><span class="level-item">5. Ablation experiments</span></span></a></li><li><a class="level is-mobile" href="#6-Conclusion"><span class="level-left"><span class="level-item">1.1.8</span><span class="level-item">6. Conclusion</span></span></a></li><li><a class="level is-mobile" href="#Reference"><span class="level-left"><span class="level-item">1.1.9</span><span class="level-item">Reference</span></span></a></li><li><a class="level is-mobile" href="#Note"><span class="level-left"><span class="level-item">1.1.10</span><span class="level-item">Note</span></span></a></li></ul></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-10-22T03:00:00.000Z">2020-10-22</time></p><p class="title"><a href="/2020-10-22-DocumentExpansionByQueryPrediction/">Document Expansion by Query Prediction</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-06-18T03:00:00.000Z">2020-06-18</time></p><p class="title"><a href="/2020-06-18-bert_based_lexical_substitution/">BERT-based Lexical Substitution</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-27T03:00:00.000Z">2020-05-27</time></p><p class="title"><a href="/2020-05-27-elastic_search/">Elastic Search 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-05-26T03:00:00.000Z">2020-05-26</time></p><p class="title"><a href="/2020-05-26-Deeper%20Text%20Understanding%20for%20IR%20with%20Contextual%20Neural%20Language%20Modeling/">Deeper Text Understanding for IR with Contextual Neural Language Modeling&quot;</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2020-02-10T03:00:00.000Z">2020-02-10</time></p><p class="title"><a href="/2020-02-10-Practical-Linux-Unix/">Linux, Unix 정리</a></p><p class="categories"><a href="/categories/cslog/">cslog</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2022 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>
