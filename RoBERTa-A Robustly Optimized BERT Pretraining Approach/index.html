@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>RoBERTa: A Robustly Optimized BERT Pretraining Approach - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Author 저자: Yinhan Liu∗§ Myle Ott∗§ Naman Goyal∗§ Jingfei Du∗§ Mandar Joshi† Danqi Chen§ Omer Levy§ Mike Lewis§ Luke Zettlemoyer†§ Veselin Stoyanov§  † Paul G. Allen School of Computer Science &amp;amp; En"><meta property="og:type" content="blog"><meta property="og:title" content="RoBERTa: A Robustly Optimized BERT Pretraining Approach"><meta property="og:url" content="https://eagle705.github.io/RoBERTa-A%20Robustly%20Optimized%20BERT%20Pretraining%20Approach/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="Author 저자: Yinhan Liu∗§ Myle Ott∗§ Naman Goyal∗§ Jingfei Du∗§ Mandar Joshi† Danqi Chen§ Omer Levy§ Mike Lewis§ Luke Zettlemoyer†§ Veselin Stoyanov§  † Paul G. Allen School of Computer Science &amp;amp; En"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169627448-c6b7d8a0-3860-44a3-b3ae-f2de1ce1143b.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169627719-c894030b-17d2-4988-ba76-ca1e40be9c0f.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169628883-4b353398-f7e7-4573-b820-51336059fed1.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169629631-adc42f43-9068-42ec-b132-68d8c4c08d1e.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169629833-e1d001d9-bb7e-42ac-a7f1-0d58869e1f11.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169656755-982ecfd7-0989-46a4-8c3f-688a197c5ca2.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169656773-da929dcb-8fc9-4033-9c61-8b26066d5385.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169656859-cb41c844-846a-4a25-a8ed-ee15defde753.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169656899-8ce502b7-c3e7-4bd0-a52c-e913ccf0d04e.png"><meta property="article:published_time" content="2022-05-19T03:00:00.000Z"><meta property="article:modified_time" content="2022-08-30T04:31:50.269Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://user-images.githubusercontent.com/7252598/169627448-c6b7d8a0-3860-44a3-b3ae-f2de1ce1143b.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/RoBERTa-A%20Robustly%20Optimized%20BERT%20Pretraining%20Approach/"},"headline":"RoBERTa: A Robustly Optimized BERT Pretraining Approach","image":["https://user-images.githubusercontent.com/7252598/169627448-c6b7d8a0-3860-44a3-b3ae-f2de1ce1143b.png","https://user-images.githubusercontent.com/7252598/169627719-c894030b-17d2-4988-ba76-ca1e40be9c0f.png","https://user-images.githubusercontent.com/7252598/169628883-4b353398-f7e7-4573-b820-51336059fed1.png","https://user-images.githubusercontent.com/7252598/169629631-adc42f43-9068-42ec-b132-68d8c4c08d1e.png","https://user-images.githubusercontent.com/7252598/169629833-e1d001d9-bb7e-42ac-a7f1-0d58869e1f11.png","https://user-images.githubusercontent.com/7252598/169656755-982ecfd7-0989-46a4-8c3f-688a197c5ca2.png","https://user-images.githubusercontent.com/7252598/169656773-da929dcb-8fc9-4033-9c61-8b26066d5385.png","https://user-images.githubusercontent.com/7252598/169656859-cb41c844-846a-4a25-a8ed-ee15defde753.png","https://user-images.githubusercontent.com/7252598/169656899-8ce502b7-c3e7-4bd0-a52c-e913ccf0d04e.png"],"datePublished":"2022-05-19T03:00:00.000Z","dateModified":"2022-08-30T04:31:50.269Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"Author 저자: Yinhan Liu∗§ Myle Ott∗§ Naman Goyal∗§ Jingfei Du∗§ Mandar Joshi† Danqi Chen§ Omer Levy§ Mike Lewis§ Luke Zettlemoyer†§ Veselin Stoyanov§  † Paul G. Allen School of Computer Science &amp; En"}</script><link rel="canonical" href="https://eagle705.github.io/RoBERTa-A%20Robustly%20Optimized%20BERT%20Pretraining%20Approach/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2022-05-19T03:00:00.000Z" title="2022. 5. 19. 오후 12:00:00">2022-05-19</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-30T04:31:50.269Z" title="2022. 8. 30. 오후 1:31:50">2022-08-30</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">14분안에 읽기 (약 2164 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">RoBERTa: A Robustly Optimized BERT Pretraining Approach</h1><div class="content"><h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>저자: Yinhan Liu∗§ Myle Ott∗§ Naman Goyal∗§ Jingfei Du∗§ Mandar Joshi† Danqi Chen§ Omer Levy§ Mike Lewis§ Luke Zettlemoyer†§ Veselin Stoyanov§ <ul>
+<li>† Paul G. Allen School of Computer Science &amp; Engineering, University of Washington, Seattle, WA </li>
+<li>§ Facebook AI</li>
+</ul>
+</li>
+</ul>
+<h2 id="느낀점"><a href="#느낀점" class="headerlink" title="느낀점"></a>느낀점</h2><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
+<li>hyperparameter choices have significant impact on the final results</li>
+<li>carefully measures the impact of many key hyperparameters and training data size</li>
+<li>find that BERT was significantly undertrained, and can match or exceed the performance of every model published after it</li>
+</ul>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
+<li>We present a replication study of BERT pretraining (Devlin et al., 2019), which includes a careful evaluation of the effects of hyperparmeter tuning and training set size.</li>
+<li>modifications<ul>
+<li>(1) training the model <strong>longer, with bigger batches, over more data</strong>; </li>
+<li>(2) <strong>removing the next sentence prediction</strong> objective; </li>
+<li>(3) training on <strong>longer sequences</strong>; and </li>
+<li>(4) <strong>dynamically changing the masking pattern</strong> applied to the training data.</li>
+</ul>
+</li>
+<li>contributions<ul>
+<li>(1) We present a set of important BERT design choices and training strategies and introduce alternatives that lead to better downstream task performance; </li>
+<li>(2) We use a novel dataset, CC-NEWS, and confirm that using more data for pretraining further improves performance on downstream tasks; </li>
+<li>(3) Our training improvements show that masked language model pretraining, under the right design choices, is competitive with all other recently published methods.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><h3 id="Training-Objectives"><a href="#Training-Objectives" class="headerlink" title="Training Objectives"></a>Training Objectives</h3><ul>
+<li>MLM objective is a cross-entropy loss on predicting the masked tokens</li>
+<li>BERT uniformly selects 15% of the input tokens for possible replacement. Of the selected tokens, 80% are replaced with [MASK ], 10% are left unchanged and 10% are replaced by a randomly selected vocabulary token</li>
+<li>In the original implementation, random masking and replacement is performed once in the be- ginning and saved for the duration of training, although in practice, data is duplicated so the mask is not always the same for every training sentence (기존과 달리 dynamic masking 하겠습니다~)</li>
+<li>NSP (로버타는 쓰지 않지만)</li>
+</ul>
+<h3 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h3><ul>
+<li>BERT is optimized with Adam (Kingma and Ba, 2015) using the following parameters: β1 &#x3D; 0.9, β2 &#x3D; 0.999, ǫ &#x3D; 1e-6 and L2 weight decay of 0.01. </li>
+<li>The learning rate is warmed up over the first 10,000 steps to a peak value of 1e-4, and then linearly decayed</li>
+<li>BERT trains with a dropout of 0.1 on all layers and attention weights, and a GELU activation function</li>
+<li>Models are pretrained for S &#x3D; 1,000,000 updates, with mini-batches containing B &#x3D; 256 sequences of maxi- mum length T &#x3D; 512 tokens.</li>
+</ul>
+<h3 id="Data"><a href="#Data" class="headerlink" title="Data"></a>Data</h3><ul>
+<li>trained on a combination of BOOKCORPUS (Zhu et al., 2015) plus English WIKIPEDIA, which totals 16GB of uncompressed text</li>
+</ul>
+<h2 id="Experimental-Setup"><a href="#Experimental-Setup" class="headerlink" title="Experimental Setup"></a>Experimental Setup</h2><h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h3><ul>
+<li>optimization hyperparameters, given in Section 2, except for the peak learning rate and number of warmup steps, which are tuned separately for each setting.</li>
+<li>additionally found training to be very sensitive to the Adam epsilon term, and in some cases we obtained better performance or improved stability after tuning it</li>
+<li>we found setting <strong>β2 &#x3D; 0.98 to improve stability</strong> when training <strong>with large batch sizes</strong>.</li>
+<li>Unlike Devlin et al. (2019), we do not randomly inject short sequences, and we <strong>do not train with a reduced sequence length for the first 90% of updates</strong>. We train only with full-length sequences.</li>
+<li>train with <strong>mixed precision floating point</strong> arithmetic on DGX-1 machines, each with 8 × 32GB Nvidia V100 GPUs</li>
+</ul>
+<h3 id="Data-1"><a href="#Data-1" class="headerlink" title="Data"></a>Data</h3><ul>
+<li>five English-language corpora of varying sizes and domains, totaling over <strong>160GB</strong> of uncompressed text<ul>
+<li><strong>BOOKCORPUS</strong> (Zhu et al., 2015) plus English WIKIPEDIA. This is the original data used to train BERT. (16GB)</li>
+<li><strong>CC-NEWS</strong>, which we collected from the English portion of the CommonCrawl News dataset (Nagel, 2016). The data contains 63 million English news articles crawled between September 2016 and February 2019. (76GB after filtering)</li>
+<li><strong>OPENWEBTEXT</strong> (Gokaslan and Cohen, 2019), an open-source recreation of the WebText corpus described in Radford et al. (2019). The text is <strong>web content extracted from URLs shared on Reddit with at least three upvotes</strong>. (38GB).</li>
+<li><strong>STORIES</strong>, a dataset introduced in Trinh and Le (2018) containing a subset of CommonCrawl data filtered to match the story-like style of Winograd schemas. (31GB)</li>
+</ul>
+</li>
+</ul>
+<h3 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h3><ul>
+<li>GLUE: is a collection of 9 datasets for evaluating natural language understanding systems</li>
+<li>SQuAD: is to answer the question by extracting the relevant span from the context.<ul>
+<li>evaluate on two versions of SQuAD: V1.1 and V2.0</li>
+<li>In V1.1 the context always contains an answer, whereas <strong>in V2.0 some questions are not answered in the provided context,</strong> making the task more challenging.</li>
+<li><strong>For SQuAD V2.0, we add an additional binary classifier to predict whether the question is answerable</strong>, which we train jointly by summing the classification and span loss terms</li>
+</ul>
+</li>
+<li>RACE: is a <strong>large-scale reading comprehension</strong> dataset with more than 28,000 passages and nearly 100,000 questions<ul>
+<li><strong>is collected from English examinations in China</strong>, which are designed for middle and high school students.</li>
+<li>each passage is associated with multiple questions. For every question, the task is to select one correct answer from four options</li>
+<li>RACE has significantly <strong>longer context</strong> than other popular reading comprehension datasets and the proportion of questions that requires reasoning is very large</li>
+</ul>
+</li>
+</ul>
+<h2 id="Training-Procedure-Analysis"><a href="#Training-Procedure-Analysis" class="headerlink" title="Training Procedure Analysis"></a>Training Procedure Analysis</h2><ul>
+<li>Model Architecture: BERT_BASE (L &#x3D; 12, H &#x3D; 768, A &#x3D; 12, 110M params)</li>
+</ul>
+<h3 id="Static-vs-Dynamic-Masking"><a href="#Static-vs-Dynamic-Masking" class="headerlink" title="Static vs. Dynamic Masking"></a>Static vs. Dynamic Masking</h3><ul>
+<li>To avoid using the same mask for each training instance in every epoch, <strong>training data was duplicated 10 times so that each sequence</strong> is masked in 10 different ways over the <strong>40 epochs</strong> of training</li>
+<li>Thus, <strong>each training sequence was seen with the same mask four times during training</strong><ul>
+<li>1문장을 10개씩 복사해서 다른 mask를 생성하게 만들게 하고 40에폭 돌림 -&gt; 10*4 -&gt; 완전히 똑같은 마스킹이된 문장은 4번만 보게됨!</li>
+<li>약간 에폭 계산 방법이 이상한데 이게 맞긴맞나봄</li>
+</ul>
+</li>
+<li>becomes <strong>crucial when pretraining for more steps</strong> or with larger datasets<ul>
+<li>같은 문장을 여러 방법으로 쓸 수 있다는 점에서 dynamic masking에 epoch이 많은게 중요할듯<br><img src="https://user-images.githubusercontent.com/7252598/169627448-c6b7d8a0-3860-44a3-b3ae-f2de1ce1143b.png" alt="image"></li>
+</ul>
+</li>
+<li>dynamic masking is comparable or slightly better than static masking<ul>
+<li>살짝만 좋아지긴하지만 5번 반복에 대한 meidan 값이니 유의미한 셋팅으로 봐야</li>
+</ul>
+</li>
+</ul>
+<h3 id="Model-Input-Format-and-Next-Sentence-Prediction"><a href="#Model-Input-Format-and-Next-Sentence-Prediction" class="headerlink" title="Model Input Format and Next Sentence Prediction"></a>Model Input Format and Next Sentence Prediction</h3><p><img src="https://user-images.githubusercontent.com/7252598/169627719-c894030b-17d2-4988-ba76-ca1e40be9c0f.png" alt="image"></p>
+<ul>
+<li>SEGMENT-PAIR+NSP: This follows the original input format used in BERT (Devlin et al., 2019), with the NSP loss. Each input has a pair of <strong>segments, which can each contain multiple natural sentences</strong>. <ul>
+<li>여러 문장들</li>
+</ul>
+</li>
+<li>SENTENCE-PAIR+NSP: Each input contains a pair of natural sentences, either sampled from a contiguous portion of one document or from separate documents. Since these <strong>inputs are significantly shorter</strong> than 512 tokens.<ul>
+<li>딱 한문장</li>
+</ul>
+</li>
+<li>FULL-SENTENCES: Each input is packed with <strong>full sentences sampled contiguously from one or more documents</strong>. Inputs may cross document boundaries. When we reach the end of one document, we begin sampling sentences from the next document and add an extra separator token between documents<ul>
+<li>여러 문장들 + 문서 끊기면 SEP 추가후 다음문서에서 여러문장들</li>
+</ul>
+</li>
+<li>DOC-SENTENCES: Inputs are constructed similarly to FULL-SENTENCES, except that they may not cross document boundaries. Inputs sampled near the end of a document may be shorter than 512 tokens, so we dynamically increase the batch size in these cases to achieve a similar number of total tokens as FULL- SENTENCES<ul>
+<li>문서 끝에서 샘플링하면 토큰수가 적을테니 이런 경우는 dynamic하게 배치사이즈 키워서 FULL-SENTENCES와 비슷한 토큰개수 만들려고함</li>
+<li><code>DOC-SENTENCES가 결과상으로는 제일 좋네.. SEP 없이 한 문서내에서 샘플링하는게 좋다는걸까?</code></li>
+</ul>
+</li>
+</ul>
+<h5 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h5><ul>
+<li><strong>using individual sentences hurts performance</strong> on downstream tasks<ul>
+<li>hypothesize is because the model is not able to learn long-range dependencies</li>
+</ul>
+</li>
+<li>removing the NSP loss matches or slightly improves downstream task performance</li>
+<li>restricting sequences to <strong>come from a single document (DOC-SENTENCES) performs slightly better than packing sequences from multiple documents (FULL-SENTENCES).</strong></li>
+<li>However, because the <strong>DOC-SENTENCES format results in variable batch sizes, we use FULL-SENTENCES in the remainder of our experiments for easier comparison</strong> with related work</li>
+</ul>
+<h4 id="Training-with-large-batches"><a href="#Training-with-large-batches" class="headerlink" title="Training with large batches"></a>Training with large batches</h4><ul>
+<li>Devlin et al. (2019) originally trained BERTBASE for 1M steps with a batch size of 256 sequences. This is equivalent in computational cost, via gradient accumulation, to training for 125K steps with a batch size of 2K sequences, or for 31K steps with a batch size of 8K.<ul>
+<li>첫번째는 gradient accumulation 8, 두번째는 32<br><img src="https://user-images.githubusercontent.com/7252598/169628883-4b353398-f7e7-4573-b820-51336059fed1.png" alt="image"></li>
+</ul>
+</li>
+<li>observe that training with large batches improves perplexity for the masked language modeling objective, as well as end-task accuracy. </li>
+<li>Large batches are also easier to parallelize via distributed data parallel training, and in later experiments we <strong>train with batches of 8K sequences</strong>.</li>
+</ul>
+<h4 id="Text-Encoding"><a href="#Text-Encoding" class="headerlink" title="Text Encoding"></a>Text Encoding</h4><ul>
+<li>Byte-Pair Encoding (BPE)</li>
+<li>BPE vocabulary sizes typically range from 10K-100K subword units. However, unicode characters can account for a sizeable portion of this vocabulary when modeling large</li>
+<li>Radford et al. (2019) introduce a clever implementation of <strong>BPE that uses bytes instead of unicode characters as the base subword units.</strong> Using bytes makes it possible to learn a subword vocabulary of a modest size (50K units) that can still encode any input text without introducing any “unknown” tokens.<ul>
+<li>The original BERT implementation (Devlin et al., 2019) uses a <strong>character-level</strong> BPE vocabulary of <strong>size 30K</strong>, which is learned after preprocessing the input with heuristic tokenization rules.</li>
+<li>Following Radford et al. (2019), we instead consider training BERT with a larger <strong>byte-level</strong> BPE vocabulary containing <strong>50K subword units</strong>, <strong>without any additional preprocessing or tokenization of the input.</strong> This adds approximately 15M and 20M additional parameters for BERTBASE and BERTLARGE, respectively<ul>
+<li>RoBERTa에서 byte-level BPE를 사용했었군.. 약간 골치아프겠네</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Early experiments revealed only slight differences between these encodings, with the Radford et al. (2019) BPE achieving slightly worse end-task performance on some tasks. Nevertheless, we believe the advantages of a universal encoding scheme outweighs the minor degredation in performance and use this encoding in the remainder of our experiments. A more detailed comparison of these encodings is left to future work.<ul>
+<li>의외로 성능상에선 애매한 결과가 있었나..?</li>
+</ul>
+</li>
+</ul>
+<h3 id="RoBERTa"><a href="#RoBERTa" class="headerlink" title="RoBERTa"></a>RoBERTa</h3><ul>
+<li>We call this configuration RoBERTa for <strong>R</strong>obustly <strong>o</strong>ptimized <strong>BERT a</strong>pporach</li>
+<li>trained with<ul>
+<li>dynamic masking (Section 4.1)</li>
+<li>FULL-SENTENCES without NSP loss (Section 4.2)</li>
+<li>large mini-batches (Section 4.3)</li>
+<li>large byte-level BPE (Section 4.4)</li>
+</ul>
+</li>
+<li>investigate two other important factors<ul>
+<li>(1) the data used for pretraining, and </li>
+<li>(2) the number of training passes through the data.</li>
+</ul>
+</li>
+<li>학습했던 백본 셋팅: we begin by training RoBERTa following the BERTLARGE architecture (L &#x3D; 24, H &#x3D; 1024, A &#x3D; 16, 355M parameters)</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/169629631-adc42f43-9068-42ec-b132-68d8c4c08d1e.png" alt="image"></p>
+<h5 id="Results-1"><a href="#Results-1" class="headerlink" title="Results"></a>Results</h5><ul>
+<li>학습셋 추가 + 길게 학습하면 성능이 오른다</li>
+<li>gradient accumulation 셋팅은 32정도인가 -&gt; 8k 배치를 위해서</li>
+</ul>
+<h4 id="GLUE-Results"><a href="#GLUE-Results" class="headerlink" title="GLUE Results"></a>GLUE Results</h4><ul>
+<li><strong>In the first setting (single-task, dev)</strong> <ul>
+<li>consider a limited hyperparameter sweep for each task, <strong>with batch sizes ∈ {16, 32} and learning rates ∈ {1e−5, 2e−5, 3e−5},</strong> </li>
+<li>with a <strong>linear warmup for the first 6%</strong> of steps followed by a linear decay to 0. </li>
+<li>We <strong>finetune for 10 epochs</strong> and perform early stopping based on each task’s evaluation metric on the dev set</li>
+</ul>
+</li>
+<li><strong>In the second setting (ensembles, test)</strong><ul>
+<li>While many submissions to the GLUE leaderboard depend on multi-task finetuning, our submission depends only on single-task finetuning. For RTE, STS and MRPC we found it helpful to finetune starting from the MNLI single-task model, rather than the baseline pretrained RoBERTa.<br><img src="https://user-images.githubusercontent.com/7252598/169629833-e1d001d9-bb7e-42ac-a7f1-0d58869e1f11.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+<h4 id="SQuAD-Results"><a href="#SQuAD-Results" class="headerlink" title="SQuAD Results"></a>SQuAD Results</h4><p><img src="https://user-images.githubusercontent.com/7252598/169656755-982ecfd7-0989-46a4-8c3f-688a197c5ca2.png" alt="image"></p>
+<ul>
+<li>we only finetune RoBERTa using the provided SQuAD training data</li>
+</ul>
+<h4 id="RACE-Results"><a href="#RACE-Results" class="headerlink" title="RACE Results"></a>RACE Results</h4><p><img src="https://user-images.githubusercontent.com/7252598/169656773-da929dcb-8fc9-4033-9c61-8b26066d5385.png" alt="image"> </p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><ul>
+<li>We find that performance can be substantially improved by training the model longer, with bigger batches over more data; removing the next sentence prediction objective; training on longer sequences; and dynamically changing the masking pattern applied to the training data</li>
+</ul>
+<h2 id="Params"><a href="#Params" class="headerlink" title="Params"></a>Params</h2><p><img src="https://user-images.githubusercontent.com/7252598/169656859-cb41c844-846a-4a25-a8ed-ee15defde753.png" alt="image"><br><img src="https://user-images.githubusercontent.com/7252598/169656899-8ce502b7-c3e7-4bd0-a52c-e913ccf0d04e.png" alt="image"></p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>RoBERTa: A Robustly Optimized BERT Pretraining Approach</p><p><a href="https://eagle705.github.io/RoBERTa-A Robustly Optimized BERT Pretraining Approach/">https://eagle705.github.io/RoBERTa-A Robustly Optimized BERT Pretraining Approach/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2022-05-19</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-08-30</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/Megatron-LM-Training%20Multi-Billion%20Parameter%20Language%20Models%20Using%20Model%20Parallelism/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/A%20Neural%20Network%20Solves%20and%20Generates%20Mathematics%20Problems%20by%20Program%20Synthesis:%20Calculus,%20Differential%20Equations,%20Linear%20Algebra,%20and%20More/"><span class="level-item">A Neural Network Solves and Generates Mathematics Problems by Program Synthesis: Calculus, Differential Equations, Linear Algebra, and More</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/RoBERTa-A%20Robustly%20Optimized%20BERT%20Pretraining%20Approach/';
+            this.page.identifier = 'RoBERTa-A Robustly Optimized BERT Pretraining Approach/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">39</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">27</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2022/08/"><span class="level-start"><span class="level-item">8월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">7월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/06/"><span class="level-start"><span class="level-item">6월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/05/"><span class="level-start"><span class="level-item">5월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/01/"><span class="level-start"><span class="level-item">1월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">12월 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">11월 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">28</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">1</span><span class="level-item">Author</span></span></a></li><li><a class="level is-mobile" href="#느낀점"><span class="level-left"><span class="level-item">2</span><span class="level-item">느낀점</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">3</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#Introduction"><span class="level-left"><span class="level-item">4</span><span class="level-item">Introduction</span></span></a></li><li><a class="level is-mobile" href="#Background"><span class="level-left"><span class="level-item">5</span><span class="level-item">Background</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Training-Objectives"><span class="level-left"><span class="level-item">5.1</span><span class="level-item">Training Objectives</span></span></a></li><li><a class="level is-mobile" href="#Optimization"><span class="level-left"><span class="level-item">5.2</span><span class="level-item">Optimization</span></span></a></li><li><a class="level is-mobile" href="#Data"><span class="level-left"><span class="level-item">5.3</span><span class="level-item">Data</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Experimental-Setup"><span class="level-left"><span class="level-item">6</span><span class="level-item">Experimental Setup</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Implementation"><span class="level-left"><span class="level-item">6.1</span><span class="level-item">Implementation</span></span></a></li><li><a class="level is-mobile" href="#Data-1"><span class="level-left"><span class="level-item">6.2</span><span class="level-item">Data</span></span></a></li><li><a class="level is-mobile" href="#Evaluation"><span class="level-left"><span class="level-item">6.3</span><span class="level-item">Evaluation</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Training-Procedure-Analysis"><span class="level-left"><span class="level-item">7</span><span class="level-item">Training Procedure Analysis</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Static-vs-Dynamic-Masking"><span class="level-left"><span class="level-item">7.1</span><span class="level-item">Static vs. Dynamic Masking</span></span></a></li><li><a class="level is-mobile" href="#Model-Input-Format-and-Next-Sentence-Prediction"><span class="level-left"><span class="level-item">7.2</span><span class="level-item">Model Input Format and Next Sentence Prediction</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Training-with-large-batches"><span class="level-left"><span class="level-item">7.2.1</span><span class="level-item">Training with large batches</span></span></a></li><li><a class="level is-mobile" href="#Text-Encoding"><span class="level-left"><span class="level-item">7.2.2</span><span class="level-item">Text Encoding</span></span></a></li></ul></li><li><a class="level is-mobile" href="#RoBERTa"><span class="level-left"><span class="level-item">7.3</span><span class="level-item">RoBERTa</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#GLUE-Results"><span class="level-left"><span class="level-item">7.3.1</span><span class="level-item">GLUE Results</span></span></a></li><li><a class="level is-mobile" href="#SQuAD-Results"><span class="level-left"><span class="level-item">7.3.2</span><span class="level-item">SQuAD Results</span></span></a></li><li><a class="level is-mobile" href="#RACE-Results"><span class="level-left"><span class="level-item">7.3.3</span><span class="level-item">RACE Results</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#Conclusion"><span class="level-left"><span class="level-item">8</span><span class="level-item">Conclusion</span></span></a></li><li><a class="level is-mobile" href="#Params"><span class="level-left"><span class="level-item">9</span><span class="level-item">Params</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-08-30T03:00:00.000Z">2022-08-30</time></p><p class="title"><a href="/LLM%EC%9D%84%20%EC%9C%84%ED%95%9C%20%EB%84%93%EA%B3%A0%20%EC%96%95%EC%9D%80%20%EC%A7%80%EC%8B%9D%EB%93%A4%20%EC%A7%80%EC%8B%9D%EB%93%A4/">LLM(Large-Scale Language Model)을 위한 넓고 얕은 지식들</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-08-01T03:00:00.000Z">2022-08-01</time></p><p class="title"><a href="/Efficient%20Training%20of%20Language%20Models%20to%20Fill%20in%20the%20Middle%20(FIM)/">Efficient Training of Language Models to Fill in the Middle (FIM)</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-13T03:00:00.000Z">2022-07-13</time></p><p class="title"><a href="/(ALiBi)%20TRAIN%20SHORT,%20TEST%20LONG:%20ATTENTION%20WITH%20LINEAR%20BIASES%20ENABLES%20INPUT%20LENGTH%20EXTRAPOLATION/">(ALiBi) TRAIN SHORT, TEST LONG: ATTENTION WITH LINEAR BIASES ENABLES INPUT LENGTH EXTRAPOLATION</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-06-20T03:00:00.000Z">2022-06-20</time></p><p class="title"><a href="/COCO-LM-Correcting%20and%20Contrasting%20Text%20Sequences%20for%20Language%20Model%20Pretraining/">COCO-LM: Correcting and Contrasting Text Sequences for Language Model Pretraining</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-05-23T03:00:00.000Z">2022-05-23</time></p><p class="title"><a href="/Megatron-LM-Training%20Multi-Billion%20Parameter%20Language%20Models%20Using%20Model%20Parallelism/">Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2022 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>
