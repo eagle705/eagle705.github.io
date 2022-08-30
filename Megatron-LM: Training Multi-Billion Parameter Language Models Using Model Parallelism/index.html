@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="용어 reduce -&amp;gt; 각 프로세스가 가진 값들을 특정한 하나의 process에 연산해서 모으는 연산 (하나의 값으로 모음) all+* -&amp;gt; 이름 앞에 all이 붙으면 연산결과를 참여한 모든 프로세스가 동일하게 반환받음 all reduce -&amp;gt; 하나의 디바이스가 reduce한 값을 참여한 모든 프로세스가 동일하게 받을 수 있게 전달  논문파"><meta property="og:type" content="blog"><meta property="og:title" content="Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism"><meta property="og:url" content="Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="용어 reduce -&amp;gt; 각 프로세스가 가진 값들을 특정한 하나의 process에 연산해서 모으는 연산 (하나의 값으로 모음) all+* -&amp;gt; 이름 앞에 all이 붙으면 연산결과를 참여한 모든 프로세스가 동일하게 반환받음 all reduce -&amp;gt; 하나의 디바이스가 reduce한 값을 참여한 모든 프로세스가 동일하게 받을 수 있게 전달  논문파"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169754157-50b7bf9a-7119-47f1-b9e0-fcbc1dc6e9ac.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169754953-c984b3e6-8afd-4b20-8b72-34957cb9e8d2.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169761610-46dacd5d-e364-4081-bf6f-95cad8ebdbc3.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169782401-33951ac6-8d78-4e07-87bb-5897da92c5b5.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169794932-272b6e2e-75ed-4f16-adf1-af1453764783.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169791604-8a04422a-41db-4405-9760-768699ec2e11.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169792298-be713f6a-d65f-4474-b497-261765a8da87.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169792336-d486bfeb-a448-490b-998a-b6ac0f918ffc.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169792367-ba5d9965-aa4b-451d-abf7-87d9ed880397.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169794065-ed50cf0d-b2fd-4ba5-9928-f86654544212.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169794100-19cc6d84-535c-4403-85e0-621b0226781f.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169794131-ef94665b-b373-492b-b2c0-94dab4f70c39.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169964881-f9facd09-498c-4171-8f0c-61987e0a3981.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169968501-54d315af-d484-4612-97e4-5c8afb268128.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169968717-ab24a4bb-89b2-4252-bed1-c3b115e36259.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169969872-d9686b5d-7545-48fb-9a20-d68bbd9791e9.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169971514-362a89eb-9523-4c9d-972f-0e31ffc5f324.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/169970590-8b90ab49-453d-45a5-a88c-44460f8088a4.png"><meta property="article:published_time" content="2022-05-23T03:00:00.000Z"><meta property="article:modified_time" content="2022-08-30T04:33:10.135Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://user-images.githubusercontent.com/7252598/169754157-50b7bf9a-7119-47f1-b9e0-fcbc1dc6e9ac.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism/"},"headline":"Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism","image":["https://user-images.githubusercontent.com/7252598/169754157-50b7bf9a-7119-47f1-b9e0-fcbc1dc6e9ac.png","https://user-images.githubusercontent.com/7252598/169754953-c984b3e6-8afd-4b20-8b72-34957cb9e8d2.png","https://user-images.githubusercontent.com/7252598/169761610-46dacd5d-e364-4081-bf6f-95cad8ebdbc3.png","https://user-images.githubusercontent.com/7252598/169782401-33951ac6-8d78-4e07-87bb-5897da92c5b5.png","https://user-images.githubusercontent.com/7252598/169794932-272b6e2e-75ed-4f16-adf1-af1453764783.png","https://user-images.githubusercontent.com/7252598/169791604-8a04422a-41db-4405-9760-768699ec2e11.png","https://user-images.githubusercontent.com/7252598/169792298-be713f6a-d65f-4474-b497-261765a8da87.png","https://user-images.githubusercontent.com/7252598/169792336-d486bfeb-a448-490b-998a-b6ac0f918ffc.png","https://user-images.githubusercontent.com/7252598/169792367-ba5d9965-aa4b-451d-abf7-87d9ed880397.png","https://user-images.githubusercontent.com/7252598/169794065-ed50cf0d-b2fd-4ba5-9928-f86654544212.png","https://user-images.githubusercontent.com/7252598/169794100-19cc6d84-535c-4403-85e0-621b0226781f.png","https://user-images.githubusercontent.com/7252598/169794131-ef94665b-b373-492b-b2c0-94dab4f70c39.png","https://user-images.githubusercontent.com/7252598/169964881-f9facd09-498c-4171-8f0c-61987e0a3981.png","https://user-images.githubusercontent.com/7252598/169968501-54d315af-d484-4612-97e4-5c8afb268128.png","https://user-images.githubusercontent.com/7252598/169968717-ab24a4bb-89b2-4252-bed1-c3b115e36259.png","https://user-images.githubusercontent.com/7252598/169969872-d9686b5d-7545-48fb-9a20-d68bbd9791e9.png","https://user-images.githubusercontent.com/7252598/169971514-362a89eb-9523-4c9d-972f-0e31ffc5f324.png","https://user-images.githubusercontent.com/7252598/169970590-8b90ab49-453d-45a5-a88c-44460f8088a4.png"],"datePublished":"2022-05-23T03:00:00.000Z","dateModified":"2022-08-30T04:33:10.135Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"megatron-lm:/img/eagle705-logo.png"}},"description":"용어 reduce -&gt; 각 프로세스가 가진 값들을 특정한 하나의 process에 연산해서 모으는 연산 (하나의 값으로 모음) all+* -&gt; 이름 앞에 all이 붙으면 연산결과를 참여한 모든 프로세스가 동일하게 반환받음 all reduce -&gt; 하나의 디바이스가 reduce한 값을 참여한 모든 프로세스가 동일하게 받을 수 있게 전달  논문파"}</script><link rel="canonical" href="Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2022-05-23T03:00:00.000Z" title="2022. 5. 23. 오후 12:00:00">2022-05-23</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-30T04:33:10.135Z" title="2022. 8. 30. 오후 1:33:10">2022-08-30</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">18분안에 읽기 (약 2671 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism</h1><div class="content"><h2 id="용어"><a href="#용어" class="headerlink" title="용어"></a>용어</h2><ul>
+<li>reduce -&gt; 각 프로세스가 가진 값들을 특정한 하나의 process에 연산해서 모으는 연산 (하나의 값으로 모음)</li>
+<li>all+* -&gt; 이름 앞에 all이 붙으면 연산결과를 참여한 모든 프로세스가 동일하게 반환받음</li>
+<li>all reduce -&gt; 하나의 디바이스가 reduce한 값을 참여한 모든 프로세스가 동일하게 받을 수 있게 전달</li>
+</ul>
+<h2 id="논문파일"><a href="#논문파일" class="headerlink" title="논문파일"></a>논문파일</h2><p><a target="_blank" rel="noopener" href="https://github.com/eagle705/presentation/files/8760288/Megatron-LM-.Training.Multi-Billion.Parameter.Language.Models.Using.Model.Parallelism.pdf">Megatron-LM- Training Multi-Billion Parameter Language Models Using Model Parallelism.pdf</a></p>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=w4a-ARCEiqU">https://www.youtube.com/watch?v=w4a-ARCEiqU</a></li>
+</ul>
+<h2 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h2><ul>
+<li>저자: Mohammad Shoeybi 1 2 Mostofa Patwary 1 2 Raul Puri 1 2 Patrick LeGresley 2 Jared Casper 2 Bryan Catanzaro 2</li>
+</ul>
+<h2 id="느낀점"><a href="#느낀점" class="headerlink" title="느낀점"></a>느낀점</h2><ul>
+<li>gelu이슈로 col parallel 후 아풋값을 유지하기 위해 row parallel 하는게 포인트</li>
+</ul>
+<h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
+<li>efficient intra-layer model parallel approach that enables training transformer models with billions of parameters.</li>
+<li>can be fully implemented with the insertion of a few communication operations in native PyTorch</li>
+<li>this approach by converging transformer based models up to 8.3 billion parameters using 512 GPU</li>
+<li>achieve SOTA results on the WikiText103 (10.8 compared to SOTA perplexity of 15.8) and LAMBADA (66.5% compared to SOTA accuracy of 63.2%) datasets. Our BERT model achieves SOTA results on the RACE dataset (90.9% compared to SOTA accuracy of 89.4%).</li>
+</ul>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
+<li><p>메모리를 잘 쓰기 위해서 여러 방법들이 있었음</p>
+<ul>
+<li>activation checkpointing</li>
+</ul>
+</li>
+<li><p>ADAM은 momentum이랑 optimizer state때문에 파라미터마다 해당 정보를 저장해야했음</p>
+<ul>
+<li>model parallelism overcome this limit by partitioning the model such that the weights and their associated optimizer state do not need to reside concurrently on the processor.</li>
+<li>Mesh-Tensorflow같은게 대표적인 프레임워크임</li>
+</ul>
+</li>
+<li><p>In this work, we implement a simple and efficient model parallel approach using <strong>intra-layer model-parallelism</strong>.</p>
+<img width="341" alt="image" src="https://user-images.githubusercontent.com/7252598/169754157-50b7bf9a-7119-47f1-b9e0-fcbc1dc6e9ac.png">
+</li>
+<li><p>We show that the <strong>existing BERT architecture</strong> results in model <strong>degradation as the size increases</strong></p>
+<ul>
+<li>We overcome this challenge <strong>by rearranging the layer normalization and residual connection</strong> in the transformer layers and show that with this change, results for the downstream tasks on development sets <strong>improve monotonically as the model size increases</strong></li>
+</ul>
+</li>
+<li><p>our contributions are as follows:</p>
+<ul>
+<li>• We implement a simple and efficient model parallel approach by making only a few targeted modifications to an existing PyTorch transformer implementation.</li>
+<li>• We perform an in-depth empirical analysis of our model and data parallel technique and demonstrate up to 76% scaling efficiency using 512 GPUs.</li>
+<li>• We show that <strong>careful attention to the placement of layer normalization in BERT-like models is critical to achieving increased accuracies as the model grows</strong>.</li>
+<li>• We demonstrate that <strong>scaling the model size results in improved accuracies for both GPT-2 (studied up to 8.3 billion parameters) and BERT (studied up to 3.9B parameters) models</strong>.</li>
+<li>• We showcase that our models achieve state of the art results on test sets: perplexity on WikiText103 (10.8 ppl), accuracy on LAMBADA (66.5%), and accuracy on RACE (90.9%).</li>
+</ul>
+</li>
+</ul>
+<h2 id="Background-and-Challenges"><a href="#Background-and-Challenges" class="headerlink" title="Background and Challenges"></a>Background and Challenges</h2><h3 id="Transformer-Langauge-Models-and-Multi-Head-Attention"><a href="#Transformer-Langauge-Models-and-Multi-Head-Attention" class="headerlink" title="Transformer Langauge Models and Multi-Head Attention"></a>Transformer Langauge Models and Multi-Head Attention</h3><img width="489" alt="image" src="https://user-images.githubusercontent.com/7252598/169754953-c984b3e6-8afd-4b20-8b72-34957cb9e8d2.png">
+
+<h3 id="Data-and-Model-Parallelism-in-Deep-Learning"><a href="#Data-and-Model-Parallelism-in-Deep-Learning" class="headerlink" title="Data and Model Parallelism in Deep Learning"></a>Data and Model Parallelism in Deep Learning</h3><ul>
+<li>One solution to this problem is to employ parameter sharing to reduce the memory footprint of the model (Lan et al., 2019), but this limits the overall capacity of the model.</li>
+<li>Our approach is to utilize model parallelism to split the model across multiple accelerators. This not only alleviates the memory pressure, but also increases the amount of parallelism independently of the microbatch size.</li>
+<li>Within model parallelism, there are two further paradigms:<ul>
+<li>layer-wise pipeline parallelism<ul>
+<li>groups of operations are performed on one device before the outputs are passed to the next device in the pipeline where a different group of operations are performed.</li>
+<li>However these suffer from inconsistency issues. The GPipe framework for TensorFlow (Huang et al., 2018) overcomes this inconsistency issue by using synchronous gradient decent. This approach requires additional logic to handle the efficient pipelining of these communication and computation operations, and suffers from pipeline bubbles that reduce efficiency, or changes to the optimizer itself which impact accuracy.</li>
+</ul>
+</li>
+<li>more general distributed tensor computation.<ul>
+<li>Distributed tensor computation is an orthogonal and more general approach that partitions a tensor operation across multiple devices to accelerate computation or increase model size</li>
+<li>FlexFlow (Jia et al., 2018), a deep learning framework orchestrating such parallel computation, provides a method to pick the best parallelization strategy. Recently, Mesh-TensorFlow (Shazeer et al., 2018) introduced a language for specifying a general class of distributed tensor computations in TensorFlow (Abadi et al., 2015)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Model-Parallel-Transformers"><a href="#Model-Parallel-Transformers" class="headerlink" title="Model Parallel Transformers"></a>Model Parallel Transformers</h2><ul>
+<li><p>We take advantage of the structure of transformer networks to create a simple model parallel implementation <strong>by adding a few synchronization primitives</strong></p>
+</li>
+<li><p>We introduce model parallelism in <strong>both of these blocks separately</strong>.<br><img src="https://user-images.githubusercontent.com/7252598/169761610-46dacd5d-e364-4081-bf6f-95cad8ebdbc3.png" alt="image"></p>
+</li>
+<li><p>Hence, we partition the first GEMM(X) in this column parallel fashion and split the second GEMM(A &#x3D; [A_1, A_2]) along its rows so it takes the output(Y &#x3D; [Y_1, Y_2]) of the GeLU layer directly without requiring any communication as shown in Figure 3a. <strong>The output of the second GEMM is then reduced across the GPUs</strong> before passing the output to the dropout layer.</p>
+</li>
+<li><p>This approach splits both GEMMs in the MLP block across GPUs and requires only a single all-reduce operation in the forward pass (g operator) and a single all-reduce in the backward pass (f operator).</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">class</span> <span class="title class_">f</span>(torch.autograd.Function):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">ctx, x</span>):</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">backward</span>(<span class="params">ctx, gradient</span>):</span><br><span class="line">        all_reduce(gradient)</span><br><span class="line">        <span class="keyword">return</span> gradient</span><br><span class="line"></span><br><span class="line"><span class="comment"># Code 1. Implementation of f operator.</span></span><br><span class="line"><span class="comment"># g is similar to f with identity in the backward and all-reduce in the forward functions.</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://user-images.githubusercontent.com/7252598/169782401-33951ac6-8d78-4e07-87bb-5897da92c5b5.png" alt="image"></p>
+</li>
+<li><p>for the <strong>self attention block</strong> we exploit inherent parallelism in the multihead attention operation, partitioning the GEMMs associated with key (K), query (Q), and value (V ) in a column parallel fashion such that the matrix multiply corresponding to each attention head is done locally on one GPU. This allows us to split per attention head parameters and workload across the GPUs, and doesn’t require any immediate communication to complete the self-attention</p>
+</li>
+<li><p>The subsequent GEMM from the output linear layer (after self attention) is parallelized along its rows and takes the output of the parallel attention layer directly, without requiring communication between the GPUs.</p>
+</li>
+<li><p>This approach for both the MLP and self attention layer fuses groups of two GEMMs, eliminates a synchronization point in between, and results in better scaling</p>
+<img width="532" alt="image" src="https://user-images.githubusercontent.com/7252598/169794932-272b6e2e-75ed-4f16-adf1-af1453764783.png">
+</li>
+<li><p>This enables us to perform all GEMMs in a simple transformer layer using **only two all-reduces in the forward path(self-attn g func에서 한번 MLP g func에서 한번) ** and <strong>two in the backward path (self-attn f func에서 한번 MLP f func에서 한번)</strong></p>
+</li>
+</ul>
+<img width="1507" alt="image" src="https://user-images.githubusercontent.com/7252598/169791604-8a04422a-41db-4405-9760-768699ec2e11.png">
+
+<p><img src="https://user-images.githubusercontent.com/7252598/169792298-be713f6a-d65f-4474-b497-261765a8da87.png" alt="image"></p>
+<p><img src="https://user-images.githubusercontent.com/7252598/169792336-d486bfeb-a448-490b-998a-b6ac0f918ffc.png" alt="image"></p>
+<p><img src="https://user-images.githubusercontent.com/7252598/169792367-ba5d9965-aa4b-451d-abf7-87d9ed880397.png" alt="image"></p>
+<p><img src="https://user-images.githubusercontent.com/7252598/169794065-ed50cf0d-b2fd-4ba5-9928-f86654544212.png" alt="image"></p>
+<p><img src="https://user-images.githubusercontent.com/7252598/169794100-19cc6d84-535c-4403-85e0-621b0226781f.png" alt="image"></p>
+<p><img src="https://user-images.githubusercontent.com/7252598/169794131-ef94665b-b373-492b-b2c0-94dab4f70c39.png" alt="image"></p>
+<ul>
+<li>We parallelize the input embedding weight matrix E_{H×v} along the vocabulary dimension E &#x3D; [E1, E2] (column-wise)</li>
+<li>To reduce the communication size, we fuse the output of the parallel GEMM [Y1 , Y2 ] with the cross entropy loss which reduces the dimension to b × s. <strong>Communicating scalar losses instead of logits</strong> is a huge reduction in communication that improves the efficiency of our model parallel approach.</li>
+<li>Rather than having one GPU compute part of the dropout, layer normalization, or residual connections and broadcast the results to other GPUs, we choose to duplicate the computation across GPUs. Specifi- cally, we maintain duplicate copies of layer normalization parameters on each GPU, and take the output of the model parallel region and run dropout and residual connection on these tensors before feeding them as input to the next model parallel regions<ul>
+<li>카피 했다는게, 각자 그냥 갖고 있는다는건지.. 아니면 하나가 계산한 값을 같이 쓴다는건지.. 후자는 좀 이상한거같고</li>
+</ul>
+</li>
+</ul>
+<h2 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h2><ul>
+<li>In this work we focus on GPT-2 (Radford et al., 2019), a left- to-right generative transformer based language model, and BERT (Devlin et al., 2018), a bi-directional transformer model based on language model masking</li>
+</ul>
+<h3 id="Training-Dataset"><a href="#Training-Dataset" class="headerlink" title="Training Dataset"></a>Training Dataset</h3><ul>
+<li>filtered out all the documents with content length less than 128 tokens</li>
+<li>used locality-sensitive hashing (LSH) to deduplicate content with a jaccard similarity greater than 0.7</li>
+<li>resulting aggregate corpus contains 174 GB of deduplicated text</li>
+</ul>
+<h3 id="Training-Optimization-and-Hyperparameters"><a href="#Training-Optimization-and-Hyperparameters" class="headerlink" title="Training Optimization and Hyperparameters"></a>Training Optimization and Hyperparameters</h3><ul>
+<li>utilize <strong>mixed precision training with dynamic loss scaling</strong> to take advantage of the V100’s Tensor Cores<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ref: https://docs.nvidia.com/deeplearning/performance/mixed-precision-training/index.html</span><br><span class="line">Q: How does dynamic scaling work?</span><br><span class="line">A: Dynamic loss scaling basically attempts to ride the edge of the highest loss scale it can use without causing gradient overflow, to make full use of the FP16 dynamic range.</span><br><span class="line"></span><br><span class="line">It does so by beginning with a high loss scale value (say, 2^24), then in each iteration, checking the gradients for overflows (infs/NaNs). If none of the gradients overflowed, gradients are unscaled (in FP32) and optimizer.step() is applied as usual. If an overflow was detected, optimizer.step is patched to skip the actual weight update (so that the inf/NaN gradients do not pollute the weights) and the loss scale is reduced by some factor F (F=2 by default). This takes care of reducing the loss scale to a range where overflows are not produced. However, it&#x27;s only half the story.</span><br><span class="line"></span><br><span class="line">What if, at some later point, training has stabilized and a higher loss scale is permissible? For example, later in training, gradient magnitudes tend to be smaller, and may require a higher loss scale to prevent underflow. Therefore, dynamic loss scaling also attempts to increase the loss scale by a factor of F every N iterations (N=2000 by default). If increasing the loss scale causes an overflow once more, the step is skipped and the loss scale is reduced back to the pre-increase value as usual. In this way, by: reducing the loss scale whenever a gradient overflow is encountered, and Intermittently attempting to increase the loss scale, the goal of riding the edge of the highest loss scale that can be used without causing overflow is (roughly) accomplished.</span><br></pre></td></tr></table></figure></li>
+<li>initializing our weights W with a simple normal distribution W ∼ N (0, 0.02)</li>
+<li>then scale weights immediately before residual layers by 1&#x2F;root(2N) where N is the number of transformer layers comprised of self attention and MLP blocks</li>
+<li>our optimizer we utilize Adam (Kingma &amp; Ba, 2014) with weight decay (Loshchilov &amp; Hutter, 2019) λ &#x3D; 0.01.</li>
+<li>use global gradient norm clipping of 1.0 to improve the stability of training large models.</li>
+<li>dropout of 0.1 is used</li>
+<li>to better manage our memory footprint we utilize activation checkpointing (Chen et al., 2016) after every transformer layer.</li>
+<li>For GPT-2 models<ul>
+<li>all training is performed with sequences of 1024 subword units at a batch size of 512 for 300k iterations. </li>
+<li>Our learning rate of 1.5e-4 utilizes a warmup period of 3k iterations before following a single cycle cosine decay over the remaining 297k iterations</li>
+<li>We stop the decay at a minimum learning rate of 1e-5.</li>
+</ul>
+</li>
+<li>For BERT models<ul>
+<li>use the original BERT dictionary with vocab size of 30,522</li>
+<li>replace the next sentence prediction head with sentence order prediction</li>
+<li>use whole word n-gram masking </li>
+<li>set the batch size to 1024 and use a learning rate of 1.0e-4 warmed up over 10,000 iterations and decayed linearly over 2 million iterations. Other training parameters are kept the same as (Devlin et al., 2018).</li>
+</ul>
+</li>
+</ul>
+<h2 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h2><ul>
+<li>실험용 머신<ul>
+<li>32 DGX-2H servers (a total of 512 Tesla V100 SXM3 32GB GPUs)</li>
+<li>multi-node deep learning applications, with 300 GB&#x2F;sec bandwidth between GPUs inside a server via NVSwitch and 100 GB&#x2F;sec of interconnect bandwidth between servers using 8 InfiniBand adapters per server</li>
+</ul>
+</li>
+</ul>
+<h3 id="Scaling-Analysis"><a href="#Scaling-Analysis" class="headerlink" title="Scaling Analysis"></a>Scaling Analysis</h3><ul>
+<li>consider GPT-2 models with four sets of parameters detailed in Table 1</li>
+<li>To have consistent GEMM sizes in the self attention layer, the hidden size per attention head is kept constant at 96 while the number of heads and layers are varied to obtain configurations ranging from 1 billion to 8 billion parameters</li>
+<li>1.2 billion parameters fits on a single GPU whereas the 8 billion parameter model requires 8-way model parallelism (8 GPUs).</li>
+<li>original vocabulary size was 50,257, <ul>
+<li>however, to have efficient GEMMs for the logit layer, it is beneficial for the per-GPU vocabulary size to be a multiple of 128.</li>
+<li>Since we study up to 8-way model parallelism, we pad the vocabulary such that it is divisible by 128 × 8 &#x3D; 1024, resulting in a padded vocabulary size of 51,200.<ul>
+<li>그럼 나머지 1024 * 5에 해당하는 5개는 뭘까.. 8 way씩 5개를 쓴건가</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>For the <strong>model parallel scaling, a fixed batch size of 8</strong> is used across all configurations.<ul>
+<li>Data parallel scaling is necessary for training many state of the art models which typically use a much larger global batch size.</li>
+<li>To this end, for the <strong>model+data parallel</strong> cases we fix the global <strong>batch size to 512</strong> for all experiments which corresponds to <strong>64-way data parallelism</strong>.</li>
+</ul>
+</li>
+</ul>
+<img width="407" alt="image" src="https://user-images.githubusercontent.com/7252598/169964881-f9facd09-498c-4171-8f0c-61987e0a3981.png">
+
+<ul>
+<li>observe excellent scaling numbers in both settings. For example, the 8.3 billion parameters case with 8-way (8 GPU) model parallelism achieves 77% of linear scaling. Model+data parallelism requires further communication of gradients and as a result the scaling numbers drop slightly. However, even for the largest configuration (8.3 billion parameters) running on 512 GPUs, we achieve 74% scaling relative to linear scaling of the strong single GPU baseline configuration (1.2 billion parameters).</li>
+<li>weak scaling -&gt; linear 대비 나쁘지않다</li>
+</ul>
+<h3 id="Language-Modeling-Results-Using-GPT-2"><a href="#Language-Modeling-Results-Using-GPT-2" class="headerlink" title="Language Modeling Results Using GPT-2"></a>Language Modeling Results Using GPT-2</h3><img width="472" alt="image" src="https://user-images.githubusercontent.com/7252598/169968501-54d315af-d484-4612-97e4-5c8afb268128.png">
+
+<img width="468" alt="image" src="https://user-images.githubusercontent.com/7252598/169968717-ab24a4bb-89b2-4252-bed1-c3b115e36259.png">
+
+<h3 id="Bi-directional-Transformer-Results-Using-BERT"><a href="#Bi-directional-Transformer-Results-Using-BERT" class="headerlink" title="Bi-directional Transformer Results Using BERT"></a>Bi-directional Transformer Results Using BERT</h3><ul>
+<li><p>Prior work (Lan et al., 2019) found that increasing model size beyond BERT-large with 336M parameters results in unexpected model degradation. To address this degradation, the authors of that work (Lan et al., 2019) introduced parameter sharing and showed that that their models scale much better compared to the original BERT model.</p>
+<ul>
+<li>BERT에서 스케일업하려면 param sharing이 필요하다는건가..</li>
+</ul>
+</li>
+<li><p>We further investigated this behaviour and empirically demonstrated that <strong>rearranging the order of the layer normalization and the residual connections</strong> as shown in Figure 7 is critical to enable the scaling of the BERT-style models beyond BERT-Large.</p>
+</li>
+<li><img width="462" alt="image" src="https://user-images.githubusercontent.com/7252598/169969872-d9686b5d-7545-48fb-9a20-d68bbd9791e9.png">
+</li>
+<li><p>In all cases, the hidden size per attention head is kept constant at 64. 336M and 1.3B models are trained for 2 million iterations while the 3.9B model is trained for 1.5 million iterations and is still training.</p>
+</li>
+<li><p><strong>For finetuning</strong>, we follow the same procedure as (Liu et al., 2019b -&gt; 로버타 논문인듯..?). We <strong>first perform hyperparameter tuning on batch size and learning rate</strong>. Once we obtain the best values, we report the median development set results over 5 different random seeds for initialization</p>
+</li>
+<li><img width="404" alt="image" src="https://user-images.githubusercontent.com/7252598/169971514-362a89eb-9523-4c9d-972f-0e31ffc5f324.png"></li>
+</ul>
+<img width="816" alt="image" src="https://user-images.githubusercontent.com/7252598/169970590-8b90ab49-453d-45a5-a88c-44460f8088a4.png">
+
+
+<h2 id="Conclusion-and-Future-Work"><a href="#Conclusion-and-Future-Work" class="headerlink" title="Conclusion and Future Work"></a>Conclusion and Future Work</h2><ul>
+<li>we successfully surpassed the limitations posed by traditional single-GPU-per-model training by implementing model parallelism with only a few modifications to the existing PyTorch transformer implementations</li>
+<li>showed that for BERT models, careful attention to the placement of layer normalization in BERT-like models is critical to achieving increased accuracies as the model size increases</li>
+<li>model size on down-stream task accuracy and achieve far superior results on downstream tasks and establish new SOTA for WikiText103, LAMBADA, and RACE datasets</li>
+</ul>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism</p><p><a href="Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism/">Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2022-05-23</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-08-30</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="COCO-LM: Correcting and Contrasting Text Sequences for Language Model Pretraining/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">COCO-LM: Correcting and Contrasting Text Sequences for Language Model Pretraining</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="RoBERTa: A Robustly Optimized BERT Pretraining Approach/"><span class="level-item">RoBERTa: A Robustly Optimized BERT Pretraining Approach</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism/';
+            this.page.identifier = 'Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">38</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">26</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2022/08/"><span class="level-start"><span class="level-item">8월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">7월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/06/"><span class="level-start"><span class="level-item">6월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/05/"><span class="level-start"><span class="level-item">5월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/01/"><span class="level-start"><span class="level-item">1월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">12월 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">11월 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">27</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#용어"><span class="level-left"><span class="level-item">1</span><span class="level-item">용어</span></span></a></li><li><a class="level is-mobile" href="#논문파일"><span class="level-left"><span class="level-item">2</span><span class="level-item">논문파일</span></span></a></li><li><a class="level is-mobile" href="#Ref"><span class="level-left"><span class="level-item">3</span><span class="level-item">Ref</span></span></a></li><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">4</span><span class="level-item">Author</span></span></a></li><li><a class="level is-mobile" href="#느낀점"><span class="level-left"><span class="level-item">5</span><span class="level-item">느낀점</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">6</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#Introduction"><span class="level-left"><span class="level-item">7</span><span class="level-item">Introduction</span></span></a></li><li><a class="level is-mobile" href="#Background-and-Challenges"><span class="level-left"><span class="level-item">8</span><span class="level-item">Background and Challenges</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Transformer-Langauge-Models-and-Multi-Head-Attention"><span class="level-left"><span class="level-item">8.1</span><span class="level-item">Transformer Langauge Models and Multi-Head Attention</span></span></a></li><li><a class="level is-mobile" href="#Data-and-Model-Parallelism-in-Deep-Learning"><span class="level-left"><span class="level-item">8.2</span><span class="level-item">Data and Model Parallelism in Deep Learning</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Model-Parallel-Transformers"><span class="level-left"><span class="level-item">9</span><span class="level-item">Model Parallel Transformers</span></span></a></li><li><a class="level is-mobile" href="#Setup"><span class="level-left"><span class="level-item">10</span><span class="level-item">Setup</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Training-Dataset"><span class="level-left"><span class="level-item">10.1</span><span class="level-item">Training Dataset</span></span></a></li><li><a class="level is-mobile" href="#Training-Optimization-and-Hyperparameters"><span class="level-left"><span class="level-item">10.2</span><span class="level-item">Training Optimization and Hyperparameters</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Experiments"><span class="level-left"><span class="level-item">11</span><span class="level-item">Experiments</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Scaling-Analysis"><span class="level-left"><span class="level-item">11.1</span><span class="level-item">Scaling Analysis</span></span></a></li><li><a class="level is-mobile" href="#Language-Modeling-Results-Using-GPT-2"><span class="level-left"><span class="level-item">11.2</span><span class="level-item">Language Modeling Results Using GPT-2</span></span></a></li><li><a class="level is-mobile" href="#Bi-directional-Transformer-Results-Using-BERT"><span class="level-left"><span class="level-item">11.3</span><span class="level-item">Bi-directional Transformer Results Using BERT</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Conclusion-and-Future-Work"><span class="level-left"><span class="level-item">12</span><span class="level-item">Conclusion and Future Work</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-08-01T03:00:00.000Z">2022-08-01</time></p><p class="title"><a href="/Efficient%20Training%20of%20Language%20Models%20to%20Fill%20in%20the%20Middle%20(FIM)/">Efficient Training of Language Models to Fill in the Middle (FIM)</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-13T03:00:00.000Z">2022-07-13</time></p><p class="title"><a href="/(ALiBi)%20TRAIN%20SHORT,%20TEST%20LONG:%20ATTENTION%20WITH%20LINEAR%20BIASES%20ENABLES%20INPUT%20LENGTH%20EXTRAPOLATION/">(ALiBi) TRAIN SHORT, TEST LONG: ATTENTION WITH LINEAR BIASES ENABLES INPUT LENGTH EXTRAPOLATION</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-06-20T03:00:00.000Z">2022-06-20</time></p><p class="title"><a href="COCO-LM: Correcting and Contrasting Text Sequences for Language Model Pretraining/">COCO-LM: Correcting and Contrasting Text Sequences for Language Model Pretraining</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-05-23T03:00:00.000Z">2022-05-23</time></p><p class="title"><a href="Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism/">Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-05-19T03:00:00.000Z">2022-05-19</time></p><p class="title"><a href="RoBERTa: A Robustly Optimized BERT Pretraining Approach/">RoBERTa: A Robustly Optimized BERT Pretraining Approach</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2022 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>

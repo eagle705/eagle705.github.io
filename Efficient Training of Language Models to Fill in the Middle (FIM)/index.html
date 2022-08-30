@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Efficient Training of Language Models to Fill in the Middle (FIM) - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="발표자료(발표)Efficient Training of Language Models to Fill in the Middle.pdf 느낀점 첫인상은 data augmentation 기법에 관련된 내용을 extensive하게 검증했다정도..? free-form generation을 하고 싶다에 초점을 두고 논문 전개  Note"><meta property="og:type" content="blog"><meta property="og:title" content="Efficient Training of Language Models to Fill in the Middle (FIM)"><meta property="og:url" content="https://eagle705.github.io/Efficient%20Training%20of%20Language%20Models%20to%20Fill%20in%20the%20Middle%20(FIM)/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="발표자료(발표)Efficient Training of Language Models to Fill in the Middle.pdf 느낀점 첫인상은 data augmentation 기법에 관련된 내용을 extensive하게 검증했다정도..? free-form generation을 하고 싶다에 초점을 두고 논문 전개  Note"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182298137-c2a6674c-d345-4ff5-8861-92857fad8cca.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182299318-32cea50d-7d56-4d1b-8a86-f44d9e41ecbb.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182306509-f7a73b1f-d8be-4b0c-a755-2cb040ffcb69.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182312000-6e668059-ef3a-49c5-a29f-eafb0e35eff0.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182314481-b629b487-e0d9-479c-a6c5-04406f86b7ff.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182315670-4b0b8729-985a-421c-a915-59a141a28dbc.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182321849-3d477644-c9e3-4c6c-b0b7-dcc0d4c9c60c.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182322976-92a7f52b-ca8c-48d6-a245-e1f5a8295596.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182323414-23a0ad81-1b37-49a7-9dd3-2df7568cc62e.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182324160-b50b1bc6-5ccd-4e69-865e-968038e7fc1d.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182325009-efe8e6d5-f509-48bb-a4ea-f1b71145ccc7.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182314481-b629b487-e0d9-479c-a6c5-04406f86b7ff.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182326776-cb78e2e8-b133-4f40-881f-b3a545f693fa.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182329347-9fcd8fbe-d7f1-48ae-a56b-7e93a387dc4a.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182331302-3e7317b6-5bc8-432d-b696-f6ae8d60dc46.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182337942-d33d5c30-6489-4647-83c4-08fd8e37fa9f.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182401957-5f854ff7-0053-4055-b762-887e268444b0.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182402748-dee89b18-a860-4ce3-9708-b9b7e9ec41e1.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182403191-5c64ba3b-80b6-480a-bd12-eb0afb8ccbd7.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182404194-1a415840-f332-4f77-99d5-83baec7506d3.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/182406636-a2808ae5-314c-440f-867d-dc696b85ac1c.png"><meta property="article:published_time" content="2022-08-01T03:00:00.000Z"><meta property="article:modified_time" content="2022-08-30T04:37:42.591Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://user-images.githubusercontent.com/7252598/182298137-c2a6674c-d345-4ff5-8861-92857fad8cca.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/Efficient%20Training%20of%20Language%20Models%20to%20Fill%20in%20the%20Middle%20(FIM)/"},"headline":"Efficient Training of Language Models to Fill in the Middle (FIM)","image":["https://user-images.githubusercontent.com/7252598/182298137-c2a6674c-d345-4ff5-8861-92857fad8cca.png","https://user-images.githubusercontent.com/7252598/182299318-32cea50d-7d56-4d1b-8a86-f44d9e41ecbb.png","https://user-images.githubusercontent.com/7252598/182306509-f7a73b1f-d8be-4b0c-a755-2cb040ffcb69.png","https://user-images.githubusercontent.com/7252598/182312000-6e668059-ef3a-49c5-a29f-eafb0e35eff0.png","https://user-images.githubusercontent.com/7252598/182314481-b629b487-e0d9-479c-a6c5-04406f86b7ff.png","https://user-images.githubusercontent.com/7252598/182315670-4b0b8729-985a-421c-a915-59a141a28dbc.png","https://user-images.githubusercontent.com/7252598/182321849-3d477644-c9e3-4c6c-b0b7-dcc0d4c9c60c.png","https://user-images.githubusercontent.com/7252598/182322976-92a7f52b-ca8c-48d6-a245-e1f5a8295596.png","https://user-images.githubusercontent.com/7252598/182323414-23a0ad81-1b37-49a7-9dd3-2df7568cc62e.png","https://user-images.githubusercontent.com/7252598/182324160-b50b1bc6-5ccd-4e69-865e-968038e7fc1d.png","https://user-images.githubusercontent.com/7252598/182325009-efe8e6d5-f509-48bb-a4ea-f1b71145ccc7.png","https://user-images.githubusercontent.com/7252598/182314481-b629b487-e0d9-479c-a6c5-04406f86b7ff.png","https://user-images.githubusercontent.com/7252598/182326776-cb78e2e8-b133-4f40-881f-b3a545f693fa.png","https://user-images.githubusercontent.com/7252598/182329347-9fcd8fbe-d7f1-48ae-a56b-7e93a387dc4a.png","https://user-images.githubusercontent.com/7252598/182331302-3e7317b6-5bc8-432d-b696-f6ae8d60dc46.png","https://user-images.githubusercontent.com/7252598/182337942-d33d5c30-6489-4647-83c4-08fd8e37fa9f.png","https://user-images.githubusercontent.com/7252598/182401957-5f854ff7-0053-4055-b762-887e268444b0.png","https://user-images.githubusercontent.com/7252598/182402748-dee89b18-a860-4ce3-9708-b9b7e9ec41e1.png","https://user-images.githubusercontent.com/7252598/182403191-5c64ba3b-80b6-480a-bd12-eb0afb8ccbd7.png","https://user-images.githubusercontent.com/7252598/182404194-1a415840-f332-4f77-99d5-83baec7506d3.png","https://user-images.githubusercontent.com/7252598/182406636-a2808ae5-314c-440f-867d-dc696b85ac1c.png"],"datePublished":"2022-08-01T03:00:00.000Z","dateModified":"2022-08-30T04:37:42.591Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"발표자료(발표)Efficient Training of Language Models to Fill in the Middle.pdf 느낀점 첫인상은 data augmentation 기법에 관련된 내용을 extensive하게 검증했다정도..? free-form generation을 하고 싶다에 초점을 두고 논문 전개  Note"}</script><link rel="canonical" href="https://eagle705.github.io/Efficient%20Training%20of%20Language%20Models%20to%20Fill%20in%20the%20Middle%20(FIM)/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2022-08-01T03:00:00.000Z" title="2022. 8. 1. 오후 12:00:00">2022-08-01</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-08-30T04:37:42.591Z" title="2022. 8. 30. 오후 1:37:42">2022-08-30</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">32분안에 읽기 (약 4759 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">Efficient Training of Language Models to Fill in the Middle (FIM)</h1><div class="content"><h1 id="발표자료"><a href="#발표자료" class="headerlink" title="발표자료"></a>발표자료</h1><p><a target="_blank" rel="noopener" href="https://github.com/eagle705/presentation/files/9248738/Efficient.Training.of.Language.Models.to.Fill.in.the.Middle.pdf">(발표)Efficient Training of Language Models to Fill in the Middle.pdf</a></p>
+<h1 id="느낀점"><a href="#느낀점" class="headerlink" title="느낀점"></a>느낀점</h1><ul>
+<li>첫인상은 data augmentation 기법에 관련된 내용을 extensive하게 검증했다정도..?</li>
+<li>free-form generation을 하고 싶다에 초점을 두고 논문 전개</li>
+</ul>
+<h1 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h1><ul>
+<li>50%란게 어떤걸까<ul>
+<li>데이터셋에서 FIM으로 transformation하는 비율 (FIM 자체는 랜덤하게 짜르니까)</li>
+</ul>
+</li>
+<li>SPM에서 캐싱이 무슨 의미 일까</li>
+</ul>
+<h1 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h1><ul>
+<li>Mohammad Bavarian ∗ Heewoo Jun∗ Nikolas Tezak John Schulman Christine McLeavey Jerry Tworek Mark Chen<ul>
+<li>OpenAI</li>
+</ul>
+</li>
+<li>Github<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/openai/human-eval-infilling">https://github.com/openai/human-eval-infilling</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><ul>
+<li>autoregressive language models can learn to infill text after we apply a straightforward transformation to the dataset, which simply <strong>moves a span of text from the middle of a document to its end</strong></li>
+<li>While this data augmentation has garnered much interest in recent years, we provide <strong>extensive</strong> evidence that training models with a large fraction of data transformed in this way does not harm the original left-to-right generative capability</li>
+<li>Given the usefulness, simplicity, and efficiency of training models to fill-in-the-middle (FIM), we suggest that future autoregressive language models be trained with FIM by default</li>
+</ul>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><ul>
+<li>Finally, causal decoder-based language models, like the GPT model series [Radford et al., 2018, 2019, Brown et al., 2020], are trained using the left-to-right next token prediction objective. The largest and most capable generative language models today, such as GPT-3, Codex, LaMDA, GLaM, PaLM, Gopher, Jurassic-1, and Chinchilla<ul>
+<li>due to their superiority in open-ended text generation, in-context learning (using few-shot priming), pretraining computational efficiency</li>
+<li>also architecturally simpler and generally more effective without task specific finetuning, making them more attractive for inference and deployment.</li>
+</ul>
+</li>
+<li>모델 구조에 따라서 infilling하는 능력이 제한되어있다<ul>
+<li>All model classes are limited when it comes to infilling, where the model is tasked with generating text at a specific location within a prompt, while conditioning on both a prefix and a suffix. Left-to-right models can only condition on the prefix. While encoder-only and encoder-decoder models are capable of conditioning on suffixes, the lengths of infill regions seen at training time are typically much shorter than what is useful in practice<ul>
+<li>여러 application 상황에선 이런점들이 unfortunate로 볼 수 있음</li>
+<li>This is unfortunate because infilling naturally arises in applications where there is context both before and after the point of generation. For example, in creating a coding assistant, infilling can be used for docstring generation, import statement generation, or for completing a partially written function.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Our goal in this work is <strong>to address this limitation by adding fill-in-the-middle (FIM) capability to causal decoder-based language models</strong> which are currently the most dominant paradigm for large scale language modelling<ul>
+<li>왜 limitation을 address하는거에 초점을 맞췄을까.. 해결하는게 보통의 접근방법인데 이것만으로도 의미가 있다는건가</li>
+</ul>
+</li>
+<li>a simple modification to training data and without changing the model architecture, causal decoder-based autoregressive (AR) language models can learn infilling without compromising their normal left-to-right generative capability.</li>
+<li>we split documents into three pieces at random and move the middle piece to the end:<ul>
+<li><code>document → (prefix, middle, suffix) → (prefix, suffix, middle)</code></li>
+</ul>
+</li>
+<li><strong>concatenate the three pieces</strong> <strong>using sentinel tokens</strong> (<code>&lt;PRE&gt; prefix &lt;SUF&gt; suffix &lt;MID&gt; middle</code>)</li>
+<li>Compared to prior work, our work emphasizes the computational efficiency of training FIM models. This emphasis is important given the increased interest in training very large language models, which are very expensive to train and have a substantial energy footprint</li>
+<li>show that models trained jointly on a mixture of FIM transformed data and ordinary left-to-right data achieve the same left-to-right capability while learning how to fill-in-the-middle<ul>
+<li>call this the FIM-for-free property</li>
+</ul>
+</li>
+<li>use the term <ul>
+<li>FIM model to refer to any model trained on a mixture of FIM transformed and normal left-to-right data. </li>
+<li>We refer to models trained without any FIM data (i.e. 0% FIM rate) as AR models.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Our-contributions"><a href="#Our-contributions" class="headerlink" title="Our contributions"></a>Our contributions</h3><ul>
+<li>cetral contributions<ul>
+<li>FIM-for-free property (기존 loss에 영향안줌)<ul>
+<li>extensive scaling study by training a suite of 8 models, with and without FIM, and show that FIM can be learned without compromising the left-to-right capability in pretraining. We examine this claim in both code and language, using both perplexity and sampling-based benchmarks</li>
+</ul>
+</li>
+<li>Best practices for FIM in pretraining (FIM rate 찾아냄)<ul>
+<li>clarify the effects of many hyperparameters related to training FIM models using comprehensive ablations. In particular, we study the FIM rate (the probability at which FIM transformation is applied to the data), different variants of FIM transformation, and t<strong>he choice of middle span.</strong></li>
+</ul>
+</li>
+<li>Finetuning inefficiency (finetuning으로 하기엔 pretraining만큼 필요함, 흥미로운점임)<ul>
+<li>An alternative to training FIM models from scratch is to learn this capability by finetuning existing language models. We show that finetuning with FIM is computationally inefficient. While FIM can be learned for free during pretraining, learning FIM during finetuning requires a significant amount of additional compute to reach similar levels of performance as pretraining.</li>
+</ul>
+</li>
+<li>New infilling benchmarks<ul>
+<li>need to evaluate the correctness of free-form generated samples. For this, we focus on code where we can use unit tests to evaluate the correctness of long FIM samples<ul>
+<li>use the single-line and multi-line infilling benchmarks introduced by [Fried et al., 2022] by removing non-empty lines of canonical solutions of HumanEval</li>
+</ul>
+</li>
+<li>create two new benchmarks called <strong>random span infilling</strong> and <strong>random span infilling light</strong>.</li>
+</ul>
+</li>
+<li>Need for sampling evaluations<ul>
+<li>find that changing various hyperparameters in FIM training often leads to negligible differences in FIM test losses but large differences in <strong>sampling based benchmarks</strong>. (어떤 벤치마크지..?, 생성쪽인듯)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>ablation study on both code and language across a range of scales<ul>
+<li>FIM-for-free property를 확인하는 실험셋팅<ul>
+<li>train 8 models from 50M to 6.9B parameters, both with and without FIM, and compare the performance across a variety of autoregressive benchmarks.</li>
+</ul>
+</li>
+<li>code와 LM에서 left-to-right LM test loss 비교하는 실험셋팅<ul>
+<li>train 16 models on code for 100B tokens and another 16 models on natural language for 100B tokens. The comparison of these models in terms of normal autoregressive left-to-right language modeling test loss is presented in Figure 1. In both domains, FIM models achieve similar AR test loss as the non-FIM models</li>
+</ul>
+</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/182298137-c2a6674c-d345-4ff5-8861-92857fad8cca.png" alt="image"></li>
+<li>org 데이터 반정도만 봐도 left-to-right loss 차이가 거의 없게 나온다</li>
+</ul>
+</li>
+<li>it is also important to show that the models are in fact learning to infill from FIM training. Figure 2 provides evidence for this in the context of FIM test losses<ul>
+<li><img src="https://user-images.githubusercontent.com/7252598/182299318-32cea50d-7d56-4d1b-8a86-f44d9e41ecbb.png" alt="image"></li>
+<li>그냥 left-to-right loss는 거의 같은데, FIM loss는 차이가 나니까 FIM이 AR모델보다 낫다고 얘기하는것 같은데</li>
+</ul>
+</li>
+</ul>
+<h1 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h1><ul>
+<li>AR loss refers to the cross entropy loss on normal left-to-right data and </li>
+<li>FIM loss as the loss on 100% FIM transformed data</li>
+<li>All test losses are in nats per token unit. </li>
+<li>In all sampling-based benchmarks, we use nucleus sampling [Holtzman et al., 2020] with a nucleus parameter of 0.95</li>
+</ul>
+<h2 id="Autoregressive-evaluation"><a href="#Autoregressive-evaluation" class="headerlink" title="Autoregressive evaluation"></a>Autoregressive evaluation</h2><ul>
+<li>benchmarks with the exception of DROP and QuAC are evaluated with few-shot prompting. For code, we measure the pass rates on HumanEval</li>
+</ul>
+<h2 id="Infilling-evaluation"><a href="#Infilling-evaluation" class="headerlink" title="Infilling evaluation"></a>Infilling evaluation</h2><ul>
+<li>To create FIM tests, we apply the FIM transformation to the examples from the AR test sets with a FIM rate of 100%.</li>
+<li>Using the same underlying examples in FIM and AR test sets allows us to compare FIM and AR test losses</li>
+<li>create a masked version of these test sets where we only measure the loss on the middle span tokens. The latter test sets are used to measure <code>P (middle∣prefix, suffix)</code> for FIM models and <code>P(middle∣prefix)</code> for AR models allowing us to investigate the amount of information FIM models gain by being able to condition on the suffix.<ul>
+<li>이건 FIM이 정보 더 보는데 약간 애매하지않나..</li>
+</ul>
+</li>
+<li>For generative infilling capabilities, we focus on code since we are interested in free-form generation in contrast to single or few token generations common in cloze-style natural language benchmarks<ul>
+<li>코드는 open ended generation이여도 정답 체크가 가능하니까 장점이 있다 (The advantage of working with code is that we can use test suites to evaluate the correctness of samples in our tasks even when evaluating long samples from open-ended generations.)</li>
+</ul>
+</li>
+<li>All the sampling based infilling benchmarks<ul>
+<li><code>single-line</code>, <code>multi-line</code>, and <code>random span infilling</code></li>
+<li>partial function completions tasks created by removing middle spans from the canonical solutions of HumanEval<ul>
+<li>use the single-line and multi-line infilling benchmarks proposed by [Fried et al., 2022] where different spans of non-empty lines in the canonical solutions of HumanEval are turned into a FIM task</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>create a new benchmark called random span infilling2, where for each HumanEval problem, we create infilling tasks by selecting the middle span from the canonical solution uniformly at random. We show an example of such a task below where the model must predict the highlighted section (or an alternative completion accomplishing the same goal)</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/182306509-f7a73b1f-d8be-4b0c-a755-2cb040ffcb69.png" alt="image"></li>
+<li>also use random span infilling light, a smaller version of random span infilling, with only one random FIM task per HumanEval problem and just 164 tasks, to track the infilling capability trends <strong>during training</strong>.</li>
+<li>FIM can be prepared in two different ways denoted as PSM and SPM. We report just the SPM infilling results for brevity, except in cases when the use of PSM changes the conclusions.</li>
+</ul>
+<h1 id="FIM-training-and-inference"><a href="#FIM-training-and-inference" class="headerlink" title="FIM training and inference"></a>FIM training and inference</h1><ul>
+<li>implement FIM using a random transformation applied to our dataset</li>
+<li>experiment with two different implementations: <strong>document</strong> level and <strong>context</strong> level<ul>
+<li>difference between the two is at which stage of the data loading pipeline the FIM transformation occurs.</li>
+<li>This choice naturally arises because a long document can be broken into many contexts, or a context can contain multiple documents when the documents are small.</li>
+</ul>
+</li>
+<li>document-level case<ul>
+<li>In document-level FIM, with a certain probability p called the FIM rate (we use p &#x3D; 0.5 for our main suite of models), we cut each document into three parts: prefix, middle, and suffix. <strong>We perform this split prior to tokenization, when the document is still a sequence of characters.</strong> (토큰화하기 전에 3등분한다)</li>
+<li>split uniformly at random, which means the lengths of prefix, middle, and suffix are each 1&#x2F;3 of the full document in expectation. (랜덤하게 3등분씩 잘라~)</li>
+</ul>
+</li>
+<li>encode each of the three sections separately and prepend sentinel tokens to the beginning of each section. We denote these sentinel tokens by <code>&lt;PRE&gt;</code>, <code>&lt;MID&gt;</code>, and <code>&lt;SUF&gt;</code></li>
+<li>PSM, SPM 등등으로 구성가능, 문서사이는 <code>&lt;EOT&gt;</code>로 분리</li>
+<li><strong>keep the loss on all three sections prefix, middle, and suffix</strong>, so FIM training does not cause a decrease in the autoregressive learning signal.<ul>
+<li>section에 대한 loss를 backward할때 고려안한다는건가..? 아니면 해서 도움이 된다는건가 -&gt; 다 계산한다는 의미일듯 그래야 AR효과가 나서..?!</li>
+<li>this choice is crucial for the FIM-for-free property to hold. This property does not change whether the sentinels are masked or not; however, it is important to always train on the <code>&lt;EOT&gt;</code> tokens as it signals a successful join to the suffix.<br><img src="https://user-images.githubusercontent.com/7252598/182312000-6e668059-ef3a-49c5-a29f-eafb0e35eff0.png" alt="image"></li>
+<li>무슨 의미일까</li>
+</ul>
+</li>
+</ul>
+<h2 id="SPM-mode"><a href="#SPM-mode" class="headerlink" title="SPM mode"></a>SPM mode</h2><ul>
+<li>a variant of the above procedure where we swap the order of prefix and suffix, called SPM, to emphasize the changing of the order to suffix, prefix, and middle</li>
+<li>Our main motivation for introducing SPM is improved key-value caching during inference.</li>
+<li>The reason for this advantage is that with SPM, appending tokens to the prefix no longer invalidates the keys and values computed in the suffix section<ul>
+<li>무슨의미일까</li>
+</ul>
+</li>
+<li>Note that superiority of SPM caching is not universal and may depend on the applications. In particular, in the SPM mode, minor changes to the suffix will invalidate the cache for prefix, but we expect changes to the suffix to be rarer than changes in prefix in real workloads. Interestingly, we find in Section 4.3 beside the caching advantages, <strong>SPM in fact has also a slight edge over PSM in the infilling benchmarks</strong>.</li>
+<li>apply the FIM transformation with 50% probability in PSM mode and with 50% probability in SPM mode, so the model is able to handle both types of formatting in inference. In other words, each mode inherits half of the total FIM rate p<br><img src="https://user-images.githubusercontent.com/7252598/182314481-b629b487-e0d9-479c-a6c5-04406f86b7ff.png" alt="image"></li>
+<li>여기서는 joint training의 효과를 극대화하기 위해 SPM의 variant를 활용함 (괴랄하다 괴랄해..)<br><img src="https://user-images.githubusercontent.com/7252598/182315670-4b0b8729-985a-421c-a915-59a141a28dbc.png" alt="image"></li>
+</ul>
+<h2 id="Context-level-FIM"><a href="#Context-level-FIM" class="headerlink" title="Context-level FIM"></a>Context-level FIM</h2><ul>
+<li>In language model training, documents are often joined with a boundary token, referred to as <code>&lt;EOT&gt;</code>, and are then chunked to the model context length. When applying FIM to long documents, this operation can result in fragmented FIM data where the entire prefix or suffix could get cut out of the context during chunking</li>
+<li>we can <strong>apply FIM after the chunking step</strong>. A context slice may have multiple documents in them joined with the <code>&lt;EOT&gt;</code> boundary token</li>
+<li>we split based on <code>&lt;EOT&gt;</code>, turn some of the documents into FIM examples with probability given by the FIM rate, and join the examples again with <code>&lt;EOT&gt;</code><ul>
+<li>문서마다 <code>&lt;EOT&gt;</code>로 짤라서 FIM하고 다시 <code>&lt;EOT&gt;</code>로 붙였다는 말<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">token_level_psm_fim</span>(<span class="params">document: <span class="built_in">str</span>, vocab: Vocab</span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">    tokens = vocab.encode(document)</span><br><span class="line">    prefix, middle, suffix = randomly_split(tokens)</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">        vocab.sentinel(<span class="string">&quot;prefix&quot;</span>), *prefix,</span><br><span class="line">        vocab.sentinel(<span class="string">&quot;suffix&quot;</span>), *suffix,</span><br><span class="line">        vocab.sentinel(<span class="string">&quot;middle&quot;</span>), *middle,</span><br><span class="line">]</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">character_level_psm_fim</span>(<span class="params">document: <span class="built_in">str</span>, vocab: Vocab</span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">    prefix, middle, suffix = randomly_split(document)</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">        vocab.sentinel(<span class="string">&quot;prefix&quot;</span>), *vocab.encode(prefix),</span><br><span class="line">        vocab.sentinel(<span class="string">&quot;suffix&quot;</span>), *vocab.encode(suffix),</span><br><span class="line">        vocab.sentinel(<span class="string">&quot;middle&quot;</span>), *vocab.encode(middle),</span><br><span class="line">]</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>show this technique can boost performance relative to document-level FIM, and <strong>adopt context-level FIM in all our main FIM runs in this work</strong></li>
+</ul>
+<h1 id="Pretraining-results"><a href="#Pretraining-results" class="headerlink" title="Pretraining results"></a>Pretraining results</h1><h2 id="Evaluation-of-left-to-right-capabilities-in-downstream-benchmarks"><a href="#Evaluation-of-left-to-right-capabilities-in-downstream-benchmarks" class="headerlink" title="Evaluation of left-to-right capabilities in downstream benchmarks"></a>Evaluation of left-to-right capabilities in downstream benchmarks</h2><ul>
+<li>train a series of models from 50M to 6.9B parameters from scratch with and without 50% FIM augmentation on natural language and code domains</li>
+<li>evaluate our models on a suite of standard downstream benchmarks, the result of which is presented in Figure 3. We again find that joint FIM pretraining does not result in any degradation in standard AR benchmarks as the performance matches within error for both natural language and code.</li>
+<li>성능 깍아먹지 않고 비슷하게 잘 나온다가 포인트 (10^9 &#x3D;&#x3D; B 단위에서도 다 비슷비슷)<br><img src="https://user-images.githubusercontent.com/7252598/182321849-3d477644-c9e3-4c6c-b0b7-dcc0d4c9c60c.png" alt="image"></li>
+</ul>
+<h2 id="FIM-rate"><a href="#FIM-rate" class="headerlink" title="FIM rate"></a>FIM rate</h2><ul>
+<li>Questions<ul>
+<li>Does FIM-for-free still hold even at higher FIM rates? If so, how high can we increase the FIM rate without degrading the left-to-right capabilities?</li>
+<li>Does using a higher FIM rate lead to stronger FIM capabilities? Or does the benefit saturate after a threshold?</li>
+</ul>
+</li>
+<li>Settings<ul>
+<li>6 large models with FIM rates (0, 0.25, 0.5, 0.75, 0.9, 1.0) for 50B tokens</li>
+</ul>
+</li>
+<li>results<ul>
+<li>FIM rate even up to 90% does not cause any degradation in left-to-right capabilities. However, there is a clear sign of degradation in ordinary AR test loss with 100% FIM rate</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/182322976-92a7f52b-ca8c-48d6-a245-e1f5a8295596.png" alt="image"></li>
+<li>On the other hand, we find that the FIM rate does significantly affect infilling capabilities. Even though the gain in FIM perplexity in Figure 4 due to a higher FIM rate is negligible, increasing this rate yields a consistent improvement in the infilling pass rate as shown in the right plot in Figure 5.</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/182323414-23a0ad81-1b37-49a7-9dd3-2df7568cc62e.png" alt="image"></li>
+</ul>
+</li>
+<li>Appendix B Scaling trends for FIM rate ablations<ul>
+<li><img src="https://user-images.githubusercontent.com/7252598/182324160-b50b1bc6-5ccd-4e69-865e-968038e7fc1d.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+<h2 id="SPM-vs-PSM-vs-joint-SPM-PSM-training"><a href="#SPM-vs-PSM-vs-joint-SPM-PSM-training" class="headerlink" title="SPM vs PSM vs joint SPM+PSM training"></a>SPM vs PSM vs joint SPM+PSM training</h2><ul>
+<li>The main finding is that SPM is slightly stronger than PSM in our benchmarks in general as evidenced by Figure 6.<ul>
+<li><img src="https://user-images.githubusercontent.com/7252598/182325009-efe8e6d5-f509-48bb-a4ea-f1b71145ccc7.png" alt="image"></li>
+<li>This is likely due to the fact that in SPM, there is no distinction between the prefix and the middle sections as they are one contiguous sequence of text. This makes it more natural for the model to continue from the prefix in contrast to PSM where attention has to first identify where the span token is.</li>
+<li>However, this does not imply that we should train solely on SPM. In Table 1, we train large models on pure PSM, pure SPM, and our default 50-50 SPM+PSM mix, and evaluate them in all modes. </li>
+<li>Not only is joint pretraining the most efficient, but it also yields the most flexible model with two inference modes.</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/182314481-b629b487-e0d9-479c-a6c5-04406f86b7ff.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+<h2 id="Context-level-vs-document-level-FIM"><a href="#Context-level-vs-document-level-FIM" class="headerlink" title="Context-level vs document-level FIM"></a>Context-level vs document-level FIM</h2><ul>
+<li><strong>context-level</strong> and document-level FIM, where augmentation is applied either <strong>before</strong> or after packing and chunking</li>
+<li><strong>perplexity evaluation does not always capture the gains in the sampling performance</strong>. (4.2 참고)<br><img src="https://user-images.githubusercontent.com/7252598/182326776-cb78e2e8-b133-4f40-881f-b3a545f693fa.png" alt="image"></li>
+<li>document-level FIM can result in fragmented FIM data with a missing prefix and&#x2F;or suffix from the chunking step of data loading pipeline. Figure 8 (left) shows that training on these invalid examples in document-level FIM does not affect the left-to-right evaluation. Hence, practitioners might still sometimes prefer document-level FIM due to its simpler implementation.</li>
+</ul>
+<h2 id="Middle-span-selection"><a href="#Middle-span-selection" class="headerlink" title="Middle span selection"></a>Middle span selection</h2><ul>
+<li>An important consideration in FIM training is the choice of middle span.</li>
+<li>select spans in three different ways, splitting randomly by lines, tokens, and characters. The section boundaries are selected uniformly at random from the allowed splitting positions based on the span type. Here, a token refers to a word in the byte-pair encoding (BPE) vocabulary. In practice, this is implemented by applying the FIM augmentation after the documents are encoded with BPE (see Appendix C). For simplicity, we run all our experiments in PSM mode in this ablation.</li>
+<li>line-based middle spans </li>
+<li>gives the models a slight advantage in the single-line and multi-line infilling benchmarks</li>
+<li>On the other hand, the line based training fails almost completely in the random span infilling benchmark</li>
+<li>token-level random spans<ul>
+<li>does slightly better on random span infilling, but is still not competitive compared to character-level runs on this benchmark</li>
+</ul>
+</li>
+<li>character level<ul>
+<li>subtokens are introduced naturally at the beginning and the end boundaries of the middle section. There is no train-test mismatch and the model is able to understand and solve more random span infilling tasks while still performing well in single-line and multi-line infilling.</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/182329347-9fcd8fbe-d7f1-48ae-a56b-7e93a387dc4a.png" alt="image"></p>
+<h1 id="Finetuning-results"><a href="#Finetuning-results" class="headerlink" title="Finetuning results"></a>Finetuning results</h1><ul>
+<li>결론은..finetuning보단 pretraining으로 하는게 나을 수 있다. finetuning도 50B tokens&amp; 90% FIM로 해야 그나마 비슷해진다<ul>
+<li>investigate whether we can finetune existing AR models to learn the FIM capability.</li>
+<li>16 models with that of the XL model trained for 100B tokens with a FIM rate of 50% without any finetuning. It is evident from this figure that even with significant additional finetuning compute, AR models finetuned with FIM do not reach the same performance as the models pretrained with FIM (and without any FIM finetuning)</li>
+</ul>
+</li>
+<li>More generally, we find that higher learning rate, FIM rate, and longer finetuning all seem helpful for improving FIM performance in finetuning.<br><img src="https://user-images.githubusercontent.com/7252598/182331302-3e7317b6-5bc8-432d-b696-f6ae8d60dc46.png" alt="image"></li>
+</ul>
+<h1 id="Discussion"><a href="#Discussion" class="headerlink" title="Discussion"></a>Discussion</h1><ul>
+<li>Pretraining vs finetuning<ul>
+<li>The main intuition for why FIM can be learned for free in pretraining is that breaking a document into three pieces and shifting the middle one to the end effectively creates three smaller documents.<ul>
+<li>In particular, each piece still requires predicting next tokens from left to right, keeping the total number of tokens processed autoregressively the same</li>
+</ul>
+</li>
+<li>On the other hand, even though FIM data is locally identical to autoregressive data, FIM does impose a different global attention pattern over the whole document.<ul>
+<li>show the causal attention mask of a FIM document in Figure 10. These new attention pattern could be the reason why it takes a relatively long token horizon and a high learning rate to learn FIM in finetuning</li>
+</ul>
+</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/182337942-d33d5c30-6489-4647-83c4-08fd8e37fa9f.png" alt="image"></li>
+</ul>
+</li>
+<li>FIM loss, AR loss, and <strong>the difficulty of FIM task</strong><ul>
+<li>There is substantial evidence that FIM can often be much harder than normal left-to-right generation.</li>
+<li>Intuitively, it is often easier to continue a text in a plausible manner <strong>than to continue the text conditioned on ending in a specific suffix.</strong> The latter requires planning a plausible narrative connecting the two pieces, starting the generation in a way that matches the prefix, and stopping the generation at the right time so it connects to the suffix</li>
+<li>in FIM the model is trained to generate <EOT> when the middle ends and connects to the suffix. On the other hand, when the model fails to produce <EOT> in the allotted budget, we often end up with truncated samples which do not connect well to the suffix. For example, consider the following:<ul>
+<li>prefix뿐만 아니라 suffix하고도 문맥상 잘 맞게 생성해야되서 더 어렵다.. post processing으로 커버도 어렵고<ul>
+<li>this type of failure is more troublesome in FIM since a failure to connect to the suffix cannot easily be fixed by post-processing.</li>
+</ul>
+</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/182401957-5f854ff7-0053-4055-b762-887e268444b0.png" alt="image"></li>
+<li>Both completions above connect well to the prefix, but only the first manages to connect well to the suffix. The second completion in contrast fails to produce <EOT> in the allotted budget resulting in<br>a bad sample.5 This turns out to be a common failure in FIM sampling</li>
+</ul>
+</li>
+<li>Appendix H<ul>
+<li>성공케이스 <ul>
+<li><img src="https://user-images.githubusercontent.com/7252598/182402748-dee89b18-a860-4ce3-9708-b9b7e9ec41e1.png" alt="image"></li>
+</ul>
+</li>
+<li>실패케이스<ul>
+<li><img src="https://user-images.githubusercontent.com/7252598/182403191-5c64ba3b-80b6-480a-bd12-eb0afb8ccbd7.png" alt="image"></li>
+</ul>
+</li>
+<li>완충케이스 (numbered items로 힌트주기)<ul>
+<li><img src="https://user-images.githubusercontent.com/7252598/182404194-1a415840-f332-4f77-99d5-83baec7506d3.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>PPL도 FIM이 AR보다 더 높은걸 보면 FIM이 좀 더 어려운 task로 볼 수 있음</li>
+<li>아래 그래프는 모두 FIM 모델이고 test loss의 type만 바꾼거임<ul>
+<li><img src="https://user-images.githubusercontent.com/7252598/182406636-a2808ae5-314c-440f-867d-dc696b85ac1c.png" alt="image"></li>
+</ul>
+</li>
+<li>Context-level vs document-level FIM and FIM rate<ul>
+<li>The basic observation is that document-level FIM effectively leads to a lower FIM rate compared to context-level FIM, even with the same nominal value of FIM rate.</li>
+<li>이하 생략</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="Related-work"><a href="#Related-work" class="headerlink" title="Related work"></a>Related work</h1><ul>
+<li>similar to this work, (utilize left-to-right autoregressive modeling by moving the infill regions to the end of context, with regions separated by sentinels)<ul>
+<li><a target="_blank" rel="noopener" href="https://aclanthology.org/2022.acl-long.26.pdf">GLM: General Language Model Pretraining with Autoregressive Blank Infilling</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2201.07520">CM3: A CAUSAL MASKED MULTIMODAL MODEL OF THE INTERNET (Facebook AI Research)</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2204.05999">InCoder: A Generative Model for Code Infilling and Synthesis</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><ul>
+<li>show that causal decoder-based language models can learn to fill in the middle of a document after being jointly trained on a mixture of traditional left-to-right and FIM transformed data</li>
+<li>A single FIM model can import modules, write docstrings, and complete functions, subsuming specialized models finetuned for individual tasks [Chen et al., 2021], providing substantial extra capability over traditional left-to-right language models.</li>
+<li>One important finding here is the FIM-for-free property.<ul>
+<li>FIM models achieve the same test loss as AR models on left-to-right test loss while achieving lower FIM loss</li>
+</ul>
+</li>
+<li>investigate FIM finetuning since a lot of the existing language models do not have FIM capabilities. Our results demonstrate that a canonically pretrained left-to-right model does not acquire the new skill to the fullest extent of the given model size even with careful hyperparameter tuning and a significant amount of finetuning compute relative to pretraining. This suggests that for the best FIM performance, pretraining jointly from scratch with our recommended hyperparameters is more effective than finetuning.</li>
+<li>use the infilling code benchmarks from InCoder [Fried et al., 2022] and introduce the new random span infilling benchmarks based on HumanEval [Chen et al., 2021]. From these, we learn a few important lessons<ul>
+<li>First, <strong>perplexity does not reflect the true infilling performance</strong>, and one should design the infilling benchmarks carefully to measure progress</li>
+<li>Second, FIM capabilities depend considerably on the FIM rate and implementation like context-level FIM but left-to-right capabilities are unaffected by these choices as long as the FIM rate is kept below 100%</li>
+<li>Third, applying FIM at the character level imbues the model with natural robustness to subtokens and makes it possible to deploy the model in the wild, for example, as a coding assistant.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Recommended-FIM-hyperparameters"><a href="#Recommended-FIM-hyperparameters" class="headerlink" title="Recommended FIM hyperparameters"></a>Recommended FIM hyperparameters</h2><ul>
+<li>FIM transformation at the character level and always including some character- level random spans as it allows the model to generate sensible completion even when the prefix and suffix end in the middle of a token</li>
+<li>pretraining with joint PSM and SPM yields the best performance due to a positive transfer between the two formats</li>
+<li>context-level FIM is superior but document-level FIM is also an option if a simpler implementation is desired</li>
+<li>Finally, we observe improved performance even up to a FIM rate of 90% without any cost in AR capabilities<ul>
+<li>In practice, any value in the range between 50% and 90% is a reasonable choice.</li>
+<li>Note that this is in contrast with some related prior work such as InCoder [Fried et al., 2022] which typically uses lower values of FIM rate such as 15%, which our results indicate to be suboptimal.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Future-directions"><a href="#Future-directions" class="headerlink" title="Future directions"></a>Future directions</h2><ul>
+<li>Smarter span selection</li>
+<li>Steerable generation</li>
+<li>Further examination of the FIM-for-free property</li>
+<li>Multiple infilling slots</li>
+<li>Improving natural language FIM performance</li>
+<li>Role of bidirectionality and attention</li>
+</ul>
+<p>Finally, our experience with the FIM-for-free property brings up the intriguing question of <em>what other useful skills can be learned jointly with no or little cost to the original capabilities of language models.</em><br>We propose the following methodology to help advance research toward answering this question:</p>
+<ol>
+<li>Establish a budget in the amount of original capabilities that one is willing to sacrifice to learn a new capability.</li>
+<li>Maximize the new capability within this budget.</li>
+</ol>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Efficient Training of Language Models to Fill in the Middle (FIM)</p><p><a href="https://eagle705.github.io/Efficient Training of Language Models to Fill in the Middle (FIM)/">https://eagle705.github.io/Efficient Training of Language Models to Fill in the Middle (FIM)/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2022-08-01</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-08-30</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/(ALiBi)%20TRAIN%20SHORT,%20TEST%20LONG:%20ATTENTION%20WITH%20LINEAR%20BIASES%20ENABLES%20INPUT%20LENGTH%20EXTRAPOLATION/"><span class="level-item">(ALiBi) TRAIN SHORT, TEST LONG: ATTENTION WITH LINEAR BIASES ENABLES INPUT LENGTH EXTRAPOLATION</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/Efficient%20Training%20of%20Language%20Models%20to%20Fill%20in%20the%20Middle%20(FIM)/';
+            this.page.identifier = 'Efficient Training of Language Models to Fill in the Middle (FIM)/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">38</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">26</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2022/08/"><span class="level-start"><span class="level-item">8월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">7월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/06/"><span class="level-start"><span class="level-item">6월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/05/"><span class="level-start"><span class="level-item">5월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/01/"><span class="level-start"><span class="level-item">1월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">12월 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">11월 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">27</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#발표자료"><span class="level-left"><span class="level-item">1</span><span class="level-item">발표자료</span></span></a></li><li><a class="level is-mobile" href="#느낀점"><span class="level-left"><span class="level-item">2</span><span class="level-item">느낀점</span></span></a></li><li><a class="level is-mobile" href="#Note"><span class="level-left"><span class="level-item">3</span><span class="level-item">Note</span></span></a></li><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">4</span><span class="level-item">Author</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">5</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#Introduction"><span class="level-left"><span class="level-item">6</span><span class="level-item">Introduction</span></span></a><ul class="menu-list"><ul class="menu-list"><li><a class="level is-mobile" href="#Our-contributions"><span class="level-left"><span class="level-item">6.1.1</span><span class="level-item">Our contributions</span></span></a></li></ul></ul></li><li><a class="level is-mobile" href="#Evaluation"><span class="level-left"><span class="level-item">7</span><span class="level-item">Evaluation</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Autoregressive-evaluation"><span class="level-left"><span class="level-item">7.1</span><span class="level-item">Autoregressive evaluation</span></span></a></li><li><a class="level is-mobile" href="#Infilling-evaluation"><span class="level-left"><span class="level-item">7.2</span><span class="level-item">Infilling evaluation</span></span></a></li></ul></li><li><a class="level is-mobile" href="#FIM-training-and-inference"><span class="level-left"><span class="level-item">8</span><span class="level-item">FIM training and inference</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#SPM-mode"><span class="level-left"><span class="level-item">8.1</span><span class="level-item">SPM mode</span></span></a></li><li><a class="level is-mobile" href="#Context-level-FIM"><span class="level-left"><span class="level-item">8.2</span><span class="level-item">Context-level FIM</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Pretraining-results"><span class="level-left"><span class="level-item">9</span><span class="level-item">Pretraining results</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Evaluation-of-left-to-right-capabilities-in-downstream-benchmarks"><span class="level-left"><span class="level-item">9.1</span><span class="level-item">Evaluation of left-to-right capabilities in downstream benchmarks</span></span></a></li><li><a class="level is-mobile" href="#FIM-rate"><span class="level-left"><span class="level-item">9.2</span><span class="level-item">FIM rate</span></span></a></li><li><a class="level is-mobile" href="#SPM-vs-PSM-vs-joint-SPM-PSM-training"><span class="level-left"><span class="level-item">9.3</span><span class="level-item">SPM vs PSM vs joint SPM+PSM training</span></span></a></li><li><a class="level is-mobile" href="#Context-level-vs-document-level-FIM"><span class="level-left"><span class="level-item">9.4</span><span class="level-item">Context-level vs document-level FIM</span></span></a></li><li><a class="level is-mobile" href="#Middle-span-selection"><span class="level-left"><span class="level-item">9.5</span><span class="level-item">Middle span selection</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Finetuning-results"><span class="level-left"><span class="level-item">10</span><span class="level-item">Finetuning results</span></span></a></li><li><a class="level is-mobile" href="#Discussion"><span class="level-left"><span class="level-item">11</span><span class="level-item">Discussion</span></span></a></li><li><a class="level is-mobile" href="#Related-work"><span class="level-left"><span class="level-item">12</span><span class="level-item">Related work</span></span></a></li><li><a class="level is-mobile" href="#Conclusion"><span class="level-left"><span class="level-item">13</span><span class="level-item">Conclusion</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Recommended-FIM-hyperparameters"><span class="level-left"><span class="level-item">13.1</span><span class="level-item">Recommended FIM hyperparameters</span></span></a></li><li><a class="level is-mobile" href="#Future-directions"><span class="level-left"><span class="level-item">13.2</span><span class="level-item">Future directions</span></span></a></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-08-01T03:00:00.000Z">2022-08-01</time></p><p class="title"><a href="/Efficient%20Training%20of%20Language%20Models%20to%20Fill%20in%20the%20Middle%20(FIM)/">Efficient Training of Language Models to Fill in the Middle (FIM)</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-13T03:00:00.000Z">2022-07-13</time></p><p class="title"><a href="/(ALiBi)%20TRAIN%20SHORT,%20TEST%20LONG:%20ATTENTION%20WITH%20LINEAR%20BIASES%20ENABLES%20INPUT%20LENGTH%20EXTRAPOLATION/">(ALiBi) TRAIN SHORT, TEST LONG: ATTENTION WITH LINEAR BIASES ENABLES INPUT LENGTH EXTRAPOLATION</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-06-20T03:00:00.000Z">2022-06-20</time></p><p class="title"><a href="COCO-LM: Correcting and Contrasting Text Sequences for Language Model Pretraining/">COCO-LM: Correcting and Contrasting Text Sequences for Language Model Pretraining</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-05-23T03:00:00.000Z">2022-05-23</time></p><p class="title"><a href="Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism/">Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-05-19T03:00:00.000Z">2022-05-19</time></p><p class="title"><a href="RoBERTa: A Robustly Optimized BERT Pretraining Approach/">RoBERTa: A Robustly Optimized BERT Pretraining Approach</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2022 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>
