@@ -172,11 +172,11 @@ widgets:
     #     type: subscribe_email
     #     description: 
     #     feedburner_id: ''
-    # -
-    #     position: left
-    #     type: adsense
-    #     client_id: ''
-    #     slot_id: ''
+    -
+        position: left
+        type: adsense
+        client_id: 'ca-pub-2655870716902046'
+        slot_id: '2764253071'
     # -
     #     position: left
     #     type: followit

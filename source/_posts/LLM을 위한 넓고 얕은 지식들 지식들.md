@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "LLM(LargeScalingLanguageModeling)을 위한 넓고 얕은 지식들"
+title:  "LLM(Large-Scale Language Model)을 위한 넓고 얕은 지식들"
 categories: paper
 comments: true
 date: 2022-08-30 12:00:00
@@ -15,7 +15,7 @@ toc: true
 - 제일 먼저 볼 것!
 - [참고](https://tutorials.pytorch.kr/intermediate/dist_tuto.html) 
 - [Pytorch Multi-GPU 정리 중](https://better-tomorrow.tistory.com/entry/Pytorch-Multi-GPU-%EC%A0%95%EB%A6%AC-%EC%A4%91)
-- [node_gpu](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FUlnWG%2Fbtrokp3bPou%2FYqnd5qX9eDEOPMFmtAwFs0%2Fimg.png)
+- ![node_gpu](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FUlnWG%2Fbtrokp3bPou%2FYqnd5qX9eDEOPMFmtAwFs0%2Fimg.png)
 - 분산학습을 할때 로그를 찍으면 프로세스 개수만큼 찍힌다 -> 따로 처리가 필요해짐! `if rank==0`일때만 찍게 한다던지
 
 # Multi GPU & Node
@@ -39,26 +39,89 @@ toc: true
   - [torch.distributed.run/torchrun](https://pytorch.org/tutorials/intermediate/ddp_tutorial.html#initialize-ddp-with-torch-distributed-run-torchrun)
 - multi-node를 쓸 경우 네트워크등 모종의 이유로 iteration당 시간은 조금 더 늘어날 수 있다 (하지만 더 많은 데이터를 본다!)
 
+# HPC
+- reference: https://docs.likejazz.com/wiki/HPC/
+- [DeepOps](https://github.com/NVIDIA/deepops)
+  - DevOps, MLOps와 함께 딥러닝을 중심으로 DeepOps라고 부르며, NVIDIA가 공개한 자사 DGX 서버에 Slurm clusters를 구성하는 툴의 이름
+  - slurm: 각 노드에 배치작업을 실행하는 스케줄러, 노드에는 작업을 관리하는 데몬이 떠 있다.
+  - [enroot](https://github.com/NVIDIA/enroot): **도커 이미지를 sqsh(squashfs) 파일로 관리**
+    - NVIDIA에서 개발
+  - [pyxis](https://github.com/NVIDIA/pyxis): **slurm의 컨테이너 플러그인**으로, srun에서 sqsh 컨테이너 파일을 주고 받을 수 있다.
+    - NVIDIA에서 개발
 
-# SLURM
-
+## SLURM
 slurm에는 많은 옵션들이 존재하는데, 이 옵션에 대해서 몇가지만 정리해보고자한다.
-
+- [SLURM에 대한 전반적인 가이드 자료](https://repository.kisti.re.kr/bitstream/10580/6542/1/2014-147%20Slurm%20%EA%B4%80%EB%A6%AC%EC%9E%90%20%EC%9D%B4%EC%9A%A9%EC%9E%90%20%EA%B0%80%EC%9D%B4%EB%93%9C.pdf)
 ex) sbatch script 예시
 ```
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --gpus-per-node=8
+#SBATCH --cpus-per-task=16
 #SBATCH --ntasks-per-node=1
 #SBATCH --partition=batch
 #SBATCH --output=logs/%j.%x.info.log
 #SBATCH --error=logs/%j.%x.error.log
 #SBATCH --exclude=제외할노드주소
+
+export MASTER_ADDR=$(hostname -i | cut -d' ' -f1)
+export WORLD_SIZE=$((SLURM_JOB_NUM_NODES * SLURM_NTASKS_PER_NODE))
 ```
 - `ntasks-per-node`
   - 각 노드에서 살행되는 프로세스 수인듯
 - `#SBATCH --gres=gpu:1`와 `#SBATCH --gpus-per-task=1`의 차이
   - https://stackoverflow.com/questions/67091056/gpu-allocation-in-slurm-gres-vs-gpus-per-task-and-mpirun-vs-srun
+- pyxis로 enroort로 만든 sqsh 이미지 실행방법
+
+```
+srun -l \
+    --container-workdir="$HOME/공유할디렉토리" \
+    --container-image="$ENROOT_IMAGE_PATH/node에서사용할enroot이미지.sqsh" \
+    --container-mounts="$HOME:$HOME" \
+    --output=$LOG_PATH/%j.%x.log \
+    sh -c "$run_cmd"
+```
+- drain 노드 확인
+
+```
+# 상태조회
+$ sinfo -l
+Fri Sep 02 17:29:07 2022
+PARTITION AVAIL  TIMELIMIT   JOB_SIZE ROOT OVERSUBS     GROUPS  NODES       STATE NODELIST
+batch*       up   infinite 1-infinite   no       NO        all      4     drained 노드1,노드2,...,노드4
+batch*       up   infinite 1-infinite   no       NO        all     16       mixed 노드n,...,노드n+15
+batch*       up   infinite 1-infinite   no       NO        all     14   allocated 노드k,...,노드k+13
+
+# 전체 노드 상태조회
+$ sinfo -N -l
+
+# queue 상태조회
+$ squeue
+```
+- 전체 노드 스펙 확인
+  - cpu, gpu, socket 개수, 메모리등 확인가능
+  - `cat /etc/slurm/slurm.conf`
+- 각 노드 스펙 확인
+  - `cat /etc/nhc/nhc.conf`
+- job 히스토리 확인
+  - `sacct`
+- 사용자 조회, 그룹 조회
+  - `sacctmgr list user`, `sacctmgr show account`
+- drain 이벤트 조회
+  - `sacctmgr list event`
+  
+## Pyxis
+- Slurm Workload Manager를 위한 SPANK(Slurm Plug-in Architecture for Node and job (K)control) 플러그인임
+  - srun 명령어로 containerized task를 클러스터에서 돌릴 수 있게 해줌!
+- 이미지 배포에 오랜 시간이 걸리는데, 각 노드에 `$ enroot list`로 이미지가 존재하면 container-name 지정으로 호출할 수 있다. 이 경우 이미지 전송을 하지 않으므로 매우 빠르게 실행 가능함.
+- 예시
+  - `$ srun --gres=gpu:1 -N2 -l --container-name=pytorch-slurm nvidia-smi`
+
+## Enroot PyTorch hook
+- `srun`은 `SLURM_`으로 시작하는 다양한 환경변수를 셋팅해준다. 하지만 `RANK`, `WORLD_SIZE`는 `torchrun`이 셋팅함
+- enroot의 `hooks/extra`에 `50-slurm-pytorch`라는 hook2이 있어서, 만약 PyTorch 이미지인 경우 `PYTORCH_VERSION` 환경변수가 있는지 확인하고, `SLURM_*`을 이용해 `torchrun`이 해주는 `RANK, WORLD_SIZE, MASTER_ADDR`등을 대신 설정해준다.
+- 따라서 pyxis로 enroot 이미지를 srun 할 경우 따로 torchrun 할 필요 없으며, rank/size를 얻기 위한 MPI 통신도 필요없다.
+  - `이 부분은 잘 이해가 안간다..!`
 
 
 
