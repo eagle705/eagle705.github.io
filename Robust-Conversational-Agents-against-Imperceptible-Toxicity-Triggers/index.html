@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Robust Conversational Agents against Imperceptible Toxicity Triggers - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Note Github: https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;Ninarehm&amp;#x2F;Robust-Agents 발표자료: Robust Conversational Agents against Imperceptible Toxicity Triggers.pdf  Author Ninareh Mehrabi1, Ahmad Beirami2∗, Fred Morstatter1, Aram"><meta property="og:type" content="blog"><meta property="og:title" content="Robust Conversational Agents against Imperceptible Toxicity Triggers"><meta property="og:url" content="https://eagle705.github.io/Robust-Conversational-Agents-against-Imperceptible-Toxicity-Triggers/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="Note Github: https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;Ninarehm&amp;#x2F;Robust-Agents 발표자료: Robust Conversational Agents against Imperceptible Toxicity Triggers.pdf  Author Ninareh Mehrabi1, Ahmad Beirami2∗, Fred Morstatter1, Aram"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/206905423-08b021b0-75ba-46e1-9c65-2b2073b5d625.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/206906804-33adbf00-b719-493d-a33f-41d047279022.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/206911268-387f2138-5f04-40ff-aeca-0c6d0ded65a8.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/206912168-fa049daf-6355-4ff3-b021-34b672a31446.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/206913511-06c3a943-2381-4314-97b7-bf78fe264e48.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/206913885-6b1f1e62-54d3-4333-9d97-d93a72859652.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/206914191-f9791d3f-601d-4dd5-bede-ea987fb5a163.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/206914045-c7e39cc1-1628-4ece-930e-2871139e5c40.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/206914632-c36015db-e881-4ba4-a84b-1975a1f94dfc.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/206938639-772d484b-542c-40cf-98ce-685897c27454.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/206915934-4e681d63-48ca-4272-9e9d-97f80aec028b.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/206916168-a764f5b2-357e-406b-a496-7699c14544b0.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/206916105-23657a87-b3c6-4a7a-8435-8833b30b51eb.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/206916300-565d5b0f-6fa9-4f24-95bd-a99c3b2b6a6a.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/206916634-62e81b8a-5305-41ab-8583-c5a36a272d3e.png"><meta property="article:published_time" content="2022-12-12T06:45:59.000Z"><meta property="article:modified_time" content="2022-12-12T06:46:28.958Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://user-images.githubusercontent.com/7252598/206905423-08b021b0-75ba-46e1-9c65-2b2073b5d625.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/Robust-Conversational-Agents-against-Imperceptible-Toxicity-Triggers/"},"headline":"Robust Conversational Agents against Imperceptible Toxicity Triggers","image":["https://user-images.githubusercontent.com/7252598/206905423-08b021b0-75ba-46e1-9c65-2b2073b5d625.png","https://user-images.githubusercontent.com/7252598/206906804-33adbf00-b719-493d-a33f-41d047279022.png","https://user-images.githubusercontent.com/7252598/206911268-387f2138-5f04-40ff-aeca-0c6d0ded65a8.png","https://user-images.githubusercontent.com/7252598/206912168-fa049daf-6355-4ff3-b021-34b672a31446.png","https://user-images.githubusercontent.com/7252598/206913511-06c3a943-2381-4314-97b7-bf78fe264e48.png","https://user-images.githubusercontent.com/7252598/206913885-6b1f1e62-54d3-4333-9d97-d93a72859652.png","https://user-images.githubusercontent.com/7252598/206914191-f9791d3f-601d-4dd5-bede-ea987fb5a163.png","https://user-images.githubusercontent.com/7252598/206914045-c7e39cc1-1628-4ece-930e-2871139e5c40.png","https://user-images.githubusercontent.com/7252598/206914632-c36015db-e881-4ba4-a84b-1975a1f94dfc.png","https://user-images.githubusercontent.com/7252598/206938639-772d484b-542c-40cf-98ce-685897c27454.png","https://user-images.githubusercontent.com/7252598/206915934-4e681d63-48ca-4272-9e9d-97f80aec028b.png","https://user-images.githubusercontent.com/7252598/206916168-a764f5b2-357e-406b-a496-7699c14544b0.png","https://user-images.githubusercontent.com/7252598/206916105-23657a87-b3c6-4a7a-8435-8833b30b51eb.png","https://user-images.githubusercontent.com/7252598/206916300-565d5b0f-6fa9-4f24-95bd-a99c3b2b6a6a.png","https://user-images.githubusercontent.com/7252598/206916634-62e81b8a-5305-41ab-8583-c5a36a272d3e.png"],"datePublished":"2022-12-12T06:45:59.000Z","dateModified":"2022-12-12T06:46:28.958Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"Note Github: https:&#x2F;&#x2F;github.com&#x2F;Ninarehm&#x2F;Robust-Agents 발표자료: Robust Conversational Agents against Imperceptible Toxicity Triggers.pdf  Author Ninareh Mehrabi1, Ahmad Beirami2∗, Fred Morstatter1, Aram"}</script><link rel="canonical" href="https://eagle705.github.io/Robust-Conversational-Agents-against-Imperceptible-Toxicity-Triggers/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><script data-ad-client="ca-pub-2655870716902046" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2022-12-12T06:45:59.000Z" title="2022. 12. 12. 오후 3:45:59">2022-12-12</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2022-12-12T06:46:28.958Z" title="2022. 12. 12. 오후 3:46:28">2022-12-12</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">18분안에 읽기 (약 2743 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">Robust Conversational Agents against Imperceptible Toxicity Triggers</h1><div class="content"><h1 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h1><ul>
+<li>Github: <a target="_blank" rel="noopener" href="https://github.com/Ninarehm/Robust-Agents">https://github.com/Ninarehm/Robust-Agents</a></li>
+<li>발표자료: <a target="_blank" rel="noopener" href="https://github.com/eagle705/presentation/files/10205206/pdf_2_Robust.Conversational.Agents.against.Imperceptible.Toxicity.Triggers.pdf">Robust Conversational Agents against Imperceptible Toxicity Triggers.pdf</a></li>
+</ul>
+<h1 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h1><ul>
+<li>Ninareh Mehrabi1, Ahmad Beirami2∗, Fred Morstatter1, Aram Galstyan1 </li>
+<li>1University of Southern California - Information Sciences Institute 2Meta AI</li>
+</ul>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><ul>
+<li>최근 NLP 연구는 다양한 toxicity detection에 개선이 있었음<ul>
+<li>toxicity detection models with the intention of identifying and mitigating toxic language from existing systems.</li>
+</ul>
+</li>
+<li>기존 연구가 많긴하나 adversarial attacks과 defense에 대한 연구는 부족했음<ul>
+<li>adversarial attacks that force the system to generate toxic language and the defense against them</li>
+</ul>
+</li>
+<li>기존의 연구는 대부분 사람이 attack 용 문장을 생성해왔음, 비용이 비싸고 확장가능하지 않음</li>
+<li>반면에 자동화해서 만든 attack인 경우 attack vector가 human-like language와 맞지 않음, 이는 LM loss로 detecting이 가능함<ul>
+<li>Existing work to generate such attacks is either based on human-generated attacks which is costly and not scalable or, in case of automatic attacks, the attack vector does not conform to human-like language, which can be detected using a language model loss</li>
+</ul>
+</li>
+<li>본 연구에서는 conversational agents를 눈에 띄지 않게 공격(앞서 자동화한 공격과 달리 인식되지 못하게) 하는 방법을 coherency, relevancy, fluency 관점에서 제안함<ul>
+<li>propose attacks against conversational agents that are imperceptible, i.e., they fit the conversation in terms of coherency, relevancy, and fluency, while they are effective and scalable, i.e., they can automatically trigger the system into generating toxic language</li>
+</ul>
+</li>
+<li>본 연구에서는 제안한 attack에 대한 defense mechanism도 제안함. 공격을 완화시킬뿐만 아니라 conversational flow도 유지시킬 수 있는 방법을 제안함<ul>
+<li>propose a defense mechanism against such attacks which not only mitigates the attack but also attempts to maintain the conversational flow</li>
+</ul>
+</li>
+<li>결론적으로 공격이 잘들어와도 잘 막을 수 있는 방법에 대해 automaitc and human evaluations했고 효과적임을 보였음<ul>
+<li>our defense is effective at avoiding toxic language generation even against imperceptible toxicity triggers while the generated language fits the conversation in terms of coherency and relevancy</li>
+</ul>
+</li>
+</ul>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><ul>
+<li>대화 시스템에서 adversarial attacks을 고려하는게 safe, robust 대화를 위해서 중요함<ul>
+<li>consider adversarial attacks on human-centric chatbots and dialogue systems. It is important for these systems to be safe and robust in the face of natural(-looking) human conversations</li>
+</ul>
+</li>
+<li>대화 예시<br><img src="https://user-images.githubusercontent.com/7252598/206905423-08b021b0-75ba-46e1-9c65-2b2073b5d625.png" alt="image"></li>
+<li>attacks<ul>
+<li>Our proposed approach works by augmenting the <em>universal adversarial triggers (UAT)</em> from Wallace et al. (2019) with <strong>additional selection criteria to generate imperceptible yet effective triggers</strong></li>
+</ul>
+</li>
+<li>defense<ul>
+<li>then focus on a defense mechanism for the non-adversarial (defender) model to avoid generating toxic utterances</li>
+<li>간단한 방법(Xu et al., 2020)으로도 adversarial triggers를 찾아낼 수 있지만, 대화 흐름을 깰수있어서, 흐름을 깨지 않는 “detoxifies” 답변을 사용하는 defense mechanism 쪽에 관심을 가짐</li>
+<li>Our proposed method relies on <strong>two levels of interpretable reasoning</strong> that helps the model to <ul>
+<li>(1) <strong>identify the key adversarial tokens</strong> responsible for the attack and </li>
+<li>(2) avoid generating toxic responses <strong>by masking those tokens</strong> during the generation process.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="Attack-Approaches"><a href="#Attack-Approaches" class="headerlink" title="Attack Approaches"></a>Attack Approaches</h1><ul>
+<li>first discuss the <strong>universal adversarial trigger(UAT)</strong> attack proposed by Wallace et al. (2019), which we use as our <strong>baseline</strong></li>
+<li>then <strong>propose alterations</strong> to this baseline to make the universal triggers <strong>more natural-looking and suitable</strong> for <strong>conversational domain</strong></li>
+</ul>
+<h2 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h2><ul>
+<li><p><strong>Universal Adversarial Trigger (UAT) (Wallace et al., 2019)</strong></p>
+<ul>
+<li>The <code>goal</code> in universal adversarial trigger attack is <code>to find a universal trigger sequence</code> for a <code>given trained model</code>, which if attached to the start of any given input can cause the model to output the desired outcome (Wallace et al., 2019)</li>
+<li>trigger sequence는 given input 앞에 붙게되면 모델의 결과물을 원하는대로 바꿔놓을 수 있는 것을 말하는 듯</li>
+<li>This attack starts with a <code>fixed-length sequence</code> as <code>the initial trigger</code>, e.g., <code>“the the the the the the”</code> and tries to <code>iteratively replace the tokens</code> in the sequence <code>to satisfy an objective</code>.</li>
+<li>The <code>iterations terminate</code> <code>when no improvement (replacement) can be made</code> to further optimize the objective</li>
+<li>toxic token을 생성하기 위해서 넣는 거다보니 LM loss를 만족시킬 필요도 없고, ppl이 되게 높은 easily detectable한 반복적인 문장이 나오는 경우가 많음</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/206906804-33adbf00-b719-493d-a33f-41d047279022.png" alt="image"></li>
+</ul>
+</li>
+<li><p><strong>Universal Adversarial Trigger with Language Model Loss (UAT-LM)</strong></p>
+<ul>
+<li>An intuitive solution to address the above shortcoming of UAT is to impose a <code>language modeling objective on the trigger tokens</code>.</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/206911268-387f2138-5f04-40ff-aeca-0c6d0ded65a8.png" alt="image"></li>
+<li>위 전략대로 lm loss 를 추가해도 generated triggers 끼리는 말이 될지라도 conversation flow가 coherency, relevancy하다고 장담할순없음</li>
+<li>다른 방법으로 수정한 방법론 제안하겠음</li>
+</ul>
+</li>
+<li><p><strong>Unigram Trigger with Selection Criteria (UTSC)</strong></p>
+<ul>
+<li>propose an alternative approach in which we generate a collection of unigram triggers (with sequence length one) from UAT<ul>
+<li>유니그램 트리거를 UAT에서 모음</li>
+</ul>
+</li>
+<li>then feed these triggers along with the history of the conversation <em>h</em> to our dialogue model and generate different attack utterances<ul>
+<li>유니그램 트리거를 붙여서 다른 attack utterances를 생성해냄</li>
+</ul>
+</li>
+<li>Next, we pick the best suited attack utterance amongst all the generated attack utterances according to our selection criterion as demonstrated in Figure 2<ul>
+<li>생성된것들중에서 selection criterion에 기초해서 가장 잘 맞는 utterance를 선택함</li>
+<li>유니그램 트리거를 conversation history에 붙여서 DialoGPT로 example을 생성하고 toxicity classfiers(단일 or 앙상블)로 점수를 내고 각각 기준(UTSC-N)에 따른 가장 높은 점수의 문장을 골라낸다<ul>
+<li>UTSC-1: 가장 높은 toxicity score 갖거나</li>
+<li>UTSC-2: threshold 보다 큰 문장중에 가장 낮은 toxicity 점수를 갖거나 (threshold 못넘으면 가장 높은 점수를 가진 것)</li>
+<li>UTSC-3: 가장 낮은 toxicity 점수를 갖는 것</li>
+</ul>
+</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/206912168-fa049daf-6355-4ff3-b021-34b672a31446.png" alt="image"></li>
+<li>유니그램이라 fluency도 눈에 띄게 희생되진 않는다</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Experimental-Setup"><a href="#Experimental-Setup" class="headerlink" title="Experimental Setup"></a>Experimental Setup</h2><ul>
+<li>General Setup<ul>
+<li>use <code>DialoGPT</code></li>
+<li>to generate <code>100 conversations</code> around a specific topic</li>
+<li>The topic is determined by the context sentence that starts the conversation between the adversary and the defender.</li>
+<li>Each conversation runs for <code>10 turns</code></li>
+</ul>
+</li>
+<li>Toxicity Detection Models<ul>
+<li>utilize an ensemble of three different toxicity detection models: <ul>
+<li><code>Toxic-bert</code>, <code>Perspective API</code>, and <code>Safety classifier</code> (Xu et al., 2020)</li>
+<li>Toxic-bert is the least sensitive of the three, followed by Perspective API, and the Safety classifier</li>
+</ul>
+</li>
+<li>allow the <code>adversary to only use one</code> of the toxicity detection models to design its attack. We then quantify toxicity using the other two toxicity detection methods, not accessed by the adversary.</li>
+</ul>
+</li>
+<li>Data<ul>
+<li>context sentences from two different datasets, Wizard of Wikipedia (Dinan et al., 2018) and ConvoKit’s Reddit Corpus</li>
+<li>Wikipedia: neutral topics</li>
+<li>Reddit: sensitive topics</li>
+<li>picked 50 random context sentences from the Wizard of Wikipedia and 50 from the Reddit datasets.</li>
+</ul>
+</li>
+<li>AMT Experiments<ul>
+<li>To compare and verify the quality of conversations generated during and after the attacks, we conduct human experiments</li>
+<li>AMT workers annotated 100 conversations from each of the three attacks and each conversa- tion was annotated by 3 AMT workers giving us overall 900 annotated conversations 300 from each attack</li>
+</ul>
+</li>
+</ul>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><ul>
+<li>Attack Effectiveness<br><img src="https://user-images.githubusercontent.com/7252598/206913511-06c3a943-2381-4314-97b7-bf78fe264e48.png" alt="image"><ul>
+<li>two of our proposed attacks UAT-LM and UTSC-1 are performing the best according to the Perspective API and Toxic- bert classifiers</li>
+<li>UAT baseline performs the best according to Safety classifier.</li>
+<li><code>Overall results show that UTSC-1 and UAT-LM attacks are competitive attacks in terms of attack effectiveness.</code></li>
+<li>UAT(baseline) attack tends to generate meaningless phrases, e.g., <code>“acist neighborhoodsJohnson carry morals Ukrain”</code> which can easily be detected as an anomaly and make the conversation not flow naturally</li>
+<li>GPT-2 기준 PPL 차이<ul>
+<li>UAT is absurdly high (∼10^7) compared to ∼10^4 for UAT-LM, and ∼ 160 for UTSC-1 </li>
+<li>no attack case is ~39</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Attack Transferability<ul>
+<li>attack is forcing the defender to generate actual toxic language rather than fooling the toxicity classifier. </li>
+<li><img src="https://user-images.githubusercontent.com/7252598/206913885-6b1f1e62-54d3-4333-9d97-d93a72859652.png" alt="image"></li>
+</ul>
+</li>
+<li>Human Evaluation<ul>
+<li>Our UTSC-1 attack is rated to have the highest coherency</li>
+<li>UTSC- 1 is rated to have more fluent attacks generated with mostly moderate to good scores and a higher average–shown by the black dotted lines–compared to the UAT and UAT-LM baselines</li>
+<li>Fleiss Kappa (Fleiss, 1971) annotator agreement results from this evaluation is reported in Table 1. Annotators have reasonable overall agreement for all the qualities<ul>
+<li><img src="https://user-images.githubusercontent.com/7252598/206914191-f9791d3f-601d-4dd5-bede-ea987fb5a163.png" alt="image"></li>
+</ul>
+</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/206914045-c7e39cc1-1628-4ece-930e-2871139e5c40.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+<h1 id="Defense-Approaches"><a href="#Defense-Approaches" class="headerlink" title="Defense Approaches"></a>Defense Approaches</h1><ul>
+<li>two components <ul>
+<li>(a) detecting the attack and </li>
+<li>(b) mitigating its effect by ensuring that the defender does not generate a toxic response</li>
+</ul>
+</li>
+<li>detection<ul>
+<li>The detection problem is rather straightforward, as the defense can simply run a toxicity classifier on the generated response</li>
+</ul>
+</li>
+<li>mitigation<ul>
+<li>Xu et al. (2020) suggested a mitigating approach which, when a toxic response is detected, simply resets the dialogue and generates a (non-toxic) utterance by randomly sampling from a predefined set of topics<ul>
+<li>기존 연구에서는 대화 중단 후 미리 정의된 토픽에서 랜덤하게 샘플링해서 대화 다시 생성</li>
+</ul>
+</li>
+<li>하지만 본 연구에서는 대화흐름을 유지하면서 toxic utterance 생성을 피하려고함!</li>
+</ul>
+</li>
+</ul>
+<h2 id="Methodology-1"><a href="#Methodology-1" class="headerlink" title="Methodology"></a>Methodology</h2><ul>
+<li>defense mechanism in the second stage utilizes two layers of reasoning using two different interpretability techniques<ul>
+<li>The first layer aims to detect which tokens in the defender’s utterance is making the toxicity detection model to label the utterance as being toxic.<ul>
+<li>defender’s utterance에서 문제의 토큰 찾기 (<strong>L1</strong>), we call these tokens the <strong>L1</strong> tokens</li>
+</ul>
+</li>
+<li>The second layer aims to detect which tokens in the adversary’s attack utterance are responsible for generation of L1 tokens form defender’s utterance<ul>
+<li>adversary’s attack utterance에서 L1 token을 생성하는 원인 토큰 찾기 (<strong>L2</strong> token)</li>
+</ul>
+</li>
+<li>defender then masks the L2 tokens from the adversary, which were responsible for triggering the defender model to generate toxic tokens, and generates a new utterance<ul>
+<li>L1을 생성하는 L2 토큰을 마스킹한다! 그리고 문장을 재생성한다!</li>
+</ul>
+</li>
+<li>then apply a toxicity classifier on this new utterance<ul>
+<li>새로 생성된 문장의 toxicity를 본다<ul>
+<li>toxicity 없으면 통과! 있으면 좀 더 masking해서 반복<br><img src="https://user-images.githubusercontent.com/7252598/206914632-c36015db-e881-4ba4-a84b-1975a1f94dfc.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>For the <code>first layer</code>, we use transformers interpret which provides explanations and identifies the L1 token according to <code>Toxic-bert</code> model<ul>
+<li>BERT를 통해 L1 토큰을 찾음</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/cdpierse/transformers-interpret">https://github.com/cdpierse/transformers-interpret</a> 사용</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoModelForSequenceClassification, AutoTokenizer</span><br><span class="line">model_name = <span class="string">&quot;distilbert-base-uncased-finetuned-sst-2-english&quot;</span></span><br><span class="line">model = AutoModelForSequenceClassification.from_pretrained(model_name)</span><br><span class="line">tokenizer = AutoTokenizer.from_pretrained(model_name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># With both the model and tokenizer initialized we are now able to get explanations on an example text.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> transformers_interpret <span class="keyword">import</span> SequenceClassificationExplainer</span><br><span class="line">cls_explainer = SequenceClassificationExplainer(</span><br><span class="line">    model,</span><br><span class="line">    tokenizer)</span><br><span class="line">word_attributions = cls_explainer(<span class="string">&quot;I love you, I like you&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>word_attributions</span><br><span class="line">[(<span class="string">&#x27;[CLS]&#x27;</span>, <span class="number">0.0</span>),</span><br><span class="line"> (<span class="string">&#x27;i&#x27;</span>, <span class="number">0.2778544699186709</span>),</span><br><span class="line"> (<span class="string">&#x27;love&#x27;</span>, <span class="number">0.7792370723380415</span>),</span><br><span class="line"> (<span class="string">&#x27;you&#x27;</span>, <span class="number">0.38560088858031094</span>),</span><br><span class="line"> (<span class="string">&#x27;,&#x27;</span>, -<span class="number">0.01769750505546915</span>),</span><br><span class="line"> (<span class="string">&#x27;i&#x27;</span>, <span class="number">0.12071898121557832</span>),</span><br><span class="line"> (<span class="string">&#x27;like&#x27;</span>, <span class="number">0.19091105304734457</span>),</span><br><span class="line"> (<span class="string">&#x27;you&#x27;</span>, <span class="number">0.33994871536713467</span>),</span><br><span class="line"> (<span class="string">&#x27;[SEP]&#x27;</span>, <span class="number">0.0</span>)]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>For the <code>second layer</code>, we use <a target="_blank" rel="noopener" href="https://github.com/Pascalson/LERG">LERG</a> (Tuan et al., 2021) that provides local explanations for dialogue response generation and identifies the <code>L2 token</code><ul>
+<li><code>LERG (Local Explanation of Response Generation) is a unified approach to explain why a conditional text generation model will predict a text</code></li>
+<li><img src="https://user-images.githubusercontent.com/7252598/206938639-772d484b-542c-40cf-98ce-685897c27454.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+<h2 id="Experimental-Setup-1"><a href="#Experimental-Setup-1" class="headerlink" title="Experimental Setup"></a>Experimental Setup</h2><h3 id="Baselines"><a href="#Baselines" class="headerlink" title="Baselines"></a>Baselines</h3><ul>
+<li>Two-stage Non Sequitur Baseline<ul>
+<li>toxicity 발견하면 주제 바꿔서 말하게 하기<ul>
+<li>uses a toxicity classifier to detect if the utterance is toxic or not. It then changes the topic of the conversation if the ut- terance was detected to be toxic, e.g., “Hey do you want to talk about something else? How about we talk about X?” where X is a randomly chosen topic from 1087 topics judged as safe from the Wizard of Wikipedia conversational topic list</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Trigger Masking (TM) Baseline<ul>
+<li>consider masking the adversarial trigger tokens. Note that the defender does not generally know which tokens were the trigger-tokens used by the adversary, so this approach is not applicable in realistic settings. </li>
+<li>실전에선 trigger tokens이 어떤건지 모르지만 인사이트용을 위해 추가함</li>
+<li>오라클 베이스라인임</li>
+</ul>
+</li>
+</ul>
+<h3 id="AMT-Experiments"><a href="#AMT-Experiments" class="headerlink" title="AMT Experiments"></a>AMT Experiments</h3><ul>
+<li>evaluate the defense quality according to relevancy and fluency, the coherency of the overall conversation, and the toxicity of the defense utterance</li>
+<li>27 conversations were rated from each of the three defenses (TM, Two- stage Non Sequitur, and our proposed defense). 3 AMT workers rated each conversation which gave us 243 annotations 81 from each defense</li>
+</ul>
+<h2 id="Results-1"><a href="#Results-1" class="headerlink" title="Results"></a>Results</h2><ul>
+<li>Defense Effectiveness<ul>
+<li>our proposed defense mechanism as well as the Non Sequitur baseline achieve <code>100% defense effectiveness</code> according to Toxic-bert classifier</li>
+<li>our proposed method for all the attacks except UAT-LM, we were able to reach <code>100% defense effectiveness</code> <code>by only masking one token</code><ul>
+<li>For UAT-LM, almost 90% of cases were resolved by masking one token and the rest were resolved by the iterative approach that masked multiple tokens (up to 3)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Defense Transferability<br><img src="https://user-images.githubusercontent.com/7252598/206915934-4e681d63-48ca-4272-9e9d-97f80aec028b.png" alt="image"></li>
+<li>Human Evaluation<br><img src="https://user-images.githubusercontent.com/7252598/206916168-a764f5b2-357e-406b-a496-7699c14544b0.png" alt="image"><br><img src="https://user-images.githubusercontent.com/7252598/206916105-23657a87-b3c6-4a7a-8435-8833b30b51eb.png" alt="image"></li>
+</ul>
+<h1 id="Beyond-Conversational-Agents"><a href="#Beyond-Conversational-Agents" class="headerlink" title="Beyond Conversational Agents"></a>Beyond Conversational Agents</h1><ul>
+<li>show the generalizability of our defense method against non-conversational generation tasks, by conducting experiments with RealToxicityPrompts dataset</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/206916300-565d5b0f-6fa9-4f24-95bd-a99c3b2b6a6a.png" alt="image"></li>
+</ul>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><ul>
+<li>studied the possibility of generating imperceptible attacks against conversational agents that, while fluent and coherent, target the model into generating toxic responses</li>
+<li>proposed a defense mechanism that was shown to be effective through various automatic and human evaluations as well as its transferability to human attacks, general generation tasks, and different toxicity classifiers</li>
+<li>Future work can focus on improving our proposed attacks both in terms of imperceptibility and effectiveness as well as more advanced defense mechanisms.</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/206916634-62e81b8a-5305-41ab-8583-c5a36a272d3e.png" alt="image"></p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Robust Conversational Agents against Imperceptible Toxicity Triggers</p><p><a href="https://eagle705.github.io/Robust-Conversational-Agents-against-Imperceptible-Toxicity-Triggers/">https://eagle705.github.io/Robust-Conversational-Agents-against-Imperceptible-Toxicity-Triggers/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2022-12-12</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-12-12</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="sharethis-inline-share-buttons"></div><script src="https://platform-api.sharethis.com/js/sharethis.js#property=63297c6228f9450019a5f574&amp;product=sop" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/SOCIAL-CHEMISTRY-101/"><span class="level-item">SOCIAL CHEMISTRY 101 - Learning to Reason about Social and Moral Norms</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/Robust-Conversational-Agents-against-Imperceptible-Toxicity-Triggers/';
+            this.page.identifier = 'Robust-Conversational-Agents-against-Imperceptible-Toxicity-Triggers/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">43</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">30</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2022/12/"><span class="level-start"><span class="level-item">12월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/11/"><span class="level-start"><span class="level-item">11월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/10/"><span class="level-start"><span class="level-item">10월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/09/"><span class="level-start"><span class="level-item">9월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/08/"><span class="level-start"><span class="level-item">8월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">7월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/06/"><span class="level-start"><span class="level-item">6월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/05/"><span class="level-start"><span class="level-item">5월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/01/"><span class="level-start"><span class="level-item">1월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">12월 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">11월 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">32</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="card widget" data-type="adsense"><div class="card-content"><div class="menu"><h3 class="menu-label">광고</h3><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2655870716902046" data-ad-slot="2764253071" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Note"><span class="level-left"><span class="level-item">1</span><span class="level-item">Note</span></span></a></li><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">2</span><span class="level-item">Author</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">3</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#Introduction"><span class="level-left"><span class="level-item">4</span><span class="level-item">Introduction</span></span></a></li><li><a class="level is-mobile" href="#Attack-Approaches"><span class="level-left"><span class="level-item">5</span><span class="level-item">Attack Approaches</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Methodology"><span class="level-left"><span class="level-item">5.1</span><span class="level-item">Methodology</span></span></a></li><li><a class="level is-mobile" href="#Experimental-Setup"><span class="level-left"><span class="level-item">5.2</span><span class="level-item">Experimental Setup</span></span></a></li><li><a class="level is-mobile" href="#Results"><span class="level-left"><span class="level-item">5.3</span><span class="level-item">Results</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Defense-Approaches"><span class="level-left"><span class="level-item">6</span><span class="level-item">Defense Approaches</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Methodology-1"><span class="level-left"><span class="level-item">6.1</span><span class="level-item">Methodology</span></span></a></li><li><a class="level is-mobile" href="#Experimental-Setup-1"><span class="level-left"><span class="level-item">6.2</span><span class="level-item">Experimental Setup</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Baselines"><span class="level-left"><span class="level-item">6.2.1</span><span class="level-item">Baselines</span></span></a></li><li><a class="level is-mobile" href="#AMT-Experiments"><span class="level-left"><span class="level-item">6.2.2</span><span class="level-item">AMT Experiments</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Results-1"><span class="level-left"><span class="level-item">6.3</span><span class="level-item">Results</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Beyond-Conversational-Agents"><span class="level-left"><span class="level-item">7</span><span class="level-item">Beyond Conversational Agents</span></span></a></li><li><a class="level is-mobile" href="#Conclusion"><span class="level-left"><span class="level-item">8</span><span class="level-item">Conclusion</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-12-12T06:45:59.000Z">2022-12-12</time></p><p class="title"><a href="/Robust-Conversational-Agents-against-Imperceptible-Toxicity-Triggers/">Robust Conversational Agents against Imperceptible Toxicity Triggers</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-11-02T06:27:15.000Z">2022-11-02</time></p><p class="title"><a href="/SOCIAL-CHEMISTRY-101/">SOCIAL CHEMISTRY 101 - Learning to Reason about Social and Moral Norms</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-10-05T07:16:45.000Z">2022-10-05</time></p><p class="title"><a href="/A-Contrastive-Framework-for-Neural-Text-Generation-NeurIPS-2022/">A Contrastive Framework for Neural Text Generation (NeurIPS 2022)</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-09-20T05:18:10.000Z">2022-09-20</time></p><p class="title"><a href="/Learning-rate-warmup-scheduling/">Learning rate &amp; warmup step &amp; LR scheduling</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-08-30T03:00:00.000Z">2022-08-30</time></p><p class="title"><a href="/LLM%EC%9D%84%20%EC%9C%84%ED%95%9C%20%EB%84%93%EA%B3%A0%20%EC%96%95%EC%9D%80%20%EC%A7%80%EC%8B%9D%EB%93%A4%20%EC%A7%80%EC%8B%9D%EB%93%A4/">LLM(Large-Scale Language Model)을 위한 넓고 얕은 지식들</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2022 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>
