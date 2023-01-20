@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>(InstructGPT) Training language models to follow instructions with human feedback - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Note ChatGPT를 가기 위한 기초논문 paper: Training language models to follow instructions with human feedback.pdf  Author Long Ouyang, Jeff Wu, Xu Jiang, Diogo Almeida, Carroll L. Wainwright, Pamela Mishkin, Ch"><meta property="og:type" content="blog"><meta property="og:title" content="(InstructGPT) Training language models to follow instructions with human feedback"><meta property="og:url" content="https://eagle705.github.io/InstructGPT/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="Note ChatGPT를 가기 위한 기초논문 paper: Training language models to follow instructions with human feedback.pdf  Author Long Ouyang, Jeff Wu, Xu Jiang, Diogo Almeida, Carroll L. Wainwright, Pamela Mishkin, Ch"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213617415-dbc39ca6-289e-4b8f-9989-8581544b229b.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213637318-e9c8178a-bbd2-4922-aa79-2c5162dd881a.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213687359-99c65961-e42f-4b92-b7c7-bd44c484a631.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213689085-51387c04-8b24-4d80-9cd3-721c77eec1f8.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213691922-03d925b9-a634-4490-90ef-c25e812ba383.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213693312-55ea174f-12d4-4e92-b2f6-d2c412987614.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213694252-503dafb2-fddd-4853-ae4e-4db76270bf9b.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213695297-1ce3159f-bac4-4192-8062-1261f8695d77.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213695813-47818f9f-73a7-412c-a365-755485884e98.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213697444-cc7f449d-12b7-42e9-a708-3305bffa504a.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213703651-061999fd-de16-40f1-a10e-3470f25e0a13.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213704123-cd4818d1-73e5-473f-80b4-99e17a7d2a5b.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213704742-a9329a43-69f1-4125-96e0-c66e27835306.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213706036-d8eda6b5-63dd-4087-a6a3-2936177b4711.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213706175-84895de4-b42d-4bf9-ad27-78b3257fe759.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213706763-c01549da-a465-45e1-bef6-7dc4d5a61554.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213712416-1d069b76-024a-4859-be32-80ee19489b3c.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213713502-de926383-9210-4141-9e78-f18c53464bb5.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213715430-79207cb4-f4ef-400b-ada9-86158ca8948f.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213715990-cf9a4418-cd41-4cfe-866c-e49e4df33394.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213716848-bf9e15b2-fd49-4774-a26d-63779593f833.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213716886-3f3e2f66-9af4-4a04-ae04-beed3c61bf13.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213717821-b7845f97-0cab-4607-b054-8bf26cd93a32.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213719079-60915fa0-2ad2-493a-a2c0-e0c4d3f8e06f.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213719216-d5f3b2bc-b7be-42e4-acf0-927ad9c246cb.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/213720809-4c4b6bd2-1e71-44a1-8818-34c5b3e98d05.png"><meta property="article:published_time" content="2023-01-20T14:21:17.000Z"><meta property="article:modified_time" content="2023-01-20T14:21:42.351Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://user-images.githubusercontent.com/7252598/213617415-dbc39ca6-289e-4b8f-9989-8581544b229b.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/InstructGPT/"},"headline":"(InstructGPT) Training language models to follow instructions with human feedback","image":["https://user-images.githubusercontent.com/7252598/213617415-dbc39ca6-289e-4b8f-9989-8581544b229b.png","https://user-images.githubusercontent.com/7252598/213637318-e9c8178a-bbd2-4922-aa79-2c5162dd881a.png","https://user-images.githubusercontent.com/7252598/213687359-99c65961-e42f-4b92-b7c7-bd44c484a631.png","https://user-images.githubusercontent.com/7252598/213689085-51387c04-8b24-4d80-9cd3-721c77eec1f8.png","https://user-images.githubusercontent.com/7252598/213691922-03d925b9-a634-4490-90ef-c25e812ba383.png","https://user-images.githubusercontent.com/7252598/213693312-55ea174f-12d4-4e92-b2f6-d2c412987614.png","https://user-images.githubusercontent.com/7252598/213694252-503dafb2-fddd-4853-ae4e-4db76270bf9b.png","https://user-images.githubusercontent.com/7252598/213695297-1ce3159f-bac4-4192-8062-1261f8695d77.png","https://user-images.githubusercontent.com/7252598/213695813-47818f9f-73a7-412c-a365-755485884e98.png","https://user-images.githubusercontent.com/7252598/213697444-cc7f449d-12b7-42e9-a708-3305bffa504a.png","https://user-images.githubusercontent.com/7252598/213703651-061999fd-de16-40f1-a10e-3470f25e0a13.png","https://user-images.githubusercontent.com/7252598/213704123-cd4818d1-73e5-473f-80b4-99e17a7d2a5b.png","https://user-images.githubusercontent.com/7252598/213704742-a9329a43-69f1-4125-96e0-c66e27835306.png","https://user-images.githubusercontent.com/7252598/213706036-d8eda6b5-63dd-4087-a6a3-2936177b4711.png","https://user-images.githubusercontent.com/7252598/213706175-84895de4-b42d-4bf9-ad27-78b3257fe759.png","https://user-images.githubusercontent.com/7252598/213706763-c01549da-a465-45e1-bef6-7dc4d5a61554.png","https://user-images.githubusercontent.com/7252598/213712416-1d069b76-024a-4859-be32-80ee19489b3c.png","https://user-images.githubusercontent.com/7252598/213713502-de926383-9210-4141-9e78-f18c53464bb5.png","https://user-images.githubusercontent.com/7252598/213715430-79207cb4-f4ef-400b-ada9-86158ca8948f.png","https://user-images.githubusercontent.com/7252598/213715990-cf9a4418-cd41-4cfe-866c-e49e4df33394.png","https://user-images.githubusercontent.com/7252598/213716848-bf9e15b2-fd49-4774-a26d-63779593f833.png","https://user-images.githubusercontent.com/7252598/213716886-3f3e2f66-9af4-4a04-ae04-beed3c61bf13.png","https://user-images.githubusercontent.com/7252598/213717821-b7845f97-0cab-4607-b054-8bf26cd93a32.png","https://user-images.githubusercontent.com/7252598/213719079-60915fa0-2ad2-493a-a2c0-e0c4d3f8e06f.png","https://user-images.githubusercontent.com/7252598/213719216-d5f3b2bc-b7be-42e4-acf0-927ad9c246cb.png","https://user-images.githubusercontent.com/7252598/213720809-4c4b6bd2-1e71-44a1-8818-34c5b3e98d05.png"],"datePublished":"2023-01-20T14:21:17.000Z","dateModified":"2023-01-20T14:21:42.351Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"Note ChatGPT를 가기 위한 기초논문 paper: Training language models to follow instructions with human feedback.pdf  Author Long Ouyang, Jeff Wu, Xu Jiang, Diogo Almeida, Carroll L. Wainwright, Pamela Mishkin, Ch"}</script><link rel="canonical" href="https://eagle705.github.io/InstructGPT/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><script data-ad-client="ca-pub-2655870716902046" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-01-20T14:21:17.000Z" title="2023. 1. 20. 오후 11:21:17">2023-01-20</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2023-01-20T14:21:42.351Z" title="2023. 1. 20. 오후 11:21:42">2023-01-20</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">33분안에 읽기 (약 4951 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">(InstructGPT) Training language models to follow instructions with human feedback</h1><div class="content"><h1 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h1><ul>
+<li>ChatGPT를 가기 위한 기초논문</li>
+<li>paper: <a target="_blank" rel="noopener" href="https://github.com/eagle705/presentation/files/10467006/Training.language.models.to.follow.instructions.with.human.feedback.pdf">Training language models to follow instructions with human feedback.pdf</a></li>
+</ul>
+<h1 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Ouyang,+L">Long Ouyang</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Wu,+J">Jeff Wu</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Jiang,+X">Xu Jiang</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Almeida,+D">Diogo Almeida</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Wainwright,+C+L">Carroll L. Wainwright</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Mishkin,+P">Pamela Mishkin</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Zhang,+C">Chong Zhang</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Agarwal,+S">Sandhini Agarwal</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Slama,+K">Katarina Slama</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Ray,+A">Alex Ray</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Schulman,+J">John Schulman</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Hilton,+J">Jacob Hilton</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Kelton,+F">Fraser Kelton</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Miller,+L">Luke Miller</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Simens,+M">Maddie Simens</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Askell,+A">Amanda Askell</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Welinder,+P">Peter Welinder</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Christiano,+P">Paul Christiano</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Leike,+J">Jan Leike</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/search/cs?searchtype=author&query=Lowe,+R">Ryan Lowe</a><ul>
+<li>OpenAI</li>
+</ul>
+</li>
+</ul>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><ul>
+<li>Making language models bigger does not inherently make them better at following a user’s intent<ul>
+<li>모델 크기만 키우는게 유저의 의도를 따라가는 관점에서는 더 낫게해주진 않음</li>
+</ul>
+</li>
+<li>large language models can generate outputs that are untruthful, toxic, or simply not helpful to the user<ul>
+<li>믿기 어렵거나 toxic하거나 하는 문장도 생성해내기 때문</li>
+</ul>
+</li>
+<li>이런 모델들은 <strong>not aligned</strong> with thier users!</li>
+<li>show an avenue for aligning language models with user intent on a wide range of tasks by fine-tuning with human feedback.<ul>
+<li>이 논문에서 LM을 유저의 의도에 맞게 파인튜닝하고 human feedback을 줘서 align했을때 효과를 보여줄 것임</li>
+</ul>
+</li>
+<li>Starting with a set of labeler-written prompts and prompts submitted through the OpenAI API, we collect a dataset of labeler demonstrations of the desired model behavior, which we use to fine-tune GPT-3 using supervised learning.<ul>
+<li>GPT-3 튜닝할 목적으로 labeler demonstrations 데이터셋 수집</li>
+</ul>
+</li>
+<li>collect a dataset of rankings of model outputs<ul>
+<li>모델 아웃풋에 대한 랭킹으로 수집함</li>
+</ul>
+</li>
+<li>which we use to further fine-tune this supervised model using reinforcement learning from human feedback<ul>
+<li>RLHF로 파인튜닝하기 위해서 사용할 것</li>
+</ul>
+</li>
+<li>call the resulting models InstructGPT<ul>
+<li>학습한 모델을 InstructGPT로 부를 것임</li>
+</ul>
+</li>
+<li>In human evaluations on our prompt distribution, outputs from the 1.3B parameter InstructGPT model are preferred to outputs from the 175B GPT-3, despite having 100x fewer parameters.<ul>
+<li>Human 평가에서 보면 1.3B InstructGPT가 175 GPT-3보다 결과가 좋음</li>
+</ul>
+</li>
+<li>InstructGPT models show improvements in truthfulness and reductions in toxic output generation while having minimal performance regressions on public NLP datasets<ul>
+<li>truthfulness나 toxic 관점에서도 꽤 개선이 보였음</li>
+</ul>
+</li>
+<li>RLHF기반 finetuning이 aligning LMs with human intents 관점에서 꽤 promising direction임을 보임</li>
+</ul>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><ul>
+<li>기존 LM은 prompted로 여러 NLP 태스크를 수행해왔음<ul>
+<li>하지만 단점도 존재함<ul>
+<li>However, these models often express unintended behaviors such as making up facts, generating biased or toxic text or simply not following user instructions</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>recent LLMs의 objective의 근본적인 문제<ul>
+<li>predicting the next token on a webpage from the internet—is different from the objective “follow the user’s instructions helpfully and safely</li>
+<li>language modeling objective is <strong>misaligned</strong></li>
+</ul>
+</li>
+<li>유저의 의도에 맞게 LM을 aligning하는게 중요함<ul>
+<li>make progress on aligning language models by training them to act in accordance with the user’s intention</li>
+</ul>
+</li>
+<li>use <strong>reinforcement learning</strong> from human feedback (RLHF; Christiano et al., 2017; Stiennon et al., 2020) to fine-tune GPT-3 to follow a broad class of <strong>written instructions</strong></li>
+<li><img width="810" alt="image" src="https://user-images.githubusercontent.com/7252598/213617415-dbc39ca6-289e-4b8f-9989-8581544b229b.png"></li>
+<li>finetuning할 때 human preferences as a reward signal로 주기 위한 테크닉임</li>
+<li>진행 순서<ul>
+<li>first hire a team of <strong>40 contractors</strong> to label our data, based on their performance on a screening test (see Section 3.4 and Appendix B.1 for more details)<ul>
+<li>기존에 OpenAI에 제출된 prompt도 쓰고, 새로 사람 고용해서 쓰기도해서 prompts를 모은 후에 prompts에 대한 human-written demonstrations 을 쓰게해서 데이터 모음</li>
+<li>collect a dataset of human-written demonstrations of the desired output behavior on (mostly English) prompts submitted to the OpenAI API3 and some labeler-written prompts, and use this to train our supervised learning baselines</li>
+</ul>
+</li>
+<li>Next, we collect a dataset of human-labeled comparisons between outputs from our models on a larger set of API prompts<ul>
+<li>모델에서 나온 결과랑 사람이 쓴 결과를 비교하는 데이터셋 만듬</li>
+</ul>
+</li>
+<li>then train a reward model (RM) on this dataset to predict which model output our labelers would prefer</li>
+<li>Finally, we use this RM as a reward function and fine-tune our supervised learning baseline to maximize this reward using the PPO algorithm</li>
+</ul>
+</li>
+<li>We call the resulting models InstructGPT.</li>
+<li>평가<ul>
+<li>mainly evaluate our models by having our labelers rate the quality of model outputs on our test set, consisting of prompts from held-out customers</li>
+<li>also conduct automatic evaluations on a range of public NLP datasets</li>
+</ul>
+</li>
+<li>3가지 모델 학습함 (<strong>1.3B</strong>, <strong>6B</strong>, and <strong>175B</strong> parameters)</li>
+<li>Main Findings:<ul>
+<li>Labelers significantly prefer InstructGPT outputs over outputs from GPT-3<ul>
+<li>InstructGPT are preferred to 175B GPT-3 outputs 85 ± 3% of the time, and preferred 71 ± 4% of the time to few-shot 175B GPT-3</li>
+</ul>
+</li>
+<li>InstructGPT models show improvements in truthfulness over GPT-3<ul>
+<li>On the TruthfulQA benchmark, InstructGPT generates truthful and informative answers about <strong>twice</strong> as often as GPT-3</li>
+<li>InstructGPT shows small improvements in toxicity over GPT-3, but not bias<ul>
+<li>InstructGPT models generate about 25% fewer toxic outputs than GPT-3</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>We can minimize performance regressions on public NLP datasets by modifying our RLHF fine-tuning procedure.<ul>
+<li>observe performance regressions compared to GPT-3 on certain public NLP datasets, notably SQuAD (Rajpurkar et al., 2018), DROP (Dua et al., 2019), HellaSwag (Zellers et al., 2019), and WMT 2015 French to English translation (Bojar et al., 2015)<ul>
+<li>This is an example of an “alignment tax”</li>
+</ul>
+</li>
+<li>We can greatly reduce the performance regressions on these datasets by mixing PPO updates with updates that increase the log likelihood of the pretraining distribution (PPO-ptx), without compromising labeler preference scores.<ul>
+<li>pretraining distribution의 log likelihood를 살려주면서 mixing PPO update를 한다는게 뭘까, 신기하네</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Our models generalize to the preferences of “held-out” labelers that did not produce any training data.</li>
+<li>Public NLP datasets are not reflective of how our language models are used</li>
+<li>InstructGPT models show promising generalization to instructions outside of the RLHF fine-tuning distribution.</li>
+<li>InstructGPT still makes simple mistakes.</li>
+</ul>
+</li>
+</ul>
+<h1 id="Methods-and-experimental-details"><a href="#Methods-and-experimental-details" class="headerlink" title="Methods and experimental details"></a>Methods and experimental details</h1><ul>
+<li>Step 1: Collect demonstration data, and train a supervised policy<ul>
+<li>the desired behavior on the input prompt distribution</li>
+<li>fine-tune a pretrained GPT-3 model on this data using supervised learning.</li>
+</ul>
+</li>
+<li>Step 2: Collect comparison data, and train a reward model.<ul>
+<li>collect a dataset of comparisons between model outputs, where labelers indicate which output they prefer for a given input (여러개 모은거죠)</li>
+<li>train a reward model to predict the human-preferred output.</li>
+</ul>
+</li>
+<li>Step 3: Optimize a policy against the reward model using PPO.<ul>
+<li>use the output of the RM as a scalar reward</li>
+<li>fine-tune the supervised policy <strong>to optimize this reward</strong> using the PPO algorithm (Schulman et al., 2017).</li>
+</ul>
+</li>
+</ul>
+<h2 id="High-level-methodology"><a href="#High-level-methodology" class="headerlink" title="High-level methodology"></a>High-level methodology</h2><ul>
+<li>Steps 2 and 3 can be <strong>iterated continuously</strong>; more comparison data is collected on the current best policy, which is used to train a new RM and then a new policy</li>
+<li>In practice, most of our comparison data comes from our <strong>supervised policies(Step 1)</strong>, with some coming from our PPO policies.</li>
+</ul>
+<h2 id="Dataset"><a href="#Dataset" class="headerlink" title="Dataset"></a>Dataset</h2><ul>
+<li>수집<ul>
+<li>consists primarily of text prompts submitted to the OpenAI API, on the Playground interface (플레이 그라운드에서 썼던 데이터쓰고, 상용꺼는 쓰지 않음, 머리좋네..)</li>
+</ul>
+</li>
+<li>정제<ul>
+<li>heuristically deduplicate prompts by checking for prompts that share a long common prefix, and we limit the number of prompts to 200 per user ID</li>
+<li>also create our train, validation, and test splits based on user ID<ul>
+<li>validation and test sets contain no data from users whose data is in the training set</li>
+<li>유저별로 쪼개서 tr, val, ts셋 만듬</li>
+</ul>
+</li>
+<li>filter all prompts in the training split for personally identifiable information (PII).</li>
+</ul>
+</li>
+<li>labelers에게서 prompts 따로 모으기, three kinds of prompts:<ul>
+<li>Plain: come up with an arbitrary task</li>
+<li><strong>Few-shot</strong>: come up with an instruction, and multiple query&#x2F;response pairs for that instruction.</li>
+<li>User-based: come up with prompts corresponding to these use cases (OpenAI API) -&gt; 이건 잘 이해가 안가네</li>
+</ul>
+</li>
+<li>produce three different datasets used in our fine-tuning procedure:<ul>
+<li>(1) our SFT dataset, with labeler demonstrations used to train our SFT models<ul>
+<li>SFT dataset contains about <strong>13k</strong> training prompts (from the API and labeler-written)</li>
+</ul>
+</li>
+<li>(2) our RM dataset, with labeler <strong>rankings</strong> of model outputs used to train our RMs<ul>
+<li>RM dataset has <strong>33k</strong> training prompts (from the API and labeler-written) (답변 포함하면 몇개일까..랭킹인데.. 프롬프트별에 따른 답변에 대한 랭킹이 아니라 하나의 프롬프트에 대한 답변들의 랭킹인걸로 기억하는데.. 체크해보자! -&gt; 후자가 맞네 K개(4~9) 뽑음 -&gt; (K,2) pair로 )</li>
+</ul>
+</li>
+<li>(3) our PPO dataset, without any human labels, which are used as inputs for RLHF fine-tuning<ul>
+<li>PPO dataset has <strong>31k</strong> training prompts (only from the API)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/213637318-e9c8178a-bbd2-4922-aa79-2c5162dd881a.png" alt="image"></p>
+<ul>
+<li>API prompts 데이터셋의 use-case에 대한 카테고리를 따로 정리해놓음<ul>
+<li>대부분은 generative쪽이 많음<br><img src="https://user-images.githubusercontent.com/7252598/213687359-99c65961-e42f-4b92-b7c7-bd44c484a631.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+<h2 id="Tasks"><a href="#Tasks" class="headerlink" title="Tasks"></a>Tasks</h2><ul>
+<li>Training tasks are from two sources:<ul>
+<li>(1) a dataset of prompts written by our labelers</li>
+<li>(2) a dataset of prompts submitted to early InstructGPT models on our API (see Table 6)</li>
+</ul>
+</li>
+<li>These prompts are very diverse and include generation, question answering, dialog, summarization, extractions, and other natural language tasks</li>
+<li>Our dataset is over 96% English</li>
+</ul>
+<h2 id="Human-data-collection"><a href="#Human-data-collection" class="headerlink" title="Human data collection"></a>Human data collection</h2><ul>
+<li>hired a team of about 40 contractors on Upwork and through ScaleAI<ul>
+<li>Upwork와 ScaleAI 라는 업체가 있나봄</li>
+</ul>
+</li>
+<li>이전에는 주로 요약 데이터를 수집했지만 이번에는 다양한 태스크와 논란있는 주제도 종종 포함시킴<ul>
+<li>our inputs span a much broader range of tasks, and can occasionally include controversial and sensitive topics</li>
+<li>민감한 주제에 대해서 분류하는 그룹을 따로 셋팅한듯<ul>
+<li>Our aim was to select a group of labelers who were sensitive to the preferences of different demographic groups, and who were good at identifying outputs that were potentially harmful.</li>
+</ul>
+</li>
+<li>labeler에 대한 screening test를 실행애서, 기준에 맞는 lablers를 선택했음 (measured agreement between us and labelers)<ul>
+<li>conducted a screening test designed to measure labeler performance on these axes. We selected labelers who performed well on this test; for more information about our selection procedure and labeler demographics<br><img src="https://user-images.githubusercontent.com/7252598/213689085-51387c04-8b24-4d80-9cd3-721c77eec1f8.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>다른 labelers에게도 generalized된 결과를 모델이 보여주는지 연구하기 위해 따로 그룹을 분리해서 추가 고용<ul>
+<li>hire a separate set of labelers who do not produce any of the training data. These labelers are sourced from the same vendors, but do not undergo a screening test.</li>
+</ul>
+</li>
+<li>inter-annotator agreement rates are quite high: training labelers agree with each-other 72.6 ± 1.5% of the time, while for held-out labelers this number is 77.3 ± 1.3%. For comparison, in the summarization work of Stiennon et al. (2020) researcher-researcher agreement was 73 ± 4%.</li>
+</ul>
+<h2 id="Models"><a href="#Models" class="headerlink" title="Models"></a>Models</h2><ul>
+<li>처음에는 GPT-3로 시작함</li>
+<li>이후에 3가지 다른 방법으로 모델들을 학습함<ul>
+<li>Supervised fine-tuning (SFT)<ul>
+<li>fine-tune GPT-3 on our labeler demonstrations using supervised learning</li>
+<li>hparams<ul>
+<li>trained for 16 epochs, </li>
+<li>using a cosine learning rate decay, and </li>
+<li>residual dropout of 0.2</li>
+</ul>
+</li>
+<li>do our final SFT model selection based on the <strong>RM score</strong> on the validation set</li>
+<li>오버핏 나지만 RM score, human preference ratings은 좋음<ul>
+<li>find that our SFT models overfit on validation loss after 1 epoch; however, we find that training for more epochs helps both the RM score and human preference ratings, despite this overfitting.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Reward modeling (RM)<ul>
+<li>trained a model to take in a prompt and response, and output a scalar reward.</li>
+<li>use <strong>6B</strong> RMs, as this saves a lot of compute, </li>
+<li>we found that <strong>175B RM training could be unstable</strong> and thus was less suitable to be used as the value function during RL (see Appendix C for more details).</li>
+<li>RM is trained on a dataset of comparisons between <strong>two model outputs on the same input</strong>.</li>
+<li>use a <strong>cross-entropy loss</strong>, with the comparisons as labels—the difference in rewards represents the log odds that one response will be preferred to the other by a human labeler</li>
+<li>present labelers with anywhere between <strong>K &#x3D; 4 and K &#x3D; 9 responses to rank</strong><ul>
+<li>This produces (�K, 2) comparisons for each prompt shown to a labeler</li>
+</ul>
+</li>
+<li>if we simply shuffle the comparisons into one dataset, a single pass over the dataset caused the reward model to overfit.<ul>
+<li>Instead, we train on <strong>all</strong> �(K, 2) comparisons from each prompt as a <strong>single batch</strong> element (싱글 배치 안에 조합을 모두 넣는게 오버핏 막는 아주 중요한 포인트)</li>
+<li>This is much more computationally efficient because it only requires a single forward pass of the RM for each completion (rather than �(K, 2) forward passes for K completions) -&gt; 한번의 배치 안에서 처리하면 되니까 이런거라는 걸까..?! 흩어져있으면 경우의 수만큼 여러번의 배치를 돌려야되고? (주석 5번 참고)</li>
+</ul>
+</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/213691922-03d925b9-a634-4490-90ef-c25e812ba383.png" alt="image"></li>
+<li>Finally, since the RM loss is invariant to shifts in reward, we normalize the reward model using a bias so that the labeler demonstrations achieve a mean score of 0 before doing RL.</li>
+</ul>
+</li>
+<li>Reinforcement learning (RL)<ul>
+<li>fine-tuned the SFT model on our environment using PPO (Schulman et al., 2017)</li>
+<li>environment is a <strong>bandit</strong>(<a target="_blank" rel="noopener" href="https://sungkee-book.tistory.com/14">슬롯머신</a>) environment which presents a random customer prompt and expects a response to the prompt</li>
+<li>Given the prompt and response, it produces a reward determined by the reward model and ends the episode</li>
+<li>add a <strong>per-token KL penalty</strong> from the SFT model at each token to mitigate over- optimization of the reward model<ul>
+<li>per-token KL penalty가 뭔지 아는게 중요할듯</li>
+</ul>
+</li>
+<li><strong>value function is initialized from the RM</strong>. We call these models “<strong>PPO</strong>.” </li>
+<li>experiment with <strong>mixing the pretraining gradients into the PPO</strong> gradients, in order to <strong>fix the performance regressions</strong> on public NLP datasets -&gt; <strong>“PPO-ptx.”</strong></li>
+<li><img src="https://user-images.githubusercontent.com/7252598/213693312-55ea174f-12d4-4e92-b2f6-d2c412987614.png" alt="image"></li>
+</ul>
+</li>
+<li>Baselines<ul>
+<li>compare the performance of our PPO models to our SFT models and GPT-3</li>
+<li>also compare to GPT-3 when it is provided a few-shot prefix to ‘prompt’ it into an instruction-following mode (GPT-3-prompted). This prefix is prepended to the user-specified instruction</li>
+<li>compare InstructGPT to fine-tuning 175B GPT-3 on the FLAN (Wei et al., 2021) and T0 (Sanh et al., 2021) datasets, which both consist of a variety of NLP tasks</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h2><ul>
+<li>To evaluate how “aligned” our models are, we first need to clarify <strong>what alignment means in this context</strong><ul>
+<li>The definition of alignment has historically been a vague and confusing topic</li>
+</ul>
+</li>
+<li>To summarize, we can divide our quantitative evaluations into two separate parts:<ul>
+<li>Evaluations on API distribution<ul>
+<li>Our main metric is human preference ratings on a held out set of prompts from the same source as our training distribution</li>
+<li>학습에 사용되지 않은 prompts중에서 instructGPT용과 GPT-3용 prompts를 둘다 평가함</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/213694252-503dafb2-fddd-4853-ae4e-4db76270bf9b.png" alt="image"></li>
+</ul>
+</li>
+<li>Evaluations on public NLP datasets<ul>
+<li>evaluate on two types of public datasets:<ul>
+<li>capture an aspect of language model safety, particularly truthfulness, toxicity, and bias (언어의 유해성, 편견성, 정확성 등 평가)</li>
+<li>capture zero-shot performance on traditional NLP tasks like question answering, reading comprehension, and summarization (기존 downstream task 잘하나 평가)</li>
+</ul>
+</li>
+<li>관련된 내용의 NLP task 샘플은 레포에 공개함 <ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/openai/following-instructions-human-feedback">https://github.com/openai/following-instructions-human-feedback</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h1><ul>
+<li>sorted into three parts: <ul>
+<li>results on the API prompt distribution, </li>
+<li>results on public NLP datasets, and </li>
+<li>qualitative results</li>
+</ul>
+</li>
+</ul>
+<h2 id="Results-on-the-API-distribution"><a href="#Results-on-the-API-distribution" class="headerlink" title="Results on the API distribution"></a>Results on the API distribution</h2><ul>
+<li>Labelers significantly prefer InstructGPT outputs over outputs from GPT-3</li>
+<li>found that our results do not change significantly when evaluated on prompts submitted to GPT-3 models on the API (see Figure 3)<ul>
+<li><img src="https://user-images.githubusercontent.com/7252598/213695297-1ce3159f-bac4-4192-8062-1261f8695d77.png" alt="image"></li>
+</ul>
+</li>
+<li>In Figure 4 we show that labelers also rate InstructGPT outputs favorably along several more concrete axes<ul>
+<li><img src="https://user-images.githubusercontent.com/7252598/213695813-47818f9f-73a7-412c-a365-755485884e98.png" alt="image"></li>
+</ul>
+</li>
+<li>Our models generalize to the preferences of “held-out” labelers that did not produce any training data.<ul>
+<li>Held-out labelers have <strong>similar ranking preferences as workers who we used to produce training data</strong> (see Figure 3)</li>
+<li>ran an experiment where we split our labelers into 5 groups, and train 5 RMs (with 3 different seeds) using 5-fold cross validation (training on 4 of the groups, and evaluating on the held-out group)</li>
+</ul>
+</li>
+<li>Public NLP datasets are not reflective of how our language models are used.<ul>
+<li>these datasets are not sufficiently diverse to improve performance on our API prompt distribution. (FLAN, T0로 튜닝해봐도 부족하다는 뜻)</li>
+<li>We believe our InstructGPT model outperforms FLAN and T0 for two reasons. <ul>
+<li>First, public NLP datasets are designed to capture tasks that are easy to evaluate with automatic metrics, such as classification, question answering, and to a certain extent summarization and translation However, classification and QA are only a small part (about 18%) whereas open-ended generation and brainstorming consist of about 57% of our prompt dataset according to labelers (see Table 1)</li>
+<li>Second, it can be difficult for public NLP datasets to obtain a very high diversity of inputs (at least, on the kinds of inputs that real-world users would be interested in using)<ul>
+<li>결국 real-world users가 입력한 양질의 실전 프롬프트의 힘이 꽤 대단하는 것.. -&gt; 이걸로 SFT 했으니, 당연 데이터가 더 좋은거기도하고 -&gt; 하이퍼클로바는 꽤 데이터가 많겠군..?! -&gt; 사내 오픈베타라도 해야되지않을까 (양질의 프롬프트를 모으는 것도 결국 엄청 중요하겠네)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/213697444-cc7f449d-12b7-42e9-a708-3305bffa504a.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+<h2 id="Results-on-public-NLP-datasets"><a href="#Results-on-public-NLP-datasets" class="headerlink" title="Results on public NLP datasets"></a>Results on public NLP datasets</h2><ul>
+<li>InstructGPT models show improvements in truthfulness over GPT-3<ul>
+<li>on the TruthfulQA dataset, our PPO models show small but significant improvements in generating truthful and informative outputs compared to GPT-3 (see Figure 6)</li>
+<li>we also give a helpful “Instruction+QA” prompt that instructs the model to respond with “I have no comment” when it is not certain of the correct answer. In this case, our PPO models err on the side of being truthful and uninformative rather than confidently saying a falsehood; the baseline GPT-3 model aren’t as good at this <ul>
+<li>살짝 가이드 줬더니 PPO 계열이 잘하더라</li>
+</ul>
+</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/213703651-061999fd-de16-40f1-a10e-3470f25e0a13.png" alt="image"></li>
+</ul>
+</li>
+<li>InstructGPT shows small improvements in toxicity over GPT-3, but not bias<ul>
+<li>Our results are in Figure 7. We find that, when instructed to produce a safe and respectful output (“respectful prompt”), InstructGPT models generate less toxic outputs than those from GPT-3 according to the Perspective API<ul>
+<li><img src="https://user-images.githubusercontent.com/7252598/213704123-cd4818d1-73e5-473f-80b4-99e17a7d2a5b.png" alt="image"></li>
+</ul>
+</li>
+<li>This advantage disappears when the respectful prompt is removed (“no prompt”).</li>
+<li>Interestingly, when explicitly prompted to produce a toxic output, InstructGPT outputs are much more toxic than those from GPT-3 (see Figure 39).<ul>
+<li>하지만 prompt가 toxic하면 더 toxic한 결과 내더라<ul>
+<li><img src="https://user-images.githubusercontent.com/7252598/213704742-a9329a43-69f1-4125-96e0-c66e27835306.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>We can minimize performance regressions on public NLP datasets by modifying our RLHF fine-tuning procedure.<ul>
+<li>By default, when we train a PPO model on our API distribution, it suffers from an <strong>“alignment tax”</strong>, as its performance on <strong>several public NLP datasets decreases</strong></li>
+<li>We want an alignment procedure that avoids an alignment tax, because it incentivizes the use of models that are unaligned but more capable on these tasks.</li>
+<li>In Figure 29 we show that adding pretraining updates to our PPO fine-tuning (PPO-ptx) mitigates these performance regressions on all datasets, and even surpasses GPT-3 on HellaSwag</li>
+<li>Mixing in pretraining updates performs better than the simpler solution of increasing the KL co-efficient.</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>pretraining loss coefficient</th>
+<th>KL reward coefficient</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://user-images.githubusercontent.com/7252598/213706036-d8eda6b5-63dd-4087-a6a3-2936177b4711.png" alt="image"></td>
+<td><img src="https://user-images.githubusercontent.com/7252598/213706175-84895de4-b42d-4bf9-ad27-78b3257fe759.png" alt="image"></td>
+</tr>
+</tbody></table>
+<h2 id="Qualitative-results"><a href="#Qualitative-results" class="headerlink" title="Qualitative results"></a>Qualitative results</h2><ul>
+<li>InstructGPT models show promising generalization to instructions outside of the RLHF fine-tuning distribution.<ul>
+<li>find that InstructGPT shows ability to follow instructions in <strong>non-English languages</strong>, and perform summarization and question-answering for <strong>code</strong> <ul>
+<li>interesting because non-English languages and code form a <strong>tiny minority</strong> of our fine-tuning data<ul>
+<li>it suggests that, in some cases, alignment methods could generalize to producing the desired behavior on inputs that humans did not directly supervise (generalized 된다는거죠!)</li>
+</ul>
+</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/213706763-c01549da-a465-45e1-bef6-7dc4d5a61554.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>InstructGPT still makes simple mistakes.</li>
+<li>To give a few examples: <ul>
+<li>(1) when given an <strong>instruction with a false premise</strong>, the model sometimes <strong>incorrectly assumes the premise is true,</strong> </li>
+<li>(2) the model can <strong>overly hedge</strong>; when given a simple question, it can sometimes say that there is no one answer to the question and give multiple possible answers, even when there is one fairly clear answer from the context, and </li>
+<li>(3) the model’s performance degrades when instructions contain multiple explicit constraints (e.g. <code>“list 10 movies made in the 1930’s set in France”</code>) or when constraints can be challenging for language models (e.g. <code>writing a summary in a specified number of sentences</code>).</li>
+</ul>
+</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/213712416-1d069b76-024a-4859-be32-80ee19489b3c.png" alt="image"></li>
+</ul>
+<h1 id="Discussion"><a href="#Discussion" class="headerlink" title="Discussion"></a>Discussion</h1><h2 id="Implications-for-alignment-research"><a href="#Implications-for-alignment-research" class="headerlink" title="Implications for alignment research"></a>Implications for alignment research</h2><ul>
+<li>Our approach to alignment research in this work is iterative<ul>
+<li>PLM이 생각보다 크게 작용하지 않는다<br><img src="https://user-images.githubusercontent.com/7252598/213713502-de926383-9210-4141-9e78-f18c53464bb5.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+<h2 id="Who-are-we-aligning-to"><a href="#Who-are-we-aligning-to" class="headerlink" title="Who are we aligning to?"></a>Who are we aligning to?</h2><ul>
+<li>First, we are aligning to demonstrations and preferences provided by our training labelers, who directly produce the data that we use to fine-tune our models.</li>
+<li>Second, we are aligning to our preferences, as the researchers designing this study (and thus by proxy to our broader research organization, OpenAI): we write the labeling instructions that labelers use as a guide when writing demonstrations and choosing their preferred output, and we <strong>answer their questions about edge cases in a shared chat room</strong></li>
+<li>Third, our training data is determined by prompts sent by OpenAI customers to models on the OpenAI API Playground, and thus we are implicitly aligning to what customers think is valuable and, in some cases, what their end-users think is valuable to currently use the API for</li>
+<li>Fourth, OpenAI’s customers are not representative of all potential or current users of language models—let alone of all individuals and groups impacted by language model use</li>
+</ul>
+<h2 id="Limitations"><a href="#Limitations" class="headerlink" title="Limitations"></a>Limitations</h2><h3 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h3><ul>
+<li>The behavior of our InstructGPT models is determined in part by the human feedback obtained from our contractors</li>
+<li>However, this group is clearly not representative of the full spectrum of people who will use and be affected by our deployed models. As a simple example, our labelers are primarily English-speaking and our data consists almost entirely of English instructions.</li>
+<li>There are also many ways in which we could improve our data collection set-up. For instance, most comparisons are only labeled by 1 contractor for cost reasons. Having examples labeled multiple times could help identify areas where our contractors disagree, and thus where a single model is unlikely to align to all of them</li>
+</ul>
+<h3 id="Models-1"><a href="#Models-1" class="headerlink" title="Models"></a>Models</h3><ul>
+<li>Our models are neither fully aligned nor fully safe; they still generate toxic or biased outputs, make up facts, and generate sexual and violent content without explicit prompting.</li>
+<li>InstructGPT generates more toxic outputs than equivalently-sized GPT-3 models. We discuss potential mitigations in the following sections.</li>
+</ul>
+<h2 id="Open-questions"><a href="#Open-questions" class="headerlink" title="Open questions"></a>Open questions</h2><ul>
+<li>While we mainly focus on RLHF, there are many other algorithms that could be used to train policies on our demonstration and comparison data to get even better results. For example, one could explore expert iteration (Anthony et al., 2017; Silver et al., 2017), or simpler behavior cloning methods that use a subset of the comparison data. One could also try constrained optimization approaches (Achiam et al., 2017) that maximize the score from a reward model conditioned on generating a small number of harmful behaviors.</li>
+</ul>
+<h2 id="Broader-impacts"><a href="#Broader-impacts" class="headerlink" title="Broader impacts"></a>Broader impacts</h2><ul>
+<li>This work is motivated by our aim to increase the positive impact of large language models by training them to do what a given set of humans want them to do.</li>
+<li>By default, language models optimize the next word prediction objective, which is only a proxy for what we want these models to do. </li>
+<li>Our results indicate that our techniques hold promise for making language models more helpful, truthful, and harmless. </li>
+<li>In the longer term, alignment failures could lead to more severe consequences, particularly if these models are deployed in safety-critical situations. </li>
+<li>We expect that as model scaling continues, greater care has to be taken to ensure that they are aligned with human intentions (Bostrom, 2014).</li>
+</ul>
+<h1 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a>Appendix</h1><ul>
+<li>Web interface<ul>
+<li>In Figure 12, we show screenshots of our labeling interface, that all of our labelers (and researchers) use to label data.</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/213715430-79207cb4-f4ef-400b-ada9-86158ca8948f.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+<h2 id="C-Additional-model-details"><a href="#C-Additional-model-details" class="headerlink" title="C Additional model details"></a>C Additional model details</h2><p><img src="https://user-images.githubusercontent.com/7252598/213715990-cf9a4418-cd41-4cfe-866c-e49e4df33394.png" alt="image"></p>
+<h3 id="Details-of-RM-training"><a href="#Details-of-RM-training" class="headerlink" title="Details of RM training"></a>Details of RM training</h3><p><img src="https://user-images.githubusercontent.com/7252598/213716848-bf9e15b2-fd49-4774-a26d-63779593f833.png" alt="image"><br><img src="https://user-images.githubusercontent.com/7252598/213716886-3f3e2f66-9af4-4a04-ae04-beed3c61bf13.png" alt="image"></p>
+<h3 id="Details-of-the-initialization-models-for-RLHF-and-RLHF-training"><a href="#Details-of-the-initialization-models-for-RLHF-and-RLHF-training" class="headerlink" title="Details of the initialization models for RLHF and RLHF training"></a>Details of the initialization models for RLHF and RLHF training</h3><p><img src="https://user-images.githubusercontent.com/7252598/213717821-b7845f97-0cab-4607-b054-8bf26cd93a32.png" alt="image"></p>
+<h3 id="FLAN-and-T0-models"><a href="#FLAN-and-T0-models" class="headerlink" title="FLAN and T0 models"></a>FLAN and T0 models</h3><p><img src="https://user-images.githubusercontent.com/7252598/213719079-60915fa0-2ad2-493a-a2c0-e0c4d3f8e06f.png" alt="image"><br><img src="https://user-images.githubusercontent.com/7252598/213719216-d5f3b2bc-b7be-42e4-acf0-927ad9c246cb.png" alt="image"></p>
+<h2 id="F-Model-Samples"><a href="#F-Model-Samples" class="headerlink" title="F Model Samples"></a>F Model Samples</h2><p><img src="https://user-images.githubusercontent.com/7252598/213720809-4c4b6bd2-1e71-44a1-8818-34c5b3e98d05.png" alt="image"></p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>(InstructGPT) Training language models to follow instructions with human feedback</p><p><a href="https://eagle705.github.io/InstructGPT/">https://eagle705.github.io/InstructGPT/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2023-01-20</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2023-01-20</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="sharethis-inline-share-buttons"></div><script src="https://platform-api.sharethis.com/js/sharethis.js#property=63297c6228f9450019a5f574&amp;product=sop" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/Chinchilla-Training-Compute-Optimal-Large-Language-Models/"><span class="level-item">(Chinchilla) Training Compute-Optimal Large Language Models</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/InstructGPT/';
+            this.page.identifier = 'InstructGPT/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">45</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">31</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2023/01/"><span class="level-start"><span class="level-item">1월 2023</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/12/"><span class="level-start"><span class="level-item">12월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/11/"><span class="level-start"><span class="level-item">11월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/10/"><span class="level-start"><span class="level-item">10월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/09/"><span class="level-start"><span class="level-item">9월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/08/"><span class="level-start"><span class="level-item">8월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">7월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/06/"><span class="level-start"><span class="level-item">6월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/05/"><span class="level-start"><span class="level-item">5월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/01/"><span class="level-start"><span class="level-item">1월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">12월 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">11월 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">34</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="card widget" data-type="adsense"><div class="card-content"><div class="menu"><h3 class="menu-label">광고</h3><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2655870716902046" data-ad-slot="2764253071" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Note"><span class="level-left"><span class="level-item">1</span><span class="level-item">Note</span></span></a></li><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">2</span><span class="level-item">Author</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">3</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#Introduction"><span class="level-left"><span class="level-item">4</span><span class="level-item">Introduction</span></span></a></li><li><a class="level is-mobile" href="#Methods-and-experimental-details"><span class="level-left"><span class="level-item">5</span><span class="level-item">Methods and experimental details</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#High-level-methodology"><span class="level-left"><span class="level-item">5.1</span><span class="level-item">High-level methodology</span></span></a></li><li><a class="level is-mobile" href="#Dataset"><span class="level-left"><span class="level-item">5.2</span><span class="level-item">Dataset</span></span></a></li><li><a class="level is-mobile" href="#Tasks"><span class="level-left"><span class="level-item">5.3</span><span class="level-item">Tasks</span></span></a></li><li><a class="level is-mobile" href="#Human-data-collection"><span class="level-left"><span class="level-item">5.4</span><span class="level-item">Human data collection</span></span></a></li><li><a class="level is-mobile" href="#Models"><span class="level-left"><span class="level-item">5.5</span><span class="level-item">Models</span></span></a></li><li><a class="level is-mobile" href="#Evaluation"><span class="level-left"><span class="level-item">5.6</span><span class="level-item">Evaluation</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Results"><span class="level-left"><span class="level-item">6</span><span class="level-item">Results</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Results-on-the-API-distribution"><span class="level-left"><span class="level-item">6.1</span><span class="level-item">Results on the API distribution</span></span></a></li><li><a class="level is-mobile" href="#Results-on-public-NLP-datasets"><span class="level-left"><span class="level-item">6.2</span><span class="level-item">Results on public NLP datasets</span></span></a></li><li><a class="level is-mobile" href="#Qualitative-results"><span class="level-left"><span class="level-item">6.3</span><span class="level-item">Qualitative results</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Discussion"><span class="level-left"><span class="level-item">7</span><span class="level-item">Discussion</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Implications-for-alignment-research"><span class="level-left"><span class="level-item">7.1</span><span class="level-item">Implications for alignment research</span></span></a></li><li><a class="level is-mobile" href="#Who-are-we-aligning-to"><span class="level-left"><span class="level-item">7.2</span><span class="level-item">Who are we aligning to?</span></span></a></li><li><a class="level is-mobile" href="#Limitations"><span class="level-left"><span class="level-item">7.3</span><span class="level-item">Limitations</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Methodology"><span class="level-left"><span class="level-item">7.3.1</span><span class="level-item">Methodology</span></span></a></li><li><a class="level is-mobile" href="#Models-1"><span class="level-left"><span class="level-item">7.3.2</span><span class="level-item">Models</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Open-questions"><span class="level-left"><span class="level-item">7.4</span><span class="level-item">Open questions</span></span></a></li><li><a class="level is-mobile" href="#Broader-impacts"><span class="level-left"><span class="level-item">7.5</span><span class="level-item">Broader impacts</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Appendix"><span class="level-left"><span class="level-item">8</span><span class="level-item">Appendix</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#C-Additional-model-details"><span class="level-left"><span class="level-item">8.1</span><span class="level-item">C Additional model details</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Details-of-RM-training"><span class="level-left"><span class="level-item">8.1.1</span><span class="level-item">Details of RM training</span></span></a></li><li><a class="level is-mobile" href="#Details-of-the-initialization-models-for-RLHF-and-RLHF-training"><span class="level-left"><span class="level-item">8.1.2</span><span class="level-item">Details of the initialization models for RLHF and RLHF training</span></span></a></li><li><a class="level is-mobile" href="#FLAN-and-T0-models"><span class="level-left"><span class="level-item">8.1.3</span><span class="level-item">FLAN and T0 models</span></span></a></li></ul></li><li><a class="level is-mobile" href="#F-Model-Samples"><span class="level-left"><span class="level-item">8.2</span><span class="level-item">F Model Samples</span></span></a></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-01-20T14:21:17.000Z">2023-01-20</time></p><p class="title"><a href="/InstructGPT/">(InstructGPT) Training language models to follow instructions with human feedback</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-01-09T07:34:18.000Z">2023-01-09</time></p><p class="title"><a href="/Chinchilla-Training-Compute-Optimal-Large-Language-Models/">(Chinchilla) Training Compute-Optimal Large Language Models</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-12-12T06:45:59.000Z">2022-12-12</time></p><p class="title"><a href="/Robust-Conversational-Agents-against-Imperceptible-Toxicity-Triggers/">Robust Conversational Agents against Imperceptible Toxicity Triggers</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-11-02T06:27:15.000Z">2022-11-02</time></p><p class="title"><a href="/SOCIAL-CHEMISTRY-101/">SOCIAL CHEMISTRY 101 - Learning to Reason about Social and Moral Norms</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-10-05T07:16:45.000Z">2022-10-05</time></p><p class="title"><a href="/A-Contrastive-Framework-for-Neural-Text-Generation-NeurIPS-2022/">A Contrastive Framework for Neural Text Generation (NeurIPS 2022)</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2023 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>
