@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>(T0) Multitask Prompted Training Enables Zero-Shot Task Generalization - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Note Zero-Shot의 가능성 열어줌 T5의 마무리 논문격 All trained models are available at https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;bigscience-workshop&amp;#x2F;t-zero all prompts are available at https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;bigscience-workshop&amp;#x2F;promptsource."><meta property="og:type" content="blog"><meta property="og:title" content="(T0) Multitask Prompted Training Enables Zero-Shot Task Generalization"><meta property="og:url" content="https://eagle705.github.io/(T0)%20Multitask%20Prompted%20Training%20Enables%20Zero-Shot%20Task%20Generalization/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="Note Zero-Shot의 가능성 열어줌 T5의 마무리 논문격 All trained models are available at https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;bigscience-workshop&amp;#x2F;t-zero all prompts are available at https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;bigscience-workshop&amp;#x2F;promptsource."><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216490855-df2be4d5-b773-4157-a682-729fccc76e40.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216523220-07a62ca0-33db-4228-82b0-2331110f479d.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216533420-16e9e9ec-4c18-4e39-9a16-8cbadf70db50.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216537735-cb5e671c-c85d-4f5d-a88b-5c1cc9036b87.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216539130-3f28fbe7-6439-4479-9d29-80f7a7bb00e1.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216539976-9d99eaaa-00e7-4e6a-87fd-abe36f06d417.png"><meta property="article:published_time" content="2023-02-03T07:44:54.000Z"><meta property="article:modified_time" content="2023-02-03T07:45:54.565Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://user-images.githubusercontent.com/7252598/216490855-df2be4d5-b773-4157-a682-729fccc76e40.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/(T0)%20Multitask%20Prompted%20Training%20Enables%20Zero-Shot%20Task%20Generalization/"},"headline":"(T0) Multitask Prompted Training Enables Zero-Shot Task Generalization","image":["https://user-images.githubusercontent.com/7252598/216490855-df2be4d5-b773-4157-a682-729fccc76e40.png","https://user-images.githubusercontent.com/7252598/216523220-07a62ca0-33db-4228-82b0-2331110f479d.png","https://user-images.githubusercontent.com/7252598/216533420-16e9e9ec-4c18-4e39-9a16-8cbadf70db50.png","https://user-images.githubusercontent.com/7252598/216537735-cb5e671c-c85d-4f5d-a88b-5c1cc9036b87.png","https://user-images.githubusercontent.com/7252598/216539130-3f28fbe7-6439-4479-9d29-80f7a7bb00e1.png","https://user-images.githubusercontent.com/7252598/216539976-9d99eaaa-00e7-4e6a-87fd-abe36f06d417.png"],"datePublished":"2023-02-03T07:44:54.000Z","dateModified":"2023-02-03T07:45:54.565Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"Note Zero-Shot의 가능성 열어줌 T5의 마무리 논문격 All trained models are available at https:&#x2F;&#x2F;github.com&#x2F;bigscience-workshop&#x2F;t-zero all prompts are available at https:&#x2F;&#x2F;github.com&#x2F;bigscience-workshop&#x2F;promptsource."}</script><link rel="canonical" href="https://eagle705.github.io/(T0)%20Multitask%20Prompted%20Training%20Enables%20Zero-Shot%20Task%20Generalization/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><script data-ad-client="ca-pub-2655870716902046" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-02-03T07:44:54.000Z" title="2023. 2. 3. 오후 4:44:54">2023-02-03</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2023-02-03T07:45:54.565Z" title="2023. 2. 3. 오후 4:45:54">2023-02-03</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">14분안에 읽기 (약 2025 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">(T0) Multitask Prompted Training Enables Zero-Shot Task Generalization</h1><div class="content"><h1 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h1><ul>
+<li>Zero-Shot의 가능성 열어줌</li>
+<li>T5의 마무리 논문격</li>
+<li>All trained models are available at <a target="_blank" rel="noopener" href="https://github.com/bigscience-workshop/t-zero">https://github.com/bigscience-workshop/t-zero</a></li>
+<li>all prompts are available at <a target="_blank" rel="noopener" href="https://github.com/bigscience-workshop/promptsource">https://github.com/bigscience-workshop/promptsource</a>.</li>
+<li>논문 pdf 파일: <a target="_blank" rel="noopener" href="https://github.com/eagle705/presentation/files/10576665/T0.MULTITASK.PROMPTED.TRAINING.ENABLES.ZERO-SHOT.TASK.GENERALIZATION.pdf">(T0)MULTITASK PROMPTED TRAINING ENABLES ZERO-SHOT TASK GENERALIZATION.pdf</a></li>
+</ul>
+<h1 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h1><ul>
+<li>V Sanh (Hugging Face) 저술 · 2021</li>
+</ul>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><ul>
+<li>Q) Can zero-shot generalization instead be directly induced by explicit multitask learning?</li>
+<li>we develop a system for easily mapping any natural language tasks into a human-readable prompted form. <ul>
+<li>convert a large set of supervised datasets, each with multiple prompts with diverse wording</li>
+<li>fine-tune a pre-trained encoder-decoder model (Raffel et al., 2020; Lester et al., 2021) on this multi-task mixture covering a wide variety of tasks</li>
+<li>The model attains strong zero-shot performance on several standard datasets, often outperforming models up to 16× its size.</li>
+</ul>
+</li>
+</ul>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p><img src="https://user-images.githubusercontent.com/7252598/216490855-df2be4d5-b773-4157-a682-729fccc76e40.png" alt="image"></p>
+<ul>
+<li>In this paper, we focus on explicitly training language models in a supervised and massively multi-task fashion</li>
+<li>Our approach uses a training mixture consisting of a large set of <strong>different tasks</strong> specified in natural language prompts<ul>
+<li>Our goal is to induce a model to better generalize to held-out tasks without requiring massive scale, as well as being more <strong>robust</strong> to the <strong>wording choices of the prompts</strong></li>
+</ul>
+</li>
+<li>To convert a large set of natural language tasks into prompted form, we use a <strong>simple templating language</strong> for structured datasets.<ul>
+<li>develop an interface for prompt collection from public contributors that facilitated the collection of a large multitask mixture with multiple prompts per dataset</li>
+<li>train a variant of the T5 encoder-decoder model (Raffel et al., 2020; Lester et al., 2021) on a subset of the tasks (each with multiple datasets) and then <code>evaluate tasks and prompts</code> that the model was <code>not</code> trained on.</li>
+</ul>
+</li>
+<li>Our experiments study two questions. <ul>
+<li>First, does multitask prompted training improve <strong>generalization</strong> to held-out tasks? <ul>
+<li>find that multitask training enables zero-shot task generalization by showing that our model matches or exceeds the performance of GPT-3</li>
+</ul>
+</li>
+<li>Second, does training on a wider range of prompts improve <strong>robustness to prompt wording?</strong><ul>
+<li>find that training on more prompts per dataset consistently improves the median and decreases the variability of performance on held-out tasks</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="MEASURING-GENERALIZATION-TO-HELD-OUT-TASKS"><a href="#MEASURING-GENERALIZATION-TO-HELD-OUT-TASKS" class="headerlink" title="MEASURING GENERALIZATION TO HELD-OUT TASKS"></a>MEASURING GENERALIZATION TO HELD-OUT TASKS</h1><p><img src="https://user-images.githubusercontent.com/7252598/216523220-07a62ca0-33db-4228-82b0-2331110f479d.png" alt="image"></p>
+<ul>
+<li>This yields 12 tasks and 62 datasets with publicly contributed prompts in our training and evaluation mixtures (Figure 2) as of writing</li>
+<li>Zero-shot 테스트 위해서 학습하지 않은 task에 대해서 평가<ul>
+<li>To test zero-shot generalization, we hold out all constituent datasets of four tasks: natural language inference (NLI), coreference resolution, sentence completion, and word sense disambiguation</li>
+<li>We choose NLI as a held-out task because humans also zero-shot generalize to NLI as an held-out task: Most humans are never explicitly trained to classify whether a premise sentence entails or contradicts a hypothesis sentence, yet they find it <strong>intuitive</strong> to perform this task without training</li>
+<li>we also hold out coreference resolution and word sense disambiguation. We further hold out <strong>sentence completion</strong> because it is a task possibly <strong>too similar to NLI</strong> (Appendix D.2 discusses this in detail)</li>
+<li>Lastly, we further evaluate on a <strong>subset</strong> of the datasets from BIG-bench</li>
+</ul>
+</li>
+</ul>
+<h1 id="A-UNIFIED-PROMPT-FORMAT"><a href="#A-UNIFIED-PROMPT-FORMAT" class="headerlink" title="A UNIFIED PROMPT FORMAT"></a>A UNIFIED PROMPT FORMAT</h1><ul>
+<li>To facilitate writing a large collection of prompts, we develop a <strong>templating language</strong> and an application that make it easy to convert diverse datasets into prompts<ul>
+<li><code>define a prompt as consisting of an input template and a target template, along with a collection of associated meta-data</code><ul>
+<li>The templates are functions mapping a data example into natural language for the input and target sequences</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/216533420-16e9e9ec-4c18-4e39-9a16-8cbadf70db50.png" alt="image"></p>
+<ul>
+<li>36 contributors affiliated with 24 institutions in 8 countries participated. Since our goal was to train a model to be robust to prompt format, and since the question of what makes a prompt effective remains unresolved (Webson and Pavlick, 2021; Logan et al., 2021; Zhao et al., 2021), we encouraged contributors to be open in their style and create a diverse set of prompts. The main annotation guideline was that prompts needed to be grammatical and understandable by a fluent English speaker with no prior experience of the tasks. Additionally, prompts that required explicit counting or numerical indexing were removed in favor of natural language variants. For example, instead of predicting indices of a span extracting answers from a passage, the model is expected to copy the span’s text instead. With these minimal constraints, <code>prompt writers were encouraged to use both formal and creative prompts and various orderings of the data.</code></li>
+<li>We collected prompts for English datasets, excluding ones that included potentially harmful content or non-natural language such as program- ming languages. We refer to this collection as the Public Pool of Prompts (P3). As of writing, <code>P3 contains 2073 prompts for 177 datasets</code> (<code>11.7 prompts per dataset on average</code>)</li>
+</ul>
+<h1 id="EXPERIMENTAL-SETUP"><a href="#EXPERIMENTAL-SETUP" class="headerlink" title="EXPERIMENTAL SETUP"></a>EXPERIMENTAL SETUP</h1><h3 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h3><ul>
+<li>fine-tune a pretrained model on our multi-task training mixture of natural language prompted datasets</li>
+<li>Our model uses an encoder-decoder architecture with input text fed to the encoder and target text produced by the decoder</li>
+<li>we use Lester et al. (2021)’s <code>LM-adapted T5 model (referred to as T5+LM)</code>, produced by training T5 on <code>100B additional tokens</code> from C4 on a standard language modeling objective.</li>
+</ul>
+<h3 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h3><ul>
+<li>Our main model, T0, is trained on the multitask mixture detailed in Section 3 and Table 5. <ul>
+<li>T0 variants are all initialized from the 11B parameters version of T5+LM</li>
+</ul>
+</li>
+<li>Meanwhile, T0+ is the same model with identical hyperparameters except trained on a mixture that adds GPT-3’s evaluation datasets. </li>
+<li>Lastly, T0++ further adds SuperGLUE (Wang et al., 2019a) to the training mixture (except RTE and CB), which leaves NLI and the BIG-bench tasks as the only held-out tasks.</li>
+<li>We assemble <code>our multitask training mixture by combining and shuffling all examples from all training datasets</code>.<ul>
+<li>This is <code>equivalent</code> to sampling from each dataset in <code>proportion</code> to the number of examples in the dataset.</li>
+<li><code>However</code>, the number of examples in each of our training datasets varies by two orders of magnitude. We therefore follow the strategy used in Raffel et al. (2020) and <code>treat any dataset with over 500’000 examples as having 500’000 / num templates</code> examples for the purposes of <code>sampling</code>, where num templates is the number of templates created for the dataset.</li>
+</ul>
+</li>
+<li>Hparams<ul>
+<li>truncate input and target sequences to 1024 and 256 tokens</li>
+<li>use <code>packing to combine multiple training examples into a single sequence</code> to reach the maximum sequence length<ul>
+<li>잉.. 진짜? 내가 이해한게 맞는건가.. 확인해보자..! 논문 6페이지!</li>
+</ul>
+</li>
+<li>use a batch size of 1024 sequences (corresponding to 220 total in- put tokens per batch)</li>
+<li>Adafactor optimizer</li>
+<li>use a learning rate of 1e-3 and a dropout rate of 0.1.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h3><ul>
+<li>evaluate zero-shot generalization on 11 datasets in 4 held-out traditional NLP tasks: natural language inference, coreference, word sense disambiguation, and sentence completion, as well as 14 novel tasks from BIG-bench (§3)</li>
+<li>For tasks that involve choosing the correct completion from several options (e.g. multiple choice question answering)<ul>
+<li>use rank classification to evaluate our model: we compute the log-likelihood of each of the target options under the fine-tuned model and select the option with the highest log-likelihood as the prediction<ul>
+<li>각 선택지의 log-likelihood 중에 제일 높은거 선택했다는거 (다 이어서 붙이는게 아니라 -&gt; 우리는 이어 붙여서 하고 있긴한데, 이 부분이 아니라는 뜻!)<ul>
+<li>For simplicity, we do not apply length normalization to the log-likelihoods of the target options.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>We do not perform prompt selection by comparing the performance of different prompts on the vali- dation split<ul>
+<li>Perez et al. (2021) highlights how such a strategy leaks information from the evaluation splits, which makes the evaluation not “true” zero-shot.</li>
+<li>prompts 셀렉하면 치팅이고 참 된 zero-shot 평가가 아니다 이거야</li>
+<li>For a given dataset, we report the median performance across all prompts for this dataset along with their interquartile range (Q3 - Q1) to measure the model’s robustness to the wording of the prompts.<ul>
+<li>median으로 측정해서 wording에 대한 robustness 보겠다</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="RESULTS"><a href="#RESULTS" class="headerlink" title="RESULTS"></a>RESULTS</h1><h1 id="GENERALIZATION-TO-HELD-OUT-TASKS"><a href="#GENERALIZATION-TO-HELD-OUT-TASKS" class="headerlink" title="GENERALIZATION TO HELD-OUT TASKS"></a>GENERALIZATION TO HELD-OUT TASKS</h1><p><img src="https://user-images.githubusercontent.com/7252598/216537735-cb5e671c-c85d-4f5d-a88b-5c1cc9036b87.png" alt="image"></p>
+<h2 id="PROMPT-ROBUSTNESS"><a href="#PROMPT-ROBUSTNESS" class="headerlink" title="PROMPT ROBUSTNESS"></a>PROMPT ROBUSTNESS</h2><ul>
+<li>Our second research question is whether training on a wider range of prompts improves <code>robustness to the wording of the prompts</code></li>
+<li>We conduct two ablation experiments on the effects of <code>the average number of prompts per dataset (p)</code> and <code>the number of datasets (d) used during training.</code><ul>
+<li>전체 prompts 평균수랑 prompts를 사용하는 데이터숫자의 변화에 따른 성능을 비교하는것!</li>
+</ul>
+</li>
+</ul>
+<h3 id="Effect-of-More-Prompts-per-Dataset"><a href="#Effect-of-More-Prompts-per-Dataset" class="headerlink" title="Effect of More Prompts per Dataset"></a>Effect of More Prompts per Dataset</h3><ul>
+<li>we fix <code>d</code> and compare T0 to models with a varying number of prompts per dataset.</li>
+<li>T0 was trained on some prompts that do not map onto the dataset’s original task, for example “given an answer, generate a plausible question”. Including these prompts results in p being 8.03 on average (which corresponds to our main T0 model). </li>
+<li>We compare T0 to models where p &#x3D; 1 (one randomly chosen original-task prompt per dataset), p &#x3D; 5.7 on average (all original-tasks prompts for all datasets), and p &#x3D; 0 (corresponding to T5+LM without any prompted training)</li>
+<li>prompts 개수 늘어날수록 좋다!<br><img src="https://user-images.githubusercontent.com/7252598/216539130-3f28fbe7-6439-4479-9d29-80f7a7bb00e1.png" alt="image"></li>
+</ul>
+<h3 id="Effect-of-Prompts-from-More-Datasets"><a href="#Effect-of-Prompts-from-More-Datasets" class="headerlink" title="Effect of Prompts from More Datasets"></a>Effect of Prompts from More Datasets</h3><ul>
+<li>we fix p &#x3D; all available prompts and increase d from 39 to 49 to 55 (T0, T0+, T0++, respectively. See Section 5 for details.)</li>
+<li>Figure 7 shows that the median performance of all 5 held-out datasets increases as d increases from 39 to 49. However, the spread only decreases for 1 out of 5 datasets. For some datasets (e.g., ANLI), this is an artifact of the fact that some prompts always perform poorly, so that when other prompts improve, the spread is stretched larger</li>
+<li>어떤건 prompts 안좋을 수 있지만, 전체적으로 수가 커지면 좋아진다?</li>
+<li>근데 또 어떤 케이스는 안그래</li>
+<li>Although further investigation is needed, <code>it appears that increasing d</code> <code>does not consistently</code> <code>make the model more robust</code> <code>to the wording of prompts.</code><ul>
+<li>데이터셋 늘어난다고해서 wording의 robustness가 늘어나는건 아냐!<ul>
+<li><code>prompts 수를 늘리는건 좋은데, 데이터셋 늘어난다고해서 robustness가 늘어나는건 아니니 어디까지 데이터셋을 늘려야될지가 또 관건이네</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/216539976-9d99eaaa-00e7-4e6a-87fd-abe36f06d417.png" alt="image"></p>
+<h3 id="Comparing-T0-and-GPT-3-davinci-’s-robustness"><a href="#Comparing-T0-and-GPT-3-davinci-’s-robustness" class="headerlink" title="Comparing T0 and GPT-3(davinci)’s robustness"></a>Comparing T0 and GPT-3(davinci)’s robustness</h3><ul>
+<li>T0 could be more robust to prompt formulation than GPT-3.</li>
+</ul>
+<h1 id="DISCUSSION"><a href="#DISCUSSION" class="headerlink" title="DISCUSSION"></a>DISCUSSION</h1><ul>
+<li>Concurrent to our work, Wei et al. (2021) proposes FLAN, which shares largely the same method of enabling zero-shot generalization through multitask prompted training.<ul>
+<li>With a mixture of datasets similar to ours, they train multiple decoder-only language models, each with a single held-out task</li>
+<li>비슷한 연구 있음(FLAN)</li>
+</ul>
+</li>
+</ul>
+<h1 id="CONCLUSION"><a href="#CONCLUSION" class="headerlink" title="CONCLUSION"></a>CONCLUSION</h1><ul>
+<li>demonstrate that multitask prompted training can enable strong zero-shot generalization abilities in language models</li>
+<li>This approach provides an effective alternative to unsupervised language model pretraining, often enabling our T0 model to outperform models many times its size</li>
+</ul>
+</div><div class="article-licensing box"><div class="licensing-title"><p>(T0) Multitask Prompted Training Enables Zero-Shot Task Generalization</p><p><a href="https://eagle705.github.io/(T0) Multitask Prompted Training Enables Zero-Shot Task Generalization/">https://eagle705.github.io/(T0) Multitask Prompted Training Enables Zero-Shot Task Generalization/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2023-02-03</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2023-02-03</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="sharethis-inline-share-buttons"></div><script src="https://platform-api.sharethis.com/js/sharethis.js#property=63297c6228f9450019a5f574&amp;product=sop" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/InstructGPT/"><span class="level-item">(InstructGPT) Training language models to follow instructions with human feedback</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/(T0)%20Multitask%20Prompted%20Training%20Enables%20Zero-Shot%20Task%20Generalization/';
+            this.page.identifier = '(T0) Multitask Prompted Training Enables Zero-Shot Task Generalization/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">46</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">32</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2023/02/"><span class="level-start"><span class="level-item">2월 2023</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2023/01/"><span class="level-start"><span class="level-item">1월 2023</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/12/"><span class="level-start"><span class="level-item">12월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/11/"><span class="level-start"><span class="level-item">11월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/10/"><span class="level-start"><span class="level-item">10월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/09/"><span class="level-start"><span class="level-item">9월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/08/"><span class="level-start"><span class="level-item">8월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">7월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/06/"><span class="level-start"><span class="level-item">6월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/05/"><span class="level-start"><span class="level-item">5월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/01/"><span class="level-start"><span class="level-item">1월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">12월 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">11월 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">35</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="card widget" data-type="adsense"><div class="card-content"><div class="menu"><h3 class="menu-label">광고</h3><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2655870716902046" data-ad-slot="2764253071" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Note"><span class="level-left"><span class="level-item">1</span><span class="level-item">Note</span></span></a></li><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">2</span><span class="level-item">Author</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">3</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#Introduction"><span class="level-left"><span class="level-item">4</span><span class="level-item">Introduction</span></span></a></li><li><a class="level is-mobile" href="#MEASURING-GENERALIZATION-TO-HELD-OUT-TASKS"><span class="level-left"><span class="level-item">5</span><span class="level-item">MEASURING GENERALIZATION TO HELD-OUT TASKS</span></span></a></li><li><a class="level is-mobile" href="#A-UNIFIED-PROMPT-FORMAT"><span class="level-left"><span class="level-item">6</span><span class="level-item">A UNIFIED PROMPT FORMAT</span></span></a></li><li><a class="level is-mobile" href="#EXPERIMENTAL-SETUP"><span class="level-left"><span class="level-item">7</span><span class="level-item">EXPERIMENTAL SETUP</span></span></a><ul class="menu-list"><ul class="menu-list"><li><a class="level is-mobile" href="#Model"><span class="level-left"><span class="level-item">7.1.1</span><span class="level-item">Model</span></span></a></li><li><a class="level is-mobile" href="#Training"><span class="level-left"><span class="level-item">7.1.2</span><span class="level-item">Training</span></span></a></li><li><a class="level is-mobile" href="#Evaluation"><span class="level-left"><span class="level-item">7.1.3</span><span class="level-item">Evaluation</span></span></a></li></ul></ul></li><li><a class="level is-mobile" href="#RESULTS"><span class="level-left"><span class="level-item">8</span><span class="level-item">RESULTS</span></span></a></li><li><a class="level is-mobile" href="#GENERALIZATION-TO-HELD-OUT-TASKS"><span class="level-left"><span class="level-item">9</span><span class="level-item">GENERALIZATION TO HELD-OUT TASKS</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#PROMPT-ROBUSTNESS"><span class="level-left"><span class="level-item">9.1</span><span class="level-item">PROMPT ROBUSTNESS</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Effect-of-More-Prompts-per-Dataset"><span class="level-left"><span class="level-item">9.1.1</span><span class="level-item">Effect of More Prompts per Dataset</span></span></a></li><li><a class="level is-mobile" href="#Effect-of-Prompts-from-More-Datasets"><span class="level-left"><span class="level-item">9.1.2</span><span class="level-item">Effect of Prompts from More Datasets</span></span></a></li><li><a class="level is-mobile" href="#Comparing-T0-and-GPT-3-davinci-’s-robustness"><span class="level-left"><span class="level-item">9.1.3</span><span class="level-item">Comparing T0 and GPT-3(davinci)’s robustness</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#DISCUSSION"><span class="level-left"><span class="level-item">10</span><span class="level-item">DISCUSSION</span></span></a></li><li><a class="level is-mobile" href="#CONCLUSION"><span class="level-left"><span class="level-item">11</span><span class="level-item">CONCLUSION</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-03T07:44:54.000Z">2023-02-03</time></p><p class="title"><a href="/(T0)%20Multitask%20Prompted%20Training%20Enables%20Zero-Shot%20Task%20Generalization/">(T0) Multitask Prompted Training Enables Zero-Shot Task Generalization</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-01-20T14:21:17.000Z">2023-01-20</time></p><p class="title"><a href="/InstructGPT/">(InstructGPT) Training language models to follow instructions with human feedback</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-01-09T07:34:18.000Z">2023-01-09</time></p><p class="title"><a href="/Chinchilla-Training-Compute-Optimal-Large-Language-Models/">(Chinchilla) Training Compute-Optimal Large Language Models</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-12-12T06:45:59.000Z">2022-12-12</time></p><p class="title"><a href="/Robust-Conversational-Agents-against-Imperceptible-Toxicity-Triggers/">Robust Conversational Agents against Imperceptible Toxicity Triggers</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-11-02T06:27:15.000Z">2022-11-02</time></p><p class="title"><a href="/SOCIAL-CHEMISTRY-101/">SOCIAL CHEMISTRY 101 - Learning to Reason about Social and Moral Norms</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2023 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>
