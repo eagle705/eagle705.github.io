@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>(FLAN) Finetuned Language Models Are Zero-Shot Learners - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Note 2022년 2월 구글 리서치쪽 논문 github: https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;google-research&amp;#x2F;flan 참고할 데이터 mixture code: https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;google-research&amp;#x2F;FLAN&amp;#x2F;blob&amp;#x2F;main&amp;#x2F;flan&amp;#x2F;v2&amp;#x2F;mixtures.py 논문 pdf:(FLAN)FINETUNED LANGUAGE MOD"><meta property="og:type" content="blog"><meta property="og:title" content="(FLAN) Finetuned Language Models Are Zero-Shot Learners"><meta property="og:url" content="https://eagle705.github.io/(FLAN)%20Finetuned%20Language%20Models%20Are%20Zero-Shot%20Learners/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="Note 2022년 2월 구글 리서치쪽 논문 github: https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;google-research&amp;#x2F;flan 참고할 데이터 mixture code: https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;google-research&amp;#x2F;FLAN&amp;#x2F;blob&amp;#x2F;main&amp;#x2F;flan&amp;#x2F;v2&amp;#x2F;mixtures.py 논문 pdf:(FLAN)FINETUNED LANGUAGE MOD"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216854220-97b06f92-1c9b-4bac-996d-f4de2bf9c5fd.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216854718-46565013-a01d-4ed0-a48d-89931dac5dac.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216855571-0c2342a6-3ea8-4402-8691-9692fd8e0e8c.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216856396-aab8e8ec-03ac-45af-85f3-5e583d5ab573.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216863918-43378ced-e7be-44cf-a2c8-7d83b3cde118.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216865767-8ec001b2-de15-48e8-88cb-236f46868b7f.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216866036-ac0d61c5-4e79-4b01-be06-6f50c9a6b8f3.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216868452-0786da46-f4aa-486c-8ec7-9a0f6af872cc.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216868809-2fe019b7-5fd3-492c-a767-59d09b1f6865.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216869300-8f78baae-1d3c-4c06-9e26-e76037d9e2f7.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216869867-ef243483-974a-47a5-8353-9c9e70f1aa79.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216870012-3e3432d2-d1aa-420b-b556-85b8e9ed7f6e.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216870422-c795acef-602f-45a6-bb49-43bb6b8146a6.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216870442-adf524ab-145b-4797-91b5-24eeab768a87.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216870479-08034e83-bd86-4270-943a-ca63a822c464.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/216870498-e8f4927b-bee4-471f-b69a-4a36391c71da.png"><meta property="article:published_time" content="2023-02-06T04:15:12.000Z"><meta property="article:modified_time" content="2023-02-06T04:15:59.816Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://user-images.githubusercontent.com/7252598/216854220-97b06f92-1c9b-4bac-996d-f4de2bf9c5fd.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/(FLAN)%20Finetuned%20Language%20Models%20Are%20Zero-Shot%20Learners/"},"headline":"(FLAN) Finetuned Language Models Are Zero-Shot Learners","image":["https://user-images.githubusercontent.com/7252598/216854220-97b06f92-1c9b-4bac-996d-f4de2bf9c5fd.png","https://user-images.githubusercontent.com/7252598/216854718-46565013-a01d-4ed0-a48d-89931dac5dac.png","https://user-images.githubusercontent.com/7252598/216855571-0c2342a6-3ea8-4402-8691-9692fd8e0e8c.png","https://user-images.githubusercontent.com/7252598/216856396-aab8e8ec-03ac-45af-85f3-5e583d5ab573.png","https://user-images.githubusercontent.com/7252598/216863918-43378ced-e7be-44cf-a2c8-7d83b3cde118.png","https://user-images.githubusercontent.com/7252598/216865767-8ec001b2-de15-48e8-88cb-236f46868b7f.png","https://user-images.githubusercontent.com/7252598/216866036-ac0d61c5-4e79-4b01-be06-6f50c9a6b8f3.png","https://user-images.githubusercontent.com/7252598/216868452-0786da46-f4aa-486c-8ec7-9a0f6af872cc.png","https://user-images.githubusercontent.com/7252598/216868809-2fe019b7-5fd3-492c-a767-59d09b1f6865.png","https://user-images.githubusercontent.com/7252598/216869300-8f78baae-1d3c-4c06-9e26-e76037d9e2f7.png","https://user-images.githubusercontent.com/7252598/216869867-ef243483-974a-47a5-8353-9c9e70f1aa79.png","https://user-images.githubusercontent.com/7252598/216870012-3e3432d2-d1aa-420b-b556-85b8e9ed7f6e.png","https://user-images.githubusercontent.com/7252598/216870422-c795acef-602f-45a6-bb49-43bb6b8146a6.png","https://user-images.githubusercontent.com/7252598/216870442-adf524ab-145b-4797-91b5-24eeab768a87.png","https://user-images.githubusercontent.com/7252598/216870479-08034e83-bd86-4270-943a-ca63a822c464.png","https://user-images.githubusercontent.com/7252598/216870498-e8f4927b-bee4-471f-b69a-4a36391c71da.png"],"datePublished":"2023-02-06T04:15:12.000Z","dateModified":"2023-02-06T04:15:59.816Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"Note 2022년 2월 구글 리서치쪽 논문 github: https:&#x2F;&#x2F;github.com&#x2F;google-research&#x2F;flan 참고할 데이터 mixture code: https:&#x2F;&#x2F;github.com&#x2F;google-research&#x2F;FLAN&#x2F;blob&#x2F;main&#x2F;flan&#x2F;v2&#x2F;mixtures.py 논문 pdf:(FLAN)FINETUNED LANGUAGE MOD"}</script><link rel="canonical" href="https://eagle705.github.io/(FLAN)%20Finetuned%20Language%20Models%20Are%20Zero-Shot%20Learners/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><script data-ad-client="ca-pub-2655870716902046" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-02-06T04:15:12.000Z" title="2/6/2023, 1:15:12 PM">2023-02-06</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2023-02-06T04:15:59.816Z" title="2/6/2023, 1:15:59 PM">2023-02-06</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">14분안에 읽기 (약 2138 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">(FLAN) Finetuned Language Models Are Zero-Shot Learners</h1><div class="content"><h1 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h1><ul>
+<li>2022년 2월 구글 리서치쪽 논문</li>
+<li>github: <a target="_blank" rel="noopener" href="https://github.com/google-research/flan">https://github.com/google-research/flan</a></li>
+<li>참고할 데이터 mixture code: <a target="_blank" rel="noopener" href="https://github.com/google-research/FLAN/blob/main/flan/v2/mixtures.py">https://github.com/google-research/FLAN/blob/main/flan/v2/mixtures.py</a></li>
+<li>논문 pdf:<br><a target="_blank" rel="noopener" href="https://github.com/eagle705/presentation/files/10659673/FLAN.FINETUNED.LANGUAGE.MODELS.ARE.ZERO-SHOT.LEARNERS.pdf">(FLAN)FINETUNED LANGUAGE MODELS ARE ZERO-SHOT LEARNERS.pdf</a></li>
+</ul>
+<h1 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h1><ul>
+<li>Jason Wei∗, Maarten Bosma∗, Vincent Y. Zhao∗, Kelvin Guu∗, Adams Wei Yu, Brian Lester, Nan Du, Andrew M. Dai, and Quoc V. Le<ul>
+<li><strong>Google Research</strong></li>
+</ul>
+</li>
+</ul>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><ul>
+<li>explores a simple method for improving the zero-shot learning abilities of language models.</li>
+<li>instruction tuning—finetuning language models on a collection of datasets described via instructions—substantially improves zero-shot performance on unseen tasks.</li>
+<li><strong>137B</strong> parameter pretrained language model and instruction tune it on over 60 NLP datasets verbalized via natural language instruction templates. We evaluate this instruction-tuned model, which we call FLAN, on unseen task types.<br><img src="https://user-images.githubusercontent.com/7252598/216854220-97b06f92-1c9b-4bac-996d-f4de2bf9c5fd.png" alt="image"></li>
+</ul>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><ul>
+<li>We take a pretrained language model of <strong>137B</strong> parameters and perform instruction tuning—finetuning the model on a mixture of more than <strong>60 NLP datasets</strong> expressed via natural language instructions. We refer to this resulting model as <strong>FLAN</strong>, for <strong>F</strong>inetuned <strong>La</strong>nguage <strong>N</strong>et.</li>
+<li>FLAN’s zero-shot also outperforms 175B-parameter GPT-3’s zero-shot on 20 of 25 datasets that we evaluate, and <strong>even outperforms GPT-3’s few-shot</strong> by a large margin on ANLI, RTE, BoolQ, AI2-ARC, OpenbookQA, and StoryCloze.</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/216854718-46565013-a01d-4ed0-a48d-89931dac5dac.png" alt="image"></p>
+<h1 id="FLAN-INSTRUCTION-TUNING-IMPROVES-ZERO-SHOT-LEARNING"><a href="#FLAN-INSTRUCTION-TUNING-IMPROVES-ZERO-SHOT-LEARNING" class="headerlink" title="FLAN: INSTRUCTION TUNING IMPROVES ZERO-SHOT LEARNING"></a>FLAN: INSTRUCTION TUNING IMPROVES ZERO-SHOT LEARNING</h1><ul>
+<li>The motivation of instruction tuning is to improve the ability of language models to respond to NLP instructions. The idea is that by using supervision to teach an LM to perform tasks described via instructions, the LM will learn to follow instructions and do so even for unseen tasks.</li>
+<li>To evaluate performance on unseen tasks, we group datasets into clusters by task type and hold out each task cluster for evaluation while instruction tuning on all remaining clusters.</li>
+</ul>
+<h2 id="TASKS-amp-TEMPLATES"><a href="#TASKS-amp-TEMPLATES" class="headerlink" title="TASKS &amp; TEMPLATES"></a>TASKS &amp; TEMPLATES</h2><ul>
+<li>We aggregate 62 text datasets that are publicly available on Tensorflow Datasets, including both language understanding and language generation tasks, into a single mixture.</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/216855571-0c2342a6-3ea8-4402-8691-9692fd8e0e8c.png" alt="image"></p>
+<ul>
+<li>While most of the ten templates describe the original task, to increase diversity, for each dataset we also include up to three templates that “turned the task around,” (e.g., for sentiment classification we include templates asking to generate a movie review). We then instruction tune a pretrained language model on the mixture of all datasets, with examples in <strong>each dataset formatted via a randomly selected instruction template</strong> for that dataset<ul>
+<li>템플릿은 랜덤하게 선택하는군</li>
+<li>어떤 템플릿이 좋다 이런건 없나?</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/216856396-aab8e8ec-03ac-45af-85f3-5e583d5ab573.png" alt="image"></p>
+<h2 id="EVALUATION-SPLITS"><a href="#EVALUATION-SPLITS" class="headerlink" title="EVALUATION SPLITS"></a>EVALUATION SPLITS</h2><ul>
+<li>to evaluate zero-shot FLAN on c task clusters, we instruction tune c models, where each model holds out a different task cluster for evaluation.<ul>
+<li>c task clusters에 대해서 평가하고 싶으면 c task가 없는 클러스터에 대해서 학습하고 평가해라</li>
+</ul>
+</li>
+</ul>
+<h2 id="CLASSIFICATION-WITH-OPTIONS"><a href="#CLASSIFICATION-WITH-OPTIONS" class="headerlink" title="CLASSIFICATION WITH OPTIONS"></a>CLASSIFICATION WITH OPTIONS</h2><ul>
+<li>For classification tasks, prior work (Brown et al., 2020) used a <strong>rank classification</strong> approach where, for example, only two outputs (“yes” and “no”) are considered and the <strong>higher probability one is taken</strong> as the model’s prediction<ul>
+<li>답변의 분포 때문에! 논리적으로 보이지만 완벽하지 않다!<ul>
+<li>logically sound, it is imperfect in that the probability mass for answers may have an undesired distribution among ways of saying each answer</li>
+</ul>
+</li>
+<li>OPTIONS suffix 추가<ul>
+<li>Therefore, we include an options suffix, in which we append the token <strong>OPTIONS</strong> to the end of a classification task along with a list of the output classes for that task<ul>
+<li>This makes the <strong>model aware of which choices are desired</strong> when responding to classification tasks</li>
+<li>분포문제 때문에 이상한 답변 주지 않게 트릭을 쓰는거네! 그럴듯하다</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="TRAINING-DETAILS"><a href="#TRAINING-DETAILS" class="headerlink" title="TRAINING DETAILS"></a>TRAINING DETAILS</h2><ul>
+<li><strong>Model architecture and pretraining</strong><ul>
+<li>use LaMDA-PT, a dense left-to-right, decoder-only transformer language model of 137B parameters</li>
+<li>pretrained on a collection of web documents (including those with <strong>computer code</strong>), dialog data, and Wikipedia, tokenized into <strong>2.49T BPE tokens</strong> with a 32k vocabulary using the SentencePiece library<ul>
+<li>굳이 computer code를 언급하는건 codex쪽 영향일까? 암튼 좋은 선택인듯</li>
+<li>토큰이 2.5T면..?! 175B가 3.7T 필요하고 67B가 1.5T 필요하니까 약간? 부족한 정도인듯</li>
+</ul>
+</li>
+<li>Around 10% of the pretraining data was non-English. Note that LaMDA-PT only has language model pretraining (c.f. LaMDA, which was finetuned for dialog)<ul>
+<li>LaMDA-PT는 그냥 LM이고 LaMDA가 대화모델!, 10%정도 다른언어면 우리도 넣으면 좋지않을려나</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Instruction tuning procedure</strong><ul>
+<li><strong>FLAN is the instruction-tuned version of LaMDA-PT</strong>, FLAN 자체도 그럼 엄청 좋은 모델을 Backbone으로 쓰고 있던거네..?!</li>
+<li>Our instruction tuning pipeline mixes all datasets and randomly samples from each dataset.</li>
+<li>To balance the different sizes of datasets, we limit the number of training examples per dataset to 30k and follow the examples-proportional mixing scheme (Raffel et al., 2020) with a mixing rate maximum of 3k<ul>
+<li>Q) 이거 궁금했는데, 한 데이터셋 내에서 개수를 3만개로 제한하고…가 아니라 weight를 제한한다는건데 이거 보자<ul>
+<li>In this mixing scheme, a mixing rate maximum of 3,000 means that a dataset <strong>does not receive additional sampling weight for examples in excess of 3,000</strong>.<ul>
+<li>잘 이해가 안가네, 중복 포함일까? 그냥 weight를 조절한다는건가 적절히..?</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>hparams<ul>
+<li>finetune all models for 30k gradient steps with a batch size of <strong>8,192 tokens</strong> using the Adafactor Optimizer (Shazeer &amp; Stern, 2018) with a learning rate of 3e-5<ul>
+<li><strong>Q) batch size가 tokens로 나오네, instruction으로 다시 만들어진 데이터셋을 LM 튜닝하듯이 하는건가?</strong><ul>
+<li>The input and target sequence lengths used in finetuning are <strong>1024</strong> and <strong>256</strong>, respectively</li>
+<li>input과 target으로 나뉘어지니 꼭 그런건 아닌거같고, generation based로 하되 나눠서 하나보네</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>We use packing (Raffel et al., 2020) to combine multiple training examples into a single sequence, separating inputs from targets using a special <strong>EOS token</strong>.<ul>
+<li>input target 구분 위해서 <eos> 사용한거! 기억</li>
+</ul>
+</li>
+<li>This instruction tuning takes around <strong>60 hours</strong> on a TPUv3 with 128 cores.<ul>
+<li>60시간이면 꽤 걸렸네..?!</li>
+</ul>
+</li>
+<li>final checkpoint trained for 30k steps</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="RESULTS"><a href="#RESULTS" class="headerlink" title="RESULTS"></a>RESULTS</h1><ul>
+<li>Overall, we observe that instruction tuning is very effective on tasks <strong>naturally verbalized as instructions</strong> (e.g., NLI, QA, translation, struct-to-text) and is less effective on tasks directly formulated as language modeling, where instructions would be <strong>largely redundant</strong> (e.g., commonsense reasoning and coreference resolution tasks that are formatted as finishing an incomplete sentence or paragraph).<ul>
+<li>리던던트한게 잘 안되는구나</li>
+</ul>
+</li>
+<li>결과 보니까 BERT, T5 같은 모델이 그래도 잘하긴 잘하네..<br><img src="https://user-images.githubusercontent.com/7252598/216863918-43378ced-e7be-44cf-a2c8-7d83b3cde118.png" alt="image"></li>
+</ul>
+<h1 id="ABLATION-STUDIES-amp-FURTHER-ANALYSIS"><a href="#ABLATION-STUDIES-amp-FURTHER-ANALYSIS" class="headerlink" title="ABLATION STUDIES &amp; FURTHER ANALYSIS"></a>ABLATION STUDIES &amp; FURTHER ANALYSIS</h1><h2 id="NUMBER-OF-INSTRUCTION-TUNING-CLUSTERS"><a href="#NUMBER-OF-INSTRUCTION-TUNING-CLUSTERS" class="headerlink" title="NUMBER OF INSTRUCTION TUNING CLUSTERS"></a>NUMBER OF INSTRUCTION TUNING CLUSTERS</h2><ul>
+<li>이거 분석 좋네</li>
+<li>we examine how performance is affected by <strong>the number of clusters and tasks</strong> used in instruction tuning</li>
+<li>평가쪽<ul>
+<li>we hold out <strong>NLI, closed-book QA, and commonsense reasoning</strong> as evaluation clusters</li>
+</ul>
+</li>
+<li>결과<ul>
+<li>We show results for one to seven instruction tuning clusters, where clusters are added in decreasing order of number of tasks per cluster.</li>
+<li>implying that performance may further <strong>improve with even more clusters added to instruction tuning</strong><ul>
+<li>이건 약간 T0와는 다른 결과인거 같기도한데 체크해봐야겠음<br><img src="https://user-images.githubusercontent.com/7252598/216865767-8ec001b2-de15-48e8-88cb-236f46868b7f.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="SCALING-LAWS"><a href="#SCALING-LAWS" class="headerlink" title="SCALING LAWS"></a>SCALING LAWS</h2><ul>
+<li>small model은 capacity가 낮으므로 instruction tuning하면 튜닝한거 배우느라 다 capa를 써버려서 unseen에 대해서 낮게 나온다 라고 해석함</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/216866036-ac0d61c5-4e79-4b01-be06-6f50c9a6b8f3.png" alt="image"></p>
+<h2 id="ROLE-OF-INSTRUCTIONS"><a href="#ROLE-OF-INSTRUCTIONS" class="headerlink" title="ROLE OF INSTRUCTIONS"></a>ROLE OF INSTRUCTIONS</h2><ul>
+<li>모델의 능력이 instructions에서 오는지, 아니면 원래 있는건지 확인<ul>
+<li>we explore the role of instructions during finetuning, as one possibility is that performance gains come entirely from multi-task finetuning and the model could perform just as well without instructions</li>
+<li>We hence consider two finetuning setups without instructions.<ul>
+<li>[1] In a <code>no template setup</code>, only inputs and outputs were given to the model (e.g., for translation the input would be <code>“The dog runs.”</code> and the output would be <code>“Le chien court.”</code>).</li>
+<li>[2] In a dataset name setup, each input is prepended with the name of the task and dataset (e.g., for translation to French, the input would be <code>“[Translation: WMT’14 to French] The dog runs.”</code>).</li>
+</ul>
+</li>
+<li>compare these two ablations to FLAN’s finetuning procedure, which used <code>natural instructions</code> (e.g., “Please translate this sentence to French: ‘The dog runs.’”)</li>
+</ul>
+</li>
+<li>FLAN이 성능이 제일 좋긴한데, 데이터셋이름을 앞에 붙이는 것도 성능이 생각보다 괜찮네?</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/216868452-0786da46-f4aa-486c-8ec7-9a0f6af872cc.png" alt="image"></p>
+<h2 id="INSTRUCTIONS-WITH-FEW-SHOT-EXEMPLARS"><a href="#INSTRUCTIONS-WITH-FEW-SHOT-EXEMPLARS" class="headerlink" title="INSTRUCTIONS WITH FEW-SHOT EXEMPLARS"></a>INSTRUCTIONS WITH FEW-SHOT EXEMPLARS</h2><ul>
+<li>fewshot 넣으면 조금 더 좋아지긴한다<br><img src="https://user-images.githubusercontent.com/7252598/216868809-2fe019b7-5fd3-492c-a767-59d09b1f6865.png" alt="image"></li>
+</ul>
+<h2 id="INSTRUCTION-TUNING-FACILITATES-PROMPT-TUNING"><a href="#INSTRUCTION-TUNING-FACILITATES-PROMPT-TUNING" class="headerlink" title="INSTRUCTION TUNING FACILITATES PROMPT TUNING"></a>INSTRUCTION TUNING FACILITATES PROMPT TUNING</h2><ul>
+<li>Prompt tuning 결과도 더 좋긴한데, 이건 이미 한번 봐서 그런건 아닌가? 아 읽어보니 아니네, 그러면 잘하는거 맞을듯</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/216869300-8f78baae-1d3c-4c06-9e26-e76037d9e2f7.png" alt="image"></p>
+<h1 id="DISCUSSION"><a href="#DISCUSSION" class="headerlink" title="DISCUSSION"></a>DISCUSSION</h1><ul>
+<li>Our instruction-tuned model, FLAN, improves performance against an untuned model and surpasses zero-shot GPT-3 on the majority of tasks that we evaluate on.</li>
+<li>Ablation studies reveal that performance on unseen tasks improves with the number of instruction tuning task clusters, and, interestingly, that performance improvements from instruction tuning emerge only with sufficient model scale.</li>
+<li>Moreover, instruction tuning can be combined with other prompting methods such as few-shot prompting and prompt tuning.</li>
+</ul>
+<h1 id="CONCLUSIONS"><a href="#CONCLUSIONS" class="headerlink" title="CONCLUSIONS"></a>CONCLUSIONS</h1><ul>
+<li>This paper has explored a simple method for improving the ability of language models at scale to perform zero-shot tasks based purely on instructions. Our instruction-tuned model, FLAN, compares favorably against GPT-3 and signals the potential ability for language models at scale to follow instructions.</li>
+</ul>
+<h1 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a>Appendix</h1><p><img src="https://user-images.githubusercontent.com/7252598/216869867-ef243483-974a-47a5-8353-9c9e70f1aa79.png" alt="image"></p>
+<ul>
+<li>Multiple FLAN outputs hparams<ul>
+<li>Multiple FLAN outputs are generated via random sampling with a <code>temperature of 0.9 and top k of 40</code>.</li>
+</ul>
+</li>
+<li>examples<ul>
+<li>보통 change, recommend, generate, suggest, make up, answer in Langauge 등 마지막에 여러 명령(?)으로 해결할 수 있게 해놓음</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>example 1</th>
+<th>example 2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://user-images.githubusercontent.com/7252598/216870012-3e3432d2-d1aa-420b-b556-85b8e9ed7f6e.png" alt="image"></td>
+<td><img src="https://user-images.githubusercontent.com/7252598/216870422-c795acef-602f-45a6-bb49-43bb6b8146a6.png" alt="image"></td>
+</tr>
+<tr>
+<td><img src="https://user-images.githubusercontent.com/7252598/216870442-adf524ab-145b-4797-91b5-24eeab768a87.png" alt="image"></td>
+<td><img src="https://user-images.githubusercontent.com/7252598/216870479-08034e83-bd86-4270-943a-ca63a822c464.png" alt="image"></td>
+</tr>
+<tr>
+<td><img src="https://user-images.githubusercontent.com/7252598/216870498-e8f4927b-bee4-471f-b69a-4a36391c71da.png" alt="image"></td>
+<td></td>
+</tr>
+</tbody></table>
+</div><div class="article-licensing box"><div class="licensing-title"><p>(FLAN) Finetuned Language Models Are Zero-Shot Learners</p><p><a href="https://eagle705.github.io/(FLAN) Finetuned Language Models Are Zero-Shot Learners/">https://eagle705.github.io/(FLAN) Finetuned Language Models Are Zero-Shot Learners/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2023-02-06</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2023-02-06</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="sharethis-inline-share-buttons"></div><script src="https://platform-api.sharethis.com/js/sharethis.js#property=63297c6228f9450019a5f574&amp;product=sop" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/(T0)%20Multitask%20Prompted%20Training%20Enables%20Zero-Shot%20Task%20Generalization/"><span class="level-item">(T0) Multitask Prompted Training Enables Zero-Shot Task Generalization</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/(FLAN)%20Finetuned%20Language%20Models%20Are%20Zero-Shot%20Learners/';
+            this.page.identifier = '(FLAN) Finetuned Language Models Are Zero-Shot Learners/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">47</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">33</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2023/02/"><span class="level-start"><span class="level-item">2월 2023</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2023/01/"><span class="level-start"><span class="level-item">1월 2023</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/12/"><span class="level-start"><span class="level-item">12월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/11/"><span class="level-start"><span class="level-item">11월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/10/"><span class="level-start"><span class="level-item">10월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/09/"><span class="level-start"><span class="level-item">9월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/08/"><span class="level-start"><span class="level-item">8월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">7월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/06/"><span class="level-start"><span class="level-item">6월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/05/"><span class="level-start"><span class="level-item">5월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/01/"><span class="level-start"><span class="level-item">1월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">12월 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">11월 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">36</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="card widget" data-type="adsense"><div class="card-content"><div class="menu"><h3 class="menu-label">광고</h3><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2655870716902046" data-ad-slot="2764253071" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Note"><span class="level-left"><span class="level-item">1</span><span class="level-item">Note</span></span></a></li><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">2</span><span class="level-item">Author</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">3</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#Introduction"><span class="level-left"><span class="level-item">4</span><span class="level-item">Introduction</span></span></a></li><li><a class="level is-mobile" href="#FLAN-INSTRUCTION-TUNING-IMPROVES-ZERO-SHOT-LEARNING"><span class="level-left"><span class="level-item">5</span><span class="level-item">FLAN: INSTRUCTION TUNING IMPROVES ZERO-SHOT LEARNING</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#TASKS-amp-TEMPLATES"><span class="level-left"><span class="level-item">5.1</span><span class="level-item">TASKS &amp; TEMPLATES</span></span></a></li><li><a class="level is-mobile" href="#EVALUATION-SPLITS"><span class="level-left"><span class="level-item">5.2</span><span class="level-item">EVALUATION SPLITS</span></span></a></li><li><a class="level is-mobile" href="#CLASSIFICATION-WITH-OPTIONS"><span class="level-left"><span class="level-item">5.3</span><span class="level-item">CLASSIFICATION WITH OPTIONS</span></span></a></li><li><a class="level is-mobile" href="#TRAINING-DETAILS"><span class="level-left"><span class="level-item">5.4</span><span class="level-item">TRAINING DETAILS</span></span></a></li></ul></li><li><a class="level is-mobile" href="#RESULTS"><span class="level-left"><span class="level-item">6</span><span class="level-item">RESULTS</span></span></a></li><li><a class="level is-mobile" href="#ABLATION-STUDIES-amp-FURTHER-ANALYSIS"><span class="level-left"><span class="level-item">7</span><span class="level-item">ABLATION STUDIES &amp; FURTHER ANALYSIS</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#NUMBER-OF-INSTRUCTION-TUNING-CLUSTERS"><span class="level-left"><span class="level-item">7.1</span><span class="level-item">NUMBER OF INSTRUCTION TUNING CLUSTERS</span></span></a></li><li><a class="level is-mobile" href="#SCALING-LAWS"><span class="level-left"><span class="level-item">7.2</span><span class="level-item">SCALING LAWS</span></span></a></li><li><a class="level is-mobile" href="#ROLE-OF-INSTRUCTIONS"><span class="level-left"><span class="level-item">7.3</span><span class="level-item">ROLE OF INSTRUCTIONS</span></span></a></li><li><a class="level is-mobile" href="#INSTRUCTIONS-WITH-FEW-SHOT-EXEMPLARS"><span class="level-left"><span class="level-item">7.4</span><span class="level-item">INSTRUCTIONS WITH FEW-SHOT EXEMPLARS</span></span></a></li><li><a class="level is-mobile" href="#INSTRUCTION-TUNING-FACILITATES-PROMPT-TUNING"><span class="level-left"><span class="level-item">7.5</span><span class="level-item">INSTRUCTION TUNING FACILITATES PROMPT TUNING</span></span></a></li></ul></li><li><a class="level is-mobile" href="#DISCUSSION"><span class="level-left"><span class="level-item">8</span><span class="level-item">DISCUSSION</span></span></a></li><li><a class="level is-mobile" href="#CONCLUSIONS"><span class="level-left"><span class="level-item">9</span><span class="level-item">CONCLUSIONS</span></span></a></li><li><a class="level is-mobile" href="#Appendix"><span class="level-left"><span class="level-item">10</span><span class="level-item">Appendix</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-06T04:15:12.000Z">2023-02-06</time></p><p class="title"><a href="/(FLAN)%20Finetuned%20Language%20Models%20Are%20Zero-Shot%20Learners/">(FLAN) Finetuned Language Models Are Zero-Shot Learners</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-03T07:44:54.000Z">2023-02-03</time></p><p class="title"><a href="/(T0)%20Multitask%20Prompted%20Training%20Enables%20Zero-Shot%20Task%20Generalization/">(T0) Multitask Prompted Training Enables Zero-Shot Task Generalization</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-01-20T14:21:17.000Z">2023-01-20</time></p><p class="title"><a href="/InstructGPT/">(InstructGPT) Training language models to follow instructions with human feedback</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-01-09T07:34:18.000Z">2023-01-09</time></p><p class="title"><a href="/Chinchilla-Training-Compute-Optimal-Large-Language-Models/">(Chinchilla) Training Compute-Optimal Large Language Models</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-12-12T06:45:59.000Z">2022-12-12</time></p><p class="title"><a href="/Robust-Conversational-Agents-against-Imperceptible-Toxicity-Triggers/">Robust Conversational Agents against Imperceptible Toxicity Triggers</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2023 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>
