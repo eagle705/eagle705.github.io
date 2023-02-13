@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>SELF-INSTRUCT Aligning Language Model with Self Generated Instructions - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Note code: https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;yizhongw&amp;#x2F;self-instruct slide: SELF-INSTRUCT.pdf 여기 있는 Instruction은 NLP task쪽이라기보다 InstructGPT에서의 prompt중에 명령관련 표현을 의미하는 듯 Instruction뿐만 아니라 Instance도 생성하기 때문에 challenge하고"><meta property="og:type" content="blog"><meta property="og:title" content="SELF-INSTRUCT Aligning Language Model with Self Generated Instructions"><meta property="og:url" content="https://eagle705.github.io/SELF-INSTRUCT%20Aligning%20Language%20Model%20with%20Self%20Generated%20Instructions/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="Note code: https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;yizhongw&amp;#x2F;self-instruct slide: SELF-INSTRUCT.pdf 여기 있는 Instruction은 NLP task쪽이라기보다 InstructGPT에서의 prompt중에 명령관련 표현을 의미하는 듯 Instruction뿐만 아니라 Instance도 생성하기 때문에 challenge하고"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/217453282-8fc30591-2633-473a-b157-e08abb47596d.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/217465744-c1fcb396-cbc1-468b-86e4-d72d5d005e9d.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/217397748-39ba069e-3340-4097-b2eb-62d82ea2919b.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/217401805-22f50a46-5f53-4479-8cbf-dbbbb292e7b8.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/217404161-42aa1a13-c2f6-45e1-bb30-53636a934584.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/217404363-b1431caf-9783-4c96-9f8c-3f2aee0ff834.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/217408758-b5b4d0ac-bf4e-41cf-b0de-4a8e275ab807.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/217408964-38a48fa4-4b4d-403e-8519-1099be76a128.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/217441947-92bc2db5-e4b5-4557-8fe9-0bd371b13e07.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/217443597-167b1253-8bcc-4f26-806a-77340386a197.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/217444425-31b57ce0-218d-4eae-9ccc-4b49c13c71ad.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/217444909-40bb116f-f83e-4fb1-a7fd-cb94901cc2f1.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/217446692-81194509-260e-46be-8025-b898ba5546df.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/217448842-58240b5e-462e-4cc2-bfea-acca63e524f0.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/217449345-45bcfda6-550d-4715-bc01-7fdc2037cafa.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218369215-fb32ffdb-aea1-4145-9372-ab2c8a5fd195.gif"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218369298-1e5e132d-007a-4a5e-9262-88e1f00f8022.gif"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218369186-12b83069-7e59-4149-9277-83e7d7aa1259.gif"><meta property="article:published_time" content="2023-02-13T04:18:48.000Z"><meta property="article:modified_time" content="2023-02-13T04:19:27.901Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://user-images.githubusercontent.com/7252598/217453282-8fc30591-2633-473a-b157-e08abb47596d.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/SELF-INSTRUCT%20Aligning%20Language%20Model%20with%20Self%20Generated%20Instructions/"},"headline":"SELF-INSTRUCT Aligning Language Model with Self Generated Instructions","image":["https://user-images.githubusercontent.com/7252598/217453282-8fc30591-2633-473a-b157-e08abb47596d.png","https://user-images.githubusercontent.com/7252598/217465744-c1fcb396-cbc1-468b-86e4-d72d5d005e9d.png","https://user-images.githubusercontent.com/7252598/217397748-39ba069e-3340-4097-b2eb-62d82ea2919b.png","https://user-images.githubusercontent.com/7252598/217401805-22f50a46-5f53-4479-8cbf-dbbbb292e7b8.png","https://user-images.githubusercontent.com/7252598/217404161-42aa1a13-c2f6-45e1-bb30-53636a934584.png","https://user-images.githubusercontent.com/7252598/217404363-b1431caf-9783-4c96-9f8c-3f2aee0ff834.png","https://user-images.githubusercontent.com/7252598/217408758-b5b4d0ac-bf4e-41cf-b0de-4a8e275ab807.png","https://user-images.githubusercontent.com/7252598/217408964-38a48fa4-4b4d-403e-8519-1099be76a128.png","https://user-images.githubusercontent.com/7252598/217441947-92bc2db5-e4b5-4557-8fe9-0bd371b13e07.png","https://user-images.githubusercontent.com/7252598/217443597-167b1253-8bcc-4f26-806a-77340386a197.png","https://user-images.githubusercontent.com/7252598/217444425-31b57ce0-218d-4eae-9ccc-4b49c13c71ad.png","https://user-images.githubusercontent.com/7252598/217444909-40bb116f-f83e-4fb1-a7fd-cb94901cc2f1.png","https://user-images.githubusercontent.com/7252598/217446692-81194509-260e-46be-8025-b898ba5546df.png","https://user-images.githubusercontent.com/7252598/217448842-58240b5e-462e-4cc2-bfea-acca63e524f0.png","https://user-images.githubusercontent.com/7252598/217449345-45bcfda6-550d-4715-bc01-7fdc2037cafa.png","https://user-images.githubusercontent.com/7252598/218369215-fb32ffdb-aea1-4145-9372-ab2c8a5fd195.gif","https://user-images.githubusercontent.com/7252598/218369298-1e5e132d-007a-4a5e-9262-88e1f00f8022.gif","https://user-images.githubusercontent.com/7252598/218369186-12b83069-7e59-4149-9277-83e7d7aa1259.gif"],"datePublished":"2023-02-13T04:18:48.000Z","dateModified":"2023-02-13T04:19:27.901Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"Note code: https:&#x2F;&#x2F;github.com&#x2F;yizhongw&#x2F;self-instruct slide: SELF-INSTRUCT.pdf 여기 있는 Instruction은 NLP task쪽이라기보다 InstructGPT에서의 prompt중에 명령관련 표현을 의미하는 듯 Instruction뿐만 아니라 Instance도 생성하기 때문에 challenge하고"}</script><link rel="canonical" href="https://eagle705.github.io/SELF-INSTRUCT%20Aligning%20Language%20Model%20with%20Self%20Generated%20Instructions/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><script data-ad-client="ca-pub-2655870716902046" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-02-13T04:18:48.000Z" title="2/13/2023, 1:18:48 PM">2023-02-13</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2023-02-13T04:19:27.901Z" title="2/13/2023, 1:19:27 PM">2023-02-13</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">20분안에 읽기 (약 3026 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">SELF-INSTRUCT Aligning Language Model with Self Generated Instructions</h1><div class="content"><h1 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h1><ul>
+<li>code: <a target="_blank" rel="noopener" href="https://github.com/yizhongw/self-instruct">https://github.com/yizhongw/self-instruct</a></li>
+<li>slide: <a target="_blank" rel="noopener" href="https://github.com/eagle705/presentation/files/10718545/SELF-INSTRUCT.pdf">SELF-INSTRUCT.pdf</a></li>
+<li>여기 있는 Instruction은 NLP task쪽이라기보다 InstructGPT에서의 prompt중에 명령관련 표현을 의미하는 듯</li>
+<li>Instruction뿐만 아니라 Instance도 생성하기 때문에 challenge하고, LLM에 내재되어있는 능력을 꺼내되 꺼낸 컨텐츠도 LLM안에 있는거라서, human의 개입이 잘안들어간 self-Instruct+Instance라고 할 수 있을듯<ul>
+<li>Because of SELF-INSTRUCT’s dependence on the inductive biases extracted from LMs</li>
+</ul>
+</li>
+<li>InstructGPT_001 정도의 모델을 휴먼리소스 적게해서 만드는 방법</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/yizhongw/self-instruct/blob/main/data/seed_tasks.jsonl">175개 시드 템플릿</a></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>예시1</th>
+<th>예시2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://user-images.githubusercontent.com/7252598/217453282-8fc30591-2633-473a-b157-e08abb47596d.png" alt="image"></td>
+<td><img src="https://user-images.githubusercontent.com/7252598/217465744-c1fcb396-cbc1-468b-86e4-d72d5d005e9d.png" alt="두번째예시"></td>
+</tr>
+</tbody></table>
+<h1 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h1><ul>
+<li>Yizhong Wang♣ Yeganeh Kordi♢ Swaroop Mishra♡ Alisa Liu♣ Noah A. Smith♣+ Daniel Khashabi♠ Hannaneh Hajishirzi♣+ </li>
+<li>♣University of Washington ♢Tehran Polytechnic ♡Arizona State University ♠Johns Hopkins University +Allen Institute for AI</li>
+</ul>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><ul>
+<li>Large “instruction-tuned” language models (finetuned to respond to instructions) have demonstrated a remarkable ability to generalize zero-shot to new tasks.<ul>
+<li>Nevertheless, they depend heavily on human-written instruction data that is limited in quantity, diversity, and creativity, therefore hindering the generality of the tuned model.</li>
+</ul>
+</li>
+<li>We introduce SELF-INSTRUCT, a framework for improving the instruction-following capabilities of pretrained language models by bootstrapping off its own generations.</li>
+<li>Our pipeline <ul>
+<li>generates <ul>
+<li>instruction, </li>
+<li>input, and </li>
+<li>output samples</li>
+</ul>
+</li>
+<li>from a language model, then prunes them before using them to finetune the original model.</li>
+</ul>
+</li>
+<li>Applying our method to vanilla GPT3, we demonstrate a 33% absolute improvement over the original model on SUPERNATURALINSTRUCTIONS, on par with the performance of InstructGPT001</li>
+<li>we curate a set of expert-written instructions for novel tasks, and show through human evaluation that tuning GPT3 with SELF-INSTRUCT outperforms using existing public instruction datasets by a large margin, leaving only a 5% absolute gap behind InstructGPT001</li>
+<li>SELF-INSTRUCT provides an almost annotation-free method for aligning pretrained language models with instructions, and we <a target="_blank" rel="noopener" href="https://github.com/yizhongw/self-instruct">release our large synthetic dataset to facilitate future studies on instruction tuning</a>.</li>
+</ul>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><ul>
+<li>These developments are powered by two key components: large pre-trained language models (LM) and human-written instruction data. <strong>PROMPTSOURCE</strong> (Bach et al., 2022) and <strong>SUPERNATURALINSTRUCTIONS</strong> (Wang et al., 2022) are two notable recent datasets that use extensive manual annotation for collecting instructions to construct T0 and T𝑘-INSTRUCT</li>
+<li>However, this process is costly and often suffers limited diversity given that most human generations tend to be popular NLP tasks, <strong>falling short of covering a true variety of tasks and different ways to describe them</strong>.</li>
+<li>In this work, we introduce SELF-INSTRUCT, a semi-automated process for instruction-tuning a pretrained LM using instructional signals from the model itself.</li>
+<li>The overall process is an <strong>iterative bootstrapping algorithm</strong> (see Figure 1), which starts off with a limited (e.g., 175 in our study) seed set of manually-written instructions that are used to guide the overall generation.<ul>
+<li>In the first phase, the model is prompted to generate instructions for new tasks<ul>
+<li>This step leverages the existing collection of instructions to create more broad-coverage instructions that define (often new) tasks</li>
+</ul>
+</li>
+<li>Given the newly-generated set of instructions, the framework also creates input-output instances for them, which can be later used for supervising the instruction tuning.</li>
+<li>Finally, <strong>various measures</strong> are used to prune low-quality and repeated instructions, before adding them to the task pool.  (어떤 measure를 쓰는건지 봐야겠군)<ul>
+<li>This process can be repeated for many interactions until reaching a large number of tasks.<br><img src="https://user-images.githubusercontent.com/7252598/217397748-39ba069e-3340-4097-b2eb-62d82ea2919b.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The iterative SELF INSTRUCT process on this model leads to about <code>52k instructions</code>, <code>paired with about 82K instance inputs and target outputs</code>.<ul>
+<li>인스터럭션이 5만2천개고, 실제 데이터는 8만2천개라는거지?</li>
+</ul>
+</li>
+<li>provides a diverse range of creative tasks and over 50% of them have less than 0.3 ROUGE- L overlaps with the seed instructions (§4.2)<ul>
+<li>rouge-l 기준 0.3보다 낮아서 안겹친다는건데, 이게 의미적으로 맞긴한거냐고</li>
+</ul>
+</li>
+<li>The SUPERNI results indicate that GPT3SELF-INST out- performs GPT3 (the original model) by a large margin (+33.1%) and nearly matches the performance of InstructGPT001</li>
+<li>Moreover, our human evaluation on the newly-created instruction set shows that GPT3SELF-INST demonstrates a broad range of instruction following ability, outperforming models trained on other publicly available instruction datasets and leaving only a 5% gap behind InstructGPT001.</li>
+<li>In summary, our contributions are: <ul>
+<li>(1) SELF-INSTRUCT, a method for inducing instruction following capability with minimal human-labeled data; </li>
+<li>(2) We demonstrate its effectiveness via extensive instruction-tuning experiments; </li>
+<li>(3) We release a large synthetic dataset of 52K instructions and a set of manually-written novel tasks for building and evaluating future instruction-following models.</li>
+</ul>
+</li>
+</ul>
+<h1 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h1><ul>
+<li>Annotating large-scale instruction data can be challenging for humans because it requires <ul>
+<li><ol>
+<li>creativity to come up with novel tasks and</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>expertise for writing the labeled instances for each task.</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Defining-Instruction-Data"><a href="#Defining-Instruction-Data" class="headerlink" title="Defining Instruction Data"></a>Defining Instruction Data</h2><p><img src="https://user-images.githubusercontent.com/7252598/217401805-22f50a46-5f53-4479-8cbf-dbbbb292e7b8.png" alt="image"></p>
+<h2 id="Automatic-Instruction-Data-Generation"><a href="#Automatic-Instruction-Data-Generation" class="headerlink" title="Automatic Instruction Data Generation"></a>Automatic Instruction Data Generation</h2><ul>
+<li>Our pipeline for generating the instruction data consists of four steps: <ul>
+<li><ol>
+<li>instruction generation,</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>identifying whether the instruction represents a classification task or not,  (왜 분류 태스크인지 아닌지를 알아내려할까?)</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>instance generation with the input-first or the output-first approach, and</li>
+</ol>
+</li>
+<li><ol start="4">
+<li>filtering low-quality data.</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Instruction-Generation"><a href="#Instruction-Generation" class="headerlink" title="Instruction Generation"></a>Instruction Generation</h3><ul>
+<li>large pretrained language models can be prompted to generate new and novel instructions when presented with some existing instructions in the context<ul>
+<li>This provides us with a way to grow the instruction data from a small set of seed human-written instructions</li>
+<li>We propose to generate a diverse set of instructions in a bootstrapping fashion</li>
+</ul>
+</li>
+<li>We initiate the task pool with <strong>175 tasks</strong> (1 instruction and 1 instance for each task) written by our authors</li>
+<li>For every step, we sample 8 task instructions from this pool as in-context examples<ul>
+<li>Of the 8 instructions, <strong>6 are from the human-written tasks, and 2 are from the model-generated tasks</strong> in previous steps to promote diversity.</li>
+<li>The prompting template is shown in Table 6.</li>
+<li>6개는 사람이 쓴거고 2개는 모델이 생성한건데, 음.. 초기에 저렇게 한다는걸까</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/217404161-42aa1a13-c2f6-45e1-bb30-53636a934584.png" alt="image"></p>
+<h3 id="Classification-Task-Identification"><a href="#Classification-Task-Identification" class="headerlink" title="Classification Task Identification."></a>Classification Task Identification.</h3><ul>
+<li>Because we need two different approaches for classification and non-classification tasks, we next <strong>identify whether the generated instruction represents a classification task or not.</strong><ul>
+<li>We prompt vanilla GPT3 few-shot to determine this, using 12 classification instructions and 19 non-classification instructions from the seed tasks.<ul>
+<li>few-shot으로 이게 classification인지 아닌지 판단하게함, few-shot이 좋아야하네, practical하다고 할수 있을까?</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Instance-Generation"><a href="#Instance-Generation" class="headerlink" title="Instance Generation."></a>Instance Generation.</h3><ul>
+<li>Given the instructions and their task type, we generate instances for each instruction independently.<ul>
+<li>각각에 대해서 생성하는건 잘한듯</li>
+</ul>
+</li>
+<li>This is challenging because it requires the model to understand what the target task is, based on the instruction, figure out what additional input fields are needed and generate them, and finally complete the task by <strong>producing the output.</strong> </li>
+<li>pretrained language models can achieve this to a large extent when <code>prompted with instruction-input-output in-context examples</code> from other tasks</li>
+<li>A natural way to do this is the <code>Input-first Approach</code><ul>
+<li>language model to come up with the input fields first based on the instruction, and then produce the corresponding output.</li>
+</ul>
+</li>
+<li>However, we found that this approach can <strong>generate inputs biased toward one label, especially for classification tasks</strong> (e.g., for grammar error detection, it usually generates grammatical input). Therefore, we additionally propose an <code>Output-first Approach</code> for classification tasks<ul>
+<li>we first generate the possible class labels, and then condition the input generation on each class label.</li>
+<li>We apply the <code>output-first approach</code> to the <code>classification tasks</code> identified in the former step, and the <code>input-first approach</code> to the <code>remaining non-classification tasks</code>.<ul>
+<li>분류문제와 비분류문제에 대해서는 접근을 다르게함</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Filtering-and-Postprocessing"><a href="#Filtering-and-Postprocessing" class="headerlink" title="Filtering and Postprocessing"></a>Filtering and Postprocessing</h3><ul>
+<li>To encourage diversity, a new instruction is added to the task pool only when its <code>ROUGE-L overlap</code> with any existing instruction is <code>less than 0.7</code>.<ul>
+<li>instruction이 많은데 검수를 꽤 해야겠네 (루프한번이면 되지만)</li>
+</ul>
+</li>
+<li>We also exclude instructions that contain some specific keywords (e.g., images, pictures, graphs) that usually can not be processed by language models.<ul>
+<li>이미지, 그래프등의 단어는 룰로 배제</li>
+</ul>
+</li>
+<li>When generating new instances for each instruction, we filter out instances that are exactly the same or those with the same input but different outputs.</li>
+<li>Q) 이상한 Instruction이랑 Instance가 분명 있을텐데 왜 얘넨 필터링 안하지?</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Table 7</th>
+<th>Table 8</th>
+<th>Table 9</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://user-images.githubusercontent.com/7252598/217404363-b1431caf-9783-4c96-9f8c-3f2aee0ff834.png" alt="image"></td>
+<td><img src="https://user-images.githubusercontent.com/7252598/217408758-b5b4d0ac-bf4e-41cf-b0de-4a8e275ab807.png" alt="image"></td>
+<td><img src="https://user-images.githubusercontent.com/7252598/217408964-38a48fa4-4b4d-403e-8519-1099be76a128.png" alt="image"></td>
+</tr>
+</tbody></table>
+<h2 id="Finetuning-the-LM-to-Follow-Instructions"><a href="#Finetuning-the-LM-to-Follow-Instructions" class="headerlink" title="Finetuning the LM to Follow Instructions"></a>Finetuning the LM to Follow Instructions</h2><ul>
+<li>After the creation of the large-scale instruction data, we use this data to finetune the original language model (i.e., SELF-INSTRUCT).</li>
+<li>To do this, we <code>concatenate the instruction and instance input as a prompt</code> and <code>train the model to generate the instance output</code> in a standard <code>supervised</code> way.</li>
+<li>To make the model <code>robust</code> to different formats, we use <code>multiple</code> templates to encode the instruction and instance input together.<ul>
+<li>For example, the instruction can be prefixed with <code>“Task:” or not</code>, the input can be prefixed with <code>“Input:” or not</code>, <code>“Output:” can be appended at the end of the prompt</code>, and different numbers of break lines can be put in the middle, etc.</li>
+</ul>
+</li>
+</ul>
+<h1 id="SELF-INSTRUCT-Data-from-GPT3"><a href="#SELF-INSTRUCT-Data-from-GPT3" class="headerlink" title="SELF-INSTRUCT Data from GPT3"></a>SELF-INSTRUCT Data from GPT3</h1><ul>
+<li>we apply our method for inducing instruction data to GPT3 as a case study</li>
+<li>We use the largest GPT3 language model (“davinci” engine) accessed through the OpenAI API<ul>
+<li>아.. API 써서 한거구나</li>
+</ul>
+</li>
+</ul>
+<h2 id="Statistics"><a href="#Statistics" class="headerlink" title="Statistics"></a>Statistics</h2><ul>
+<li>We generate a total of over 52K instructions, and more than 82K instances corresponding to these instructions after filtering.<ul>
+<li>인스트럭션이 52,000개인데 인스턴스는 82,000이네 더 많이 만들고(텍스트야 모델돌리면 생성되니) 필터링했다는 걸까<br><img src="https://user-images.githubusercontent.com/7252598/217441947-92bc2db5-e4b5-4557-8fe9-0bd371b13e07.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+<h2 id="Diversity"><a href="#Diversity" class="headerlink" title="Diversity"></a>Diversity</h2><ul>
+<li>we identify the verb-noun structure in the generated instructions. We use the Berkeley Neural Parser6 (Kitaev and Klein, 2018; Kitaev et al., 2019) to parse the instructions, and then extract the verb that is closest to the root of the parse tree as well as its first direct noun object. 26,559 out of the 52,445 instructions contain such structure; other instructions usually contain more complex clauses (e.g., “Classify whether this tweet contains political content or not.”) or are framed as questions (e.g., “Which of these statements are true?”).</li>
+<li>We plot the top 20 most common root verbs and their top 4 direct noun objects in Figure 2, which accounts for 14% of the entire set. Overall, we see quite diverse intents and textual formats in these instructions.</li>
+<li>For each generated instruction, we compute its highest ROUGE-L overlap with the 175 seed instructions. We plot the distribution of these ROUGE-L scores in Figure 3,<ul>
+<li>시드에 대해서만 계산했구나</li>
+</ul>
+</li>
+<li>We also demonstrate diversity in length of the instructions, instance inputs, and instance outputs in Figure 4.</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/217443597-167b1253-8bcc-4f26-806a-77340386a197.png" alt="image"></p>
+<h2 id="Quality"><a href="#Quality" class="headerlink" title="Quality"></a>Quality</h2><ul>
+<li>To investigate this, we <code>randomly sample 200 instructions</code> and <code>randomly select 1 instance per instruction</code>. We asked an expert annotator (co-author of this work) to label whether each instance is correct or not, in terms of the instruction, the instance input, and the instance output. Evaluation results in Table 2 show that most of the generated instructions are meaningful, while the generated instances may contain more noise (to a reasonable extent).</li>
+<li>However, we found that <code>even though the generations may contain errors, most of them are still in the correct format or even partially correct</code>, which can provide <code>useful guidance for training</code> models to follow instructions<ul>
+<li>표를 보면 아웃풋이 인스트럭션과 인풋에 대해서 적합하냐 했을때 58%… 이거 써도 되는걸까</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/217444425-31b57ce0-218d-4eae-9ccc-4b49c13c71ad.png" alt="image"></p>
+<p><img src="https://user-images.githubusercontent.com/7252598/217444909-40bb116f-f83e-4fb1-a7fd-cb94901cc2f1.png" alt="image"></p>
+<h1 id="Experimental-Results"><a href="#Experimental-Results" class="headerlink" title="Experimental Results"></a>Experimental Results</h1><h2 id="GPT3SELF-INST-fine-tuning-GPT3-on-its-own-instruction-data"><a href="#GPT3SELF-INST-fine-tuning-GPT3-on-its-own-instruction-data" class="headerlink" title="GPT3SELF-INST: fine-tuning GPT3 on its own instruction data"></a>GPT3SELF-INST: fine-tuning GPT3 on its own instruction data</h2><ul>
+<li>We use the default hyper-parameters, except that we set the prompt loss weight to 0, and we train the model for 2 epochs.</li>
+<li>The resulting model is denoted as GPT3SELF-INST.</li>
+</ul>
+<h2 id="Baselines"><a href="#Baselines" class="headerlink" title="Baselines"></a>Baselines</h2><h3 id="Off-the-shelf-LMs"><a href="#Off-the-shelf-LMs" class="headerlink" title="Off-the-shelf LMs"></a>Off-the-shelf LMs</h3><ul>
+<li>T5-LM, GPT3</li>
+<li>These baselines will indicate the extent to which off-the-shelf LMs are capable of following instructions naturally immediately after pretraining.</li>
+</ul>
+<h3 id="Publicly-available-instruction-tuned-models"><a href="#Publicly-available-instruction-tuned-models" class="headerlink" title="Publicly-available instruction-tuned models"></a>Publicly-available instruction-tuned models</h3><ul>
+<li>T0 and T𝑘-INSTRUCT are two instruction-tuned models proposed in Sanh et al. (2022) and Wang et al. (2022)</li>
+<li>For both of these models, we use their largest version with 11B parameters.</li>
+</ul>
+<h3 id="Instruction-tuned-GPT3-models"><a href="#Instruction-tuned-GPT3-models" class="headerlink" title="Instruction-tuned GPT3 models"></a>Instruction-tuned GPT3 models</h3><ul>
+<li>We evaluate InstructGPT (Ouyang et al., 2022), which is developed by OpenAI based on GPT3 to follow human instructions better and has been found by the community to have impressive zero-shot abilities</li>
+<li>(we only compare with their text-davinci-001 engine)</li>
+</ul>
+<h2 id="Experiment-1-Zero-Shot-Generalization-on-SUPERNI-benchmark"><a href="#Experiment-1-Zero-Shot-Generalization-on-SUPERNI-benchmark" class="headerlink" title="Experiment 1: Zero-Shot Generalization on SUPERNI benchmark"></a>Experiment 1: Zero-Shot Generalization on SUPERNI benchmark</h2><p><img src="https://user-images.githubusercontent.com/7252598/217446692-81194509-260e-46be-8025-b898ba5546df.png" alt="image"></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2204.07705.pdf">SUPERNI 벤치마크</a></li>
+</ul>
+<h2 id="Experiment-2-Generalization-to-User-oriented-Instructions-on-Novel-Tasks"><a href="#Experiment-2-Generalization-to-User-oriented-Instructions-on-Novel-Tasks" class="headerlink" title="Experiment 2: Generalization to User-oriented Instructions on Novel Tasks"></a>Experiment 2: Generalization to User-oriented Instructions on Novel Tasks</h2><ul>
+<li><code>most of these NLP tasks were proposed for research purposes and skewed toward classification</code>. To better access the practical value of instruction-following models, a subset of the authors curate a new set of instructions motivated by user-oriented applications</li>
+<li>craft instructions related to each domain(e.g., email writing, social media, productivity tools, entertainment, programming) along with an input-output instance (again, input is optional)</li>
+<li>In total, we create <code>252 instructions</code> with 1 instance per instruction. We believe it can serve as a testbed for evaluating how instruction based models handle diverse and unfamiliar instructions. Table 4 presents a small portion of the 252 tasks.</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/217448842-58240b5e-462e-4cc2-bfea-acca63e524f0.png" alt="image"></p>
+<h3 id="Human-evaluation-setup"><a href="#Human-evaluation-setup" class="headerlink" title="Human evaluation setup"></a>Human evaluation setup</h3><p><img src="https://user-images.githubusercontent.com/7252598/217449345-45bcfda6-550d-4715-bc01-7fdc2037cafa.png" alt="image"></p>
+<h1 id="Discussion-and-Limitation"><a href="#Discussion-and-Limitation" class="headerlink" title="Discussion and Limitation"></a>Discussion and Limitation</h1><h2 id="Why-does-SELF-INSTRUCT-work"><a href="#Why-does-SELF-INSTRUCT-work" class="headerlink" title="Why does SELF-INSTRUCT work?"></a>Why does SELF-INSTRUCT work?</h2><ul>
+<li>we conjecture that it is closer to <strong>𝐻2</strong>, <strong>particularly for larger models</strong></li>
+<li>LMs already know much about language instructions, is a key motivation for SELF- INSTRUCT and is also supported by its empirical success.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>(H1) 첫번째 가설</th>
+<th>(H2) 두번째 가설</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Human feedback is a necessary and indispensable aspect of instruction-tuning as LMs need to learn about issues that were not quite learned during pre-training.</td>
+<td>Human feedback is an optional aspect of instruction tuning as LMs are already quite familiar with instructions from their pre-training. Observing the human feedback is merely a lightweight process for aligning their pre-training distribution&#x2F;objective which might be replaceable with a different process.</td>
+</tr>
+</tbody></table>
+<h2 id="Limitations-of-SELF-INSTRUCT"><a href="#Limitations-of-SELF-INSTRUCT" class="headerlink" title="Limitations of SELF-INSTRUCT"></a>Limitations of SELF-INSTRUCT</h2><h3 id="Tail-phenomena"><a href="#Tail-phenomena" class="headerlink" title="Tail phenomena"></a>Tail phenomena</h3><ul>
+<li>LMs’ largest gains correspond to the frequent uses of languages (head of the language use distribution), and there are minimal gains in the low-frequency contexts</li>
+<li>Similarly, in the context of this work, it would not be surprising if the majority of the gains by SELF-INSTRUCT are skewed toward tasks or instructions that present <code>more frequently in the pre-training corpus</code></li>
+</ul>
+<h3 id="Dependence-on-large-models"><a href="#Dependence-on-large-models" class="headerlink" title="Dependence on large models."></a>Dependence on large models.</h3><ul>
+<li>Because of SELF-INSTRUCT’s dependence on the inductive biases extracted from LMs,  it might work best for larger models</li>
+</ul>
+<h3 id="Reinforcing-LM-biases"><a href="#Reinforcing-LM-biases" class="headerlink" title="Reinforcing LM biases."></a>Reinforcing LM biases.</h3><ul>
+<li>the unintended consequences of this <code>iterative algorithm</code>, such as the amplification of problematic social biases (stereotypes or slurs about genders, races, etc.)</li>
+<li>Relatedly, one observed <code>challenge</code> in this process is the algorithm’s <code>difficulty in producing balanced labels</code>, which reflected models’ prior biases</li>
+</ul>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><ul>
+<li>We introduce SELF-INSTRUCT, a task-agnostic method to improve the instruction-following capabilities of language models via its own generation of in<br><img src="https://user-images.githubusercontent.com/7252598/218369215-fb32ffdb-aea1-4145-9372-ab2c8a5fd195.gif" alt="self-instruct-데이터생성테스트"><br>struction data (instruction, input, and output samples) and bootstrapping with it</li>
+</ul>
+<h1 id="한글도-된다"><a href="#한글도-된다" class="headerlink" title="한글도 된다?!"></a>한글도 된다?!</h1><p><img src="https://user-images.githubusercontent.com/7252598/218369298-1e5e132d-007a-4a5e-9262-88e1f00f8022.gif" alt="self-instruct-데이터생성테스트"><br><img src="https://user-images.githubusercontent.com/7252598/218369186-12b83069-7e59-4149-9277-83e7d7aa1259.gif" alt="self-instruct-데이터생성2"></p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>SELF-INSTRUCT Aligning Language Model with Self Generated Instructions</p><p><a href="https://eagle705.github.io/SELF-INSTRUCT Aligning Language Model with Self Generated Instructions/">https://eagle705.github.io/SELF-INSTRUCT Aligning Language Model with Self Generated Instructions/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2023-02-13</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2023-02-13</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="sharethis-inline-share-buttons"></div><script src="https://platform-api.sharethis.com/js/sharethis.js#property=63297c6228f9450019a5f574&amp;product=sop" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/(FLAN)%20Finetuned%20Language%20Models%20Are%20Zero-Shot%20Learners/"><span class="level-item">(FLAN) Finetuned Language Models Are Zero-Shot Learners</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/SELF-INSTRUCT%20Aligning%20Language%20Model%20with%20Self%20Generated%20Instructions/';
+            this.page.identifier = 'SELF-INSTRUCT Aligning Language Model with Self Generated Instructions/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">48</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">34</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2023/02/"><span class="level-start"><span class="level-item">2월 2023</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2023/01/"><span class="level-start"><span class="level-item">1월 2023</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/12/"><span class="level-start"><span class="level-item">12월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/11/"><span class="level-start"><span class="level-item">11월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/10/"><span class="level-start"><span class="level-item">10월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/09/"><span class="level-start"><span class="level-item">9월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/08/"><span class="level-start"><span class="level-item">8월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">7월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/06/"><span class="level-start"><span class="level-item">6월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/05/"><span class="level-start"><span class="level-item">5월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/01/"><span class="level-start"><span class="level-item">1월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">12월 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">11월 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">37</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="card widget" data-type="adsense"><div class="card-content"><div class="menu"><h3 class="menu-label">광고</h3><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2655870716902046" data-ad-slot="2764253071" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Note"><span class="level-left"><span class="level-item">1</span><span class="level-item">Note</span></span></a></li><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">2</span><span class="level-item">Author</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">3</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#Introduction"><span class="level-left"><span class="level-item">4</span><span class="level-item">Introduction</span></span></a></li><li><a class="level is-mobile" href="#Method"><span class="level-left"><span class="level-item">5</span><span class="level-item">Method</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Defining-Instruction-Data"><span class="level-left"><span class="level-item">5.1</span><span class="level-item">Defining Instruction Data</span></span></a></li><li><a class="level is-mobile" href="#Automatic-Instruction-Data-Generation"><span class="level-left"><span class="level-item">5.2</span><span class="level-item">Automatic Instruction Data Generation</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Instruction-Generation"><span class="level-left"><span class="level-item">5.2.1</span><span class="level-item">Instruction Generation</span></span></a></li><li><a class="level is-mobile" href="#Classification-Task-Identification"><span class="level-left"><span class="level-item">5.2.2</span><span class="level-item">Classification Task Identification.</span></span></a></li><li><a class="level is-mobile" href="#Instance-Generation"><span class="level-left"><span class="level-item">5.2.3</span><span class="level-item">Instance Generation.</span></span></a></li><li><a class="level is-mobile" href="#Filtering-and-Postprocessing"><span class="level-left"><span class="level-item">5.2.4</span><span class="level-item">Filtering and Postprocessing</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Finetuning-the-LM-to-Follow-Instructions"><span class="level-left"><span class="level-item">5.3</span><span class="level-item">Finetuning the LM to Follow Instructions</span></span></a></li></ul></li><li><a class="level is-mobile" href="#SELF-INSTRUCT-Data-from-GPT3"><span class="level-left"><span class="level-item">6</span><span class="level-item">SELF-INSTRUCT Data from GPT3</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Statistics"><span class="level-left"><span class="level-item">6.1</span><span class="level-item">Statistics</span></span></a></li><li><a class="level is-mobile" href="#Diversity"><span class="level-left"><span class="level-item">6.2</span><span class="level-item">Diversity</span></span></a></li><li><a class="level is-mobile" href="#Quality"><span class="level-left"><span class="level-item">6.3</span><span class="level-item">Quality</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Experimental-Results"><span class="level-left"><span class="level-item">7</span><span class="level-item">Experimental Results</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#GPT3SELF-INST-fine-tuning-GPT3-on-its-own-instruction-data"><span class="level-left"><span class="level-item">7.1</span><span class="level-item">GPT3SELF-INST: fine-tuning GPT3 on its own instruction data</span></span></a></li><li><a class="level is-mobile" href="#Baselines"><span class="level-left"><span class="level-item">7.2</span><span class="level-item">Baselines</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Off-the-shelf-LMs"><span class="level-left"><span class="level-item">7.2.1</span><span class="level-item">Off-the-shelf LMs</span></span></a></li><li><a class="level is-mobile" href="#Publicly-available-instruction-tuned-models"><span class="level-left"><span class="level-item">7.2.2</span><span class="level-item">Publicly-available instruction-tuned models</span></span></a></li><li><a class="level is-mobile" href="#Instruction-tuned-GPT3-models"><span class="level-left"><span class="level-item">7.2.3</span><span class="level-item">Instruction-tuned GPT3 models</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Experiment-1-Zero-Shot-Generalization-on-SUPERNI-benchmark"><span class="level-left"><span class="level-item">7.3</span><span class="level-item">Experiment 1: Zero-Shot Generalization on SUPERNI benchmark</span></span></a></li><li><a class="level is-mobile" href="#Experiment-2-Generalization-to-User-oriented-Instructions-on-Novel-Tasks"><span class="level-left"><span class="level-item">7.4</span><span class="level-item">Experiment 2: Generalization to User-oriented Instructions on Novel Tasks</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Human-evaluation-setup"><span class="level-left"><span class="level-item">7.4.1</span><span class="level-item">Human evaluation setup</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#Discussion-and-Limitation"><span class="level-left"><span class="level-item">8</span><span class="level-item">Discussion and Limitation</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Why-does-SELF-INSTRUCT-work"><span class="level-left"><span class="level-item">8.1</span><span class="level-item">Why does SELF-INSTRUCT work?</span></span></a></li><li><a class="level is-mobile" href="#Limitations-of-SELF-INSTRUCT"><span class="level-left"><span class="level-item">8.2</span><span class="level-item">Limitations of SELF-INSTRUCT</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Tail-phenomena"><span class="level-left"><span class="level-item">8.2.1</span><span class="level-item">Tail phenomena</span></span></a></li><li><a class="level is-mobile" href="#Dependence-on-large-models"><span class="level-left"><span class="level-item">8.2.2</span><span class="level-item">Dependence on large models.</span></span></a></li><li><a class="level is-mobile" href="#Reinforcing-LM-biases"><span class="level-left"><span class="level-item">8.2.3</span><span class="level-item">Reinforcing LM biases.</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#Conclusion"><span class="level-left"><span class="level-item">9</span><span class="level-item">Conclusion</span></span></a></li><li><a class="level is-mobile" href="#한글도-된다"><span class="level-left"><span class="level-item">10</span><span class="level-item">한글도 된다?!</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-13T04:18:48.000Z">2023-02-13</time></p><p class="title"><a href="/SELF-INSTRUCT%20Aligning%20Language%20Model%20with%20Self%20Generated%20Instructions/">SELF-INSTRUCT Aligning Language Model with Self Generated Instructions</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-06T04:15:12.000Z">2023-02-06</time></p><p class="title"><a href="/(FLAN)%20Finetuned%20Language%20Models%20Are%20Zero-Shot%20Learners/">(FLAN) Finetuned Language Models Are Zero-Shot Learners</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-03T07:44:54.000Z">2023-02-03</time></p><p class="title"><a href="/(T0)%20Multitask%20Prompted%20Training%20Enables%20Zero-Shot%20Task%20Generalization/">(T0) Multitask Prompted Training Enables Zero-Shot Task Generalization</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-01-20T14:21:17.000Z">2023-01-20</time></p><p class="title"><a href="/InstructGPT/">(InstructGPT) Training language models to follow instructions with human feedback</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-01-09T07:34:18.000Z">2023-01-09</time></p><p class="title"><a href="/Chinchilla-Training-Compute-Optimal-Large-Language-Models/">(Chinchilla) Training Compute-Optimal Large Language Models</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2023 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>
