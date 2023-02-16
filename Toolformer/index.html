@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Toolformer: Language Models Can Teach Themselves to Use Tools - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Note 미리 학습데이터를 API 기반으로 생성해놓되, 생성할때는 loss에 도움이 되는 방향으로 구성해놓고, 실제 인퍼런스할때 API콜과 관련된 토큰이 나오면 잠시 디코딩 중지 후 API콜하고 결과 받아온다음에 다시 이어서하는 방식! API종류가 많진 않아서, 완전 범용적인 평가라 하기엔 애매하고 약간 무거운것 같기도하나(학습과정이), 실제 사용할땐 편할"><meta property="og:type" content="blog"><meta property="og:title" content="Toolformer: Language Models Can Teach Themselves to Use Tools"><meta property="og:url" content="https://eagle705.github.io/Toolformer/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="Note 미리 학습데이터를 API 기반으로 생성해놓되, 생성할때는 loss에 도움이 되는 방향으로 구성해놓고, 실제 인퍼런스할때 API콜과 관련된 토큰이 나오면 잠시 디코딩 중지 후 API콜하고 결과 받아온다음에 다시 이어서하는 방식! API종류가 많진 않아서, 완전 범용적인 평가라 하기엔 애매하고 약간 무거운것 같기도하나(학습과정이), 실제 사용할땐 편할"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218888406-158b73bc-0c11-4200-bbf1-d8cd6dac9d10.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218893592-70ccac54-c94f-46da-98a6-94f0a947b881.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218905173-9d967bc3-bab6-4754-ae9a-cd9599336336.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218902206-9bfab996-78fe-49db-a9d8-c376165a876f.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218912801-d48574a9-3c67-4861-882a-abe73301aa71.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218906135-eacde097-743d-464c-81a6-eb4942eaca93.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218917255-bdf0d3f4-f122-4afb-af78-20d95f9da284.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218938898-0fde059b-1739-40b2-bc0f-bd24eeb10e89.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218938927-279d0501-90fa-405b-8857-1e46eafb0a1e.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218945294-c93d1b57-0643-44bd-ab04-3df5be8d7e11.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218950682-22a107eb-60bd-4225-b1e2-fb842a55c9a2.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218950707-cc31a741-868c-4bc0-923f-e3991a0320b3.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218952497-81202bdf-741a-4f46-a066-347617a8e9c8.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218952527-36a6b174-8fde-4cb3-ab09-fd3ba993eec0.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218952756-9914fc9d-73d9-410b-b1c9-5df24702e725.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218953518-5d3a7119-7f0e-43d8-a372-4afd90cf30ae.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218953736-7f6c6641-55ee-4c4b-b049-c91bb8956640.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218954014-46fea5b5-a1bc-4dc7-8ea8-856b725fed3a.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218954382-01b2b1d5-1088-4cdf-9a4c-cdaee2abdc83.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218954927-6ef8103a-c875-47ed-a4c5-9c190fb615fe.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/218956301-6d67f5f0-5599-4fe1-a672-578581a6ba24.png"><meta property="article:published_time" content="2023-02-16T08:24:12.000Z"><meta property="article:modified_time" content="2023-02-16T08:25:22.220Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://user-images.githubusercontent.com/7252598/218888406-158b73bc-0c11-4200-bbf1-d8cd6dac9d10.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/Toolformer/"},"headline":"Toolformer: Language Models Can Teach Themselves to Use Tools","image":["https://user-images.githubusercontent.com/7252598/218888406-158b73bc-0c11-4200-bbf1-d8cd6dac9d10.png","https://user-images.githubusercontent.com/7252598/218893592-70ccac54-c94f-46da-98a6-94f0a947b881.png","https://user-images.githubusercontent.com/7252598/218905173-9d967bc3-bab6-4754-ae9a-cd9599336336.png","https://user-images.githubusercontent.com/7252598/218902206-9bfab996-78fe-49db-a9d8-c376165a876f.png","https://user-images.githubusercontent.com/7252598/218912801-d48574a9-3c67-4861-882a-abe73301aa71.png","https://user-images.githubusercontent.com/7252598/218906135-eacde097-743d-464c-81a6-eb4942eaca93.png","https://user-images.githubusercontent.com/7252598/218917255-bdf0d3f4-f122-4afb-af78-20d95f9da284.png","https://user-images.githubusercontent.com/7252598/218938898-0fde059b-1739-40b2-bc0f-bd24eeb10e89.png","https://user-images.githubusercontent.com/7252598/218938927-279d0501-90fa-405b-8857-1e46eafb0a1e.png","https://user-images.githubusercontent.com/7252598/218945294-c93d1b57-0643-44bd-ab04-3df5be8d7e11.png","https://user-images.githubusercontent.com/7252598/218950682-22a107eb-60bd-4225-b1e2-fb842a55c9a2.png","https://user-images.githubusercontent.com/7252598/218950707-cc31a741-868c-4bc0-923f-e3991a0320b3.png","https://user-images.githubusercontent.com/7252598/218952497-81202bdf-741a-4f46-a066-347617a8e9c8.png","https://user-images.githubusercontent.com/7252598/218952527-36a6b174-8fde-4cb3-ab09-fd3ba993eec0.png","https://user-images.githubusercontent.com/7252598/218952756-9914fc9d-73d9-410b-b1c9-5df24702e725.png","https://user-images.githubusercontent.com/7252598/218953518-5d3a7119-7f0e-43d8-a372-4afd90cf30ae.png","https://user-images.githubusercontent.com/7252598/218953736-7f6c6641-55ee-4c4b-b049-c91bb8956640.png","https://user-images.githubusercontent.com/7252598/218954014-46fea5b5-a1bc-4dc7-8ea8-856b725fed3a.png","https://user-images.githubusercontent.com/7252598/218954382-01b2b1d5-1088-4cdf-9a4c-cdaee2abdc83.png","https://user-images.githubusercontent.com/7252598/218954927-6ef8103a-c875-47ed-a4c5-9c190fb615fe.png","https://user-images.githubusercontent.com/7252598/218956301-6d67f5f0-5599-4fe1-a672-578581a6ba24.png"],"datePublished":"2023-02-16T08:24:12.000Z","dateModified":"2023-02-16T08:25:22.220Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"Note 미리 학습데이터를 API 기반으로 생성해놓되, 생성할때는 loss에 도움이 되는 방향으로 구성해놓고, 실제 인퍼런스할때 API콜과 관련된 토큰이 나오면 잠시 디코딩 중지 후 API콜하고 결과 받아온다음에 다시 이어서하는 방식! API종류가 많진 않아서, 완전 범용적인 평가라 하기엔 애매하고 약간 무거운것 같기도하나(학습과정이), 실제 사용할땐 편할"}</script><link rel="canonical" href="https://eagle705.github.io/Toolformer/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><script data-ad-client="ca-pub-2655870716902046" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-02-16T08:24:12.000Z" title="2/16/2023, 5:24:12 PM">2023-02-16</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2023-02-16T08:25:22.220Z" title="2/16/2023, 5:25:22 PM">2023-02-16</time>&nbsp;업데이트 됨</span><span class="level-item"><a class="link-muted" href="/categories/paper/">paper</a></span><span class="level-item">20분안에 읽기 (약 3031 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">Toolformer: Language Models Can Teach Themselves to Use Tools</h1><div class="content"><h1 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h1><ul>
+<li>미리 학습데이터를 API 기반으로 생성해놓되, 생성할때는 loss에 도움이 되는 방향으로 구성해놓고, 실제 인퍼런스할때 API콜과 관련된 토큰이 나오면 잠시 디코딩 중지 후 API콜하고 결과 받아온다음에 다시 이어서하는 방식!</li>
+<li>API종류가 많진 않아서, 완전 범용적인 평가라 하기엔 애매하고 약간 무거운것 같기도하나(학습과정이), 실제 사용할땐 편할수도</li>
+<li>공개된 레포는 없지만, lucidrains가 만들기 시도 (<a target="_blank" rel="noopener" href="https://github.com/lucidrains/toolformer-pytorch">https://github.com/lucidrains/toolformer-pytorch</a>)</li>
+<li>paper: <a target="_blank" rel="noopener" href="https://github.com/eagle705/presentation/files/10753629/Toolformer-.Language.Models.Can.Teach.Themselves.to.Use.Tools.pdf">Toolformer Language Models Can Teach Themselves to Use Tools.pdf</a></li>
+<li>자세한 내용은 slide 참고: <a target="_blank" rel="noopener" href="https://github.com/eagle705/presentation/files/10753635/Toolformer.pdf">Toolformer.pdf</a></li>
+</ul>
+<h1 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h1><ul>
+<li>Timo Schick Jane Dwivedi-Yu Roberto Dessì† Roberta Raileanu Maria Lomeli Luke Zettlemoyer Nicola Cancedda Thomas Scialom<ul>
+<li><code>Meta AI Research</code> †Universitat Pompeu Fabra</li>
+</ul>
+</li>
+</ul>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><ul>
+<li>They also, <strong>paradoxically</strong>, struggle with basic functionality, such as arithmetic or factual lookup, where much simpler and smaller models excel.</li>
+<li>In this paper, we show that <strong>LMs can teach themselves</strong> to use <code>external tools via simple APIs</code> and achieve the best of both worlds.</li>
+<li>We introduce <code>Toolformer</code>, a model <code>trained to decide which APIs to call</code>, <code>when to call</code> them, <code>what arguments to pass</code>, and <code>how to best incorporate the results into future token prediction</code>.<ul>
+<li>이게 이 논문의 핵심이네, 어떤 API를 콜할지, 언제 콜할지, 어떤 args를 넣을지 어떻게 future token 예측에 쓸건지를 고르는 것!</li>
+</ul>
+</li>
+<li>This is done in a self-supervised way, <code>requiring nothing more than a handful of demonstrations for each API</code></li>
+<li>We incorporate a range of tools, including a calculator, a Q&amp;A system, a search engine, a translation system, and a calendar.</li>
+<li>Toolformer achieves substantially improved zero-shot performance across a variety of downstream tasks, often competitive with much larger models, without sacrificing its core language modeling abilities.</li>
+</ul>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><ul>
+<li>However, all of these models have several inherent limitations that can at best be partially addressed by further scaling. These limitations include an inability to access up-to-date information on recent events and the related tendency to hallucinate facts<ul>
+<li>LLMs은 크기가 커야되는데, 이러면 최신정보 업데이트가 어렵다</li>
+<li>hallucinate 문제가 따라다닌다<ul>
+<li>difficulties in understanding low-resource languages</li>
+<li>a lack of mathematical skills to per- form precise calculations </li>
+<li>unawareness of the progression of time</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>이러한 이슈를 극복하기 위해선 external tools을 사용해볼 수 있음 <ul>
+<li>A simple way to overcome these limitations of today’s language models is to give them the ability to use external tools such as search engines, calculators, or calendars.</li>
+</ul>
+</li>
+<li>하지만 기존 연구는 많은 양의 휴먼 어노테이션에 의존하거나, task-specific settings에 기반해서 다양한 적용이 어려웠음<ul>
+<li>However, existing approaches either rely on large amounts of human annotations (Komeili et al., 2022; Thoppilan et al., 2022) or limit tool use to task-specific settings only (e.g., Gao et al., 2022; Parisi et al., 2022), hindering a more widespread adoption of tool use in LMs.</li>
+</ul>
+</li>
+<li>Toolformer를 제안하고 아래와 같은 조건을 만족시킴<ul>
+<li>The use of tools should be learned in a self-supervised way without requiring large amounts of human annotations.</li>
+<li>The LM should not lose any of its generality and should be able to decide for itself when and how to use which tool.</li>
+</ul>
+</li>
+<li>Our approach for achieving these goals is based on the recent idea of using large LMs with in-context learning (Brown et al., 2020) to generate entire datasets from scratch<ul>
+<li>아이디어 자체는 <code>in context learning</code>에 기반한다<ul>
+<li>Given just a handful of human-written examples of how an API can be used, we let a LM annotate a huge language modeling dataset with potential API calls.</li>
+<li>We then use a self-supervised loss to determine which of these API calls actually help the model in predicting future tokens</li>
+<li>Finally, we finetune the LM itself on the API calls that it considers useful.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/218888406-158b73bc-0c11-4200-bbf1-d8cd6dac9d10.png" alt="image"></p>
+<ul>
+<li>As our approach is agnostic of the dataset be- ing used, we can apply it to the exact same dataset that was used to pretrain a model in the first place. This ensures that the model does not lose any of its generality and language modeling abilities.</li>
+<li>Toolformer, which is based on a pretrained <code>GPT-J model (Wang and Komatsuzaki, 2021) with 6.7B parameters</code>, achieves much stronger zero-shot results, clearly outperforming a much larger GPT-3 model</li>
+</ul>
+<h1 id="Approach"><a href="#Approach" class="headerlink" title="Approach"></a>Approach</h1><ul>
+<li>This allows seamless insertion of API calls into any given text, using <code>special tokens</code> to mark the start and end of each such call.</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/218893592-70ccac54-c94f-46da-98a6-94f0a947b881.png" alt="image"><br><img src="https://user-images.githubusercontent.com/7252598/218905173-9d967bc3-bab6-4754-ae9a-cd9599336336.png" alt="image"></p>
+<ul>
+<li>This is done in three steps, illustrated in Figure 2:<ul>
+<li>First, we exploit the in-context learning ability of M to sample a large number of potential API calls.</li>
+<li>We then execute these API calls and finally check whether the obtained responses are helpful for predicting future tokens<ul>
+<li>this is used as a filtering criterion</li>
+</ul>
+</li>
+<li>After filtering, we merge API calls for different tools, resulting in the augmented dataset C∗ and finetune M itself on this dataset</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/218902206-9bfab996-78fe-49db-a9d8-c376165a876f.png" alt="image"></p>
+<h3 id="Sampling-API-Calls"><a href="#Sampling-API-Calls" class="headerlink" title="Sampling API Calls"></a>Sampling API Calls</h3><ul>
+<li>we write a prompt P(x) that encourages the LM to annotate an example x &#x3D; x1,…,xn with API calls.</li>
+<li>아래 그림과 같이 정답이 있는 지문에 대해서 prompt를 사람이 생성하고, 이걸 학습시켜서 api 맵핑 및 호출시키는건가? 조금 더 확인해보자</li>
+<li>확률기반으로 api 콜링을 할만한 k개의 후보 포지션을 샘플링하고(API 스페셜토큰 생성확률이 높은!) -&gt; 각 포지션마다 api 종류중에 확률이 높은 m개를 또 샘플링한다</li>
+<li><code>&lt;/API&gt;</code>를 eos 토큰으로 썼기 때문에 이거 없는 샘플은 버린다</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Sampling API Calls</th>
+<th>Figure 3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://user-images.githubusercontent.com/7252598/218912801-d48574a9-3c67-4861-882a-abe73301aa71.png" alt="image"></td>
+<td><img src="https://user-images.githubusercontent.com/7252598/218906135-eacde097-743d-464c-81a6-eb4942eaca93.png" alt="image"></td>
+</tr>
+</tbody></table>
+<h3 id="Executing-API-Calls"><a href="#Executing-API-Calls" class="headerlink" title="Executing API Calls"></a>Executing API Calls</h3><ul>
+<li>API 후보들을 실행한다<ul>
+<li>we execute all API calls generated by M to obtain the corresponding results.</li>
+</ul>
+</li>
+<li>API 실행은 API 종류에 따라 다양하다<ul>
+<li>How this is done depends entirely on the API itself – for example, it can involve calling another neural network, executing a Python script or using a retrieval system to perform search over a large corpus.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Filtering-API-Calls"><a href="#Filtering-API-Calls" class="headerlink" title="Filtering API Calls"></a>Filtering API Calls</h3><p><img src="https://user-images.githubusercontent.com/7252598/218917255-bdf0d3f4-f122-4afb-af78-20d95f9da284.png" alt="image"></p>
+<h3 id="Model-Finetuning"><a href="#Model-Finetuning" class="headerlink" title="Model Finetuning"></a>Model Finetuning</h3><ul>
+<li>After sampling and filtering calls for all APIs, we finally merge the remaining API calls and interleave them with the original inputs</li>
+<li>e(c_i,r_i)가 prefix로 제공된다는게 무슨뜻일까?</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Model Finetuning_1</th>
+<th>Model Finetuning_2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://user-images.githubusercontent.com/7252598/218938898-0fde059b-1739-40b2-bc0f-bd24eeb10e89.png" alt="image"></td>
+<td><img src="https://user-images.githubusercontent.com/7252598/218938927-279d0501-90fa-405b-8857-1e46eafb0a1e.png" alt="image"></td>
+</tr>
+</tbody></table>
+<h3 id="Inference"><a href="#Inference" class="headerlink" title="Inference"></a>Inference</h3><ul>
+<li>we perform regular decoding until M produces the <code>“→” token</code>, indicating that it next expects the response for an API call</li>
+<li>At this point, we <code>interrupt the decoding process, call the appropriate API to get a response, and continue</code> the decoding process after inserting both the response and the </API> token.</li>
+</ul>
+<h1 id="Tools"><a href="#Tools" class="headerlink" title="Tools"></a>Tools</h1><ul>
+<li>The only constraints we impose on these tools is that <ul>
+<li>(i) both their inputs and outputs can be represented as <code>text sequences</code>, and </li>
+<li>(ii) we can obtain a <code>few demonstrations</code> of their intended use.</li>
+</ul>
+</li>
+<li>we explore the following five tools: <ul>
+<li>a question answering system, <ul>
+<li>Our first tool is a question answering system based on another LM that can answer simple factoid questions. Specifically, we use Atlas (Izacard et al., 2022), a retrieval-augmented LM finetuned on Natural Questions</li>
+</ul>
+</li>
+<li>a Wikipedia search engine, <ul>
+<li>given a search term, returns short text snippets from Wikipedia. </li>
+<li>but requires it to extract the relevant parts by itself</li>
+</ul>
+</li>
+<li>a calculator, <ul>
+<li>we only support the four basic arithmetic operations. Results are always rounded to two decimal places</li>
+</ul>
+</li>
+<li>a calendar, and <ul>
+<li>when queried, returns the current date without taking any input</li>
+</ul>
+</li>
+<li>a machine translation system.<ul>
+<li>machine translation system based on a LM that can translate a phrase from any language into English.</li>
+<li>The source language is automatically detected using the fast- Text classifier</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/218945294-c93d1b57-0643-44bd-ab04-3df5be8d7e11.png" alt="image"></p>
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><ul>
+<li>We investigate whether our approach enables a model to use tools without any further supervision and to decide for itself when and how to call which of the available tools</li>
+<li>To test this, we select a variety of downstream tasks where we assume at least one of the considered tools to be useful, and evaluate performance in zero-shot settings</li>
+</ul>
+<h2 id="Experimental-Setup"><a href="#Experimental-Setup" class="headerlink" title="Experimental Setup"></a>Experimental Setup</h2><h3 id="Dataset-Generation"><a href="#Dataset-Generation" class="headerlink" title="Dataset Generation"></a>Dataset Generation</h3><ul>
+<li>use a subset of CCNet as our language modeling dataset C</li>
+<li>GPT- J (Wang and Komatsuzaki, 2021) as our language model M</li>
+<li>To reduce the computational cost of annotating C with API calls, we define <code>heuristics</code> for some APIs to get a subset of C for which API calls are more likely to be helpful than for an average text.<ul>
+<li>we only consider texts for the calculator tool if they contain at least three numbers.</li>
+</ul>
+</li>
+<li>For obtaining C ∗ from C , we perform all steps described in Section 2 and additionally filter out all examples for which all API calls were eliminated in the filtering step.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>weighting func</th>
+<th>Table2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://user-images.githubusercontent.com/7252598/218950682-22a107eb-60bd-4225-b1e2-fb842a55c9a2.png" alt="image"></td>
+<td><img src="https://user-images.githubusercontent.com/7252598/218950707-cc31a741-868c-4bc0-923f-e3991a0320b3.png" alt="image"></td>
+</tr>
+</tbody></table>
+<h3 id="Model-Finetuning-1"><a href="#Model-Finetuning-1" class="headerlink" title="Model Finetuning"></a>Model Finetuning</h3><ul>
+<li>finetune M on C∗ using a batch size of 128 and a learning rate of 1 · 10−5 with linear warmup for the first 10% of training.</li>
+</ul>
+<h3 id="Baseline-Models"><a href="#Baseline-Models" class="headerlink" title="Baseline Models"></a>Baseline Models</h3><ul>
+<li>GPT-J: A regular GPT-J model without any finetuning.</li>
+<li>GPT-J + CC: GPT-J finetuned on C, our subset of CCNet without any API calls.</li>
+<li>Toolformer: GPT-J finetuned on C∗, our subset of CCNet augmented with API calls.</li>
+<li>Toolformer (disabled): The same model as Toolformer, but API calls are disabled during decoding.<ul>
+<li>This is achieved by manually setting the probability of the <API> token to 0.</li>
+</ul>
+</li>
+</ul>
+<p>For most tasks, we additionally compare to OPT (66B) (Zhang et al., 2022) and GPT-36 (175B) (Brown et al., 2020), two models that are about 10 and 25 times larger than our other baseline models, respectively.</p>
+<h2 id="Downstream-Tasks"><a href="#Downstream-Tasks" class="headerlink" title="Downstream Tasks"></a>Downstream Tasks</h2><ul>
+<li>제로샷 세팅<ul>
+<li>In all cases, we consider a prompted zero-shot setup – i.e., models are instructed to solve each task in natural language, but we do not provide any in-context examples.</li>
+</ul>
+</li>
+<li>We use standard greedy decoding, but with one modification for Toolformer: We let the model start an API call not just when <API> is the most likely token, but whenever it is one of the k most likely tokens. For k &#x3D; 1, this corresponds to regular greedy decoding; we <code>instead use k = 10</code> to increase the disposition of our model to make use of the APIs that it has access to. (top k 안에 <API>가 생성되도 호출?!)</li>
+<li>At the same time, we only at <code>most one API call per input</code> to make sure the model does not get stuck in a loop where it constantly calls APIs without producing any actual output.</li>
+</ul>
+<h3 id="LAMA"><a href="#LAMA" class="headerlink" title="LAMA"></a>LAMA</h3><ul>
+<li>We evaluate our models on the SQuAD, Google- RE and T-REx subsets of the LAMA benchmark<br><img src="https://user-images.githubusercontent.com/7252598/218952497-81202bdf-741a-4f46-a066-347617a8e9c8.png" alt="image"></li>
+</ul>
+<h3 id="Math-Datasets"><a href="#Math-Datasets" class="headerlink" title="Math Datasets"></a>Math Datasets</h3><ul>
+<li>We test mathematical reasoning abilities on ASDiv (Miao et al., 2020), SVAMP (Patel et al., 2021) and the MAWPS benchmark<br><img src="https://user-images.githubusercontent.com/7252598/218952527-36a6b174-8fde-4cb3-ab09-fd3ba993eec0.png" alt="image"></li>
+</ul>
+<h3 id="Question-Answering"><a href="#Question-Answering" class="headerlink" title="Question Answering"></a>Question Answering</h3><ul>
+<li>We look at Web Questions (Berant et al., 2013), Natural Questions (Kwiatkowski et al., 2019) and TriviaQA (Joshi et al., 2017), the three question answering datasets considered by Brown et al. (2020).<br><img src="https://user-images.githubusercontent.com/7252598/218952756-9914fc9d-73d9-410b-b1c9-5df24702e725.png" alt="image"></li>
+</ul>
+<h3 id="Multilingual-Question-Answering"><a href="#Multilingual-Question-Answering" class="headerlink" title="Multilingual Question Answering"></a>Multilingual Question Answering</h3><ul>
+<li>We evaluate Toolformer and all baseline models on MLQA (Lewis et al., 2019), a multilingual question-answering benchmark</li>
+<li>does not consistently outperform vanilla GPT-J. This is mainly because for some languages, finetuning on CCNet deteriorates performance; this might be due to a distribution shift compared to GPT-J’s original pretraining data.<ul>
+<li>CCNet에 학습한거 때문이다?!</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/218953518-5d3a7119-7f0e-43d8-a372-4afd90cf30ae.png" alt="image"></p>
+<h3 id="Temporal-Datasets"><a href="#Temporal-Datasets" class="headerlink" title="Temporal Datasets"></a>Temporal Datasets</h3><ul>
+<li>To investigate the calendar API’s utility, we evaluate all models on TEMPLAMA (Dhingra et al., 2022) and a new dataset that we call DATESET.</li>
+<li>TEMPLAMA is a dataset built from Wikidata that contains cloze queries about facts that change with time <code>(e.g., “Cristiano Ronaldo plays for ___”)</code><br><img src="https://user-images.githubusercontent.com/7252598/218953736-7f6c6641-55ee-4c4b-b049-c91bb8956640.png" alt="image"></li>
+</ul>
+<h3 id="Language-Modeling"><a href="#Language-Modeling" class="headerlink" title="Language Modeling"></a>Language Modeling</h3><ul>
+<li>In addition to verifying improved performance on various downstream tasks, we also want to ensure that language modeling performance of Toolformer does not degrade through our finetuning with API calls.<ul>
+<li>성능 저하 없다구!</li>
+</ul>
+</li>
+<li>Most importantly, however, training on C∗ (our dataset annotated with API calls) does not lead to an increase in perplexity compared to training on C when API calls are disabled at inference time.8</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/218954014-46fea5b5-a1bc-4dc7-8ea8-856b725fed3a.png" alt="image"></p>
+<h3 id="Scaling-Laws"><a href="#Scaling-Laws" class="headerlink" title="Scaling Laws"></a>Scaling Laws</h3><ul>
+<li>We investigate how the ability to ask external tools for help affects performance as we vary the size of our LM</li>
+<li>GPT-2 family (Radford et al., 2019), with 124M, 355M, 775M and 1.6B parameters, respectively.</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/218954382-01b2b1d5-1088-4cdf-9a4c-cdaee2abdc83.png" alt="image"></p>
+<h1 id="Analysis"><a href="#Analysis" class="headerlink" title="Analysis"></a>Analysis</h1><h3 id="Deocidng-Strategy"><a href="#Deocidng-Strategy" class="headerlink" title="Deocidng Strategy"></a>Deocidng Strategy</h3><ul>
+<li>we generate the <API> token if it is one of the k most likely tokens</li>
+<li>Table 9 shows performance on the T-REx subset of LAMA and on WebQS for different values of k</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/218954927-6ef8103a-c875-47ed-a4c5-9c190fb615fe.png" alt="image"></p>
+<h3 id="Data-Quality"><a href="#Data-Quality" class="headerlink" title="Data Quality"></a>Data Quality</h3><ul>
+<li>We qualitatively analyze some API calls generated with our approach for different APIs.</li>
+<li>Table 10 shows some examples of texts from CCNet augmented with API calls, as well as the corresponding score L−i − L+i that is used as a filtering criterion, and whether the API calls made by the model are intuitively useful in the given context.</li>
+<li>However, some amount of noise in the API calls that are not filtered can actually be useful as it forces the model finetuned on C∗ to not always blindly follow the results of each call it makes.</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/218956301-6d67f5f0-5599-4fe1-a672-578581a6ba24.png" alt="image"></p>
+<h1 id="Limitations"><a href="#Limitations" class="headerlink" title="Limitations"></a>Limitations</h1><ul>
+<li>One such limitation is the inability of Toolformer to use tools in a chain (i.e., using the output of one tool as an input for another tool)<ul>
+<li>This is due to the fact that API calls for each tool are generated independently</li>
+<li>Our current approach also does not allow the LM to use a tool in an interactive way – especially for tools such as search engines, that could potentially return hundreds of different results, enabling a LM to browse through these results or to refine its search query in a similar spirit to Nakano et al. (2021) can be crucial for certain applications.</li>
+</ul>
+</li>
+<li>Depending on the tool, our method is also very sample-inefficient; for example, processing more than a million documents results in only a few thousand examples of useful calls to the calculator API.</li>
+<li>Finally, when deciding whether or not to make an API call, Toolformer currently does not take into account the tool-dependent, computational cost incurred from making an API call.</li>
+</ul>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><ul>
+<li>This is done by finetuning on a large number of sampled API calls that are filtered based on whether they reduce perplexity on future tokens</li>
+<li>Toolformer considerably improves zero-shot performance of a 6.7B parameter GPT-J model, enabling it to even outperform a much larger GPT-3 model on a range of different downstream tasks.</li>
+</ul>
+<h1 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a>Appendix</h1><h2 id="B-Toolformer-Training"><a href="#B-Toolformer-Training" class="headerlink" title="B Toolformer Training"></a>B Toolformer Training</h2><ul>
+<li>We use up to 25k examples per API. Max sequence length 1,024. Effective batch size of 128. All models are trained using DeepSpeed’s ZeRO-3 (Rasley et al., 2020). We used 8 NVIDIA A100 40GB GPUs with BF16. Training up to 2k steps, where we evaluate PPL on a small development set from CCNet containing 1,000 examples every 500 steps. We pick the checkpoint that performs best.</li>
+</ul>
+<h2 id="C-Zero-Shot-Prompts"><a href="#C-Zero-Shot-Prompts" class="headerlink" title="C Zero-Shot Prompts"></a>C Zero-Shot Prompts</h2><ul>
+<li>제로샷이지만 프롬프트줌<ul>
+<li>we use the following prompt: <code>Please complete the following text so that it is factually correct: x.</code></li>
+</ul>
+</li>
+</ul>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Toolformer: Language Models Can Teach Themselves to Use Tools</p><p><a href="https://eagle705.github.io/Toolformer/">https://eagle705.github.io/Toolformer/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2023-02-16</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2023-02-16</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="sharethis-inline-share-buttons"></div><script src="https://platform-api.sharethis.com/js/sharethis.js#property=63297c6228f9450019a5f574&amp;product=sop" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/SELF-INSTRUCT%20Aligning%20Language%20Model%20with%20Self%20Generated%20Instructions/"><span class="level-item">SELF-INSTRUCT Aligning Language Model with Self Generated Instructions</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/Toolformer/';
+            this.page.identifier = 'Toolformer/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">49</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">35</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2023/02/"><span class="level-start"><span class="level-item">2월 2023</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile" href="/archives/2023/01/"><span class="level-start"><span class="level-item">1월 2023</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/12/"><span class="level-start"><span class="level-item">12월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/11/"><span class="level-start"><span class="level-item">11월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/10/"><span class="level-start"><span class="level-item">10월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/09/"><span class="level-start"><span class="level-item">9월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/08/"><span class="level-start"><span class="level-item">8월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">7월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/06/"><span class="level-start"><span class="level-item">6월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/05/"><span class="level-start"><span class="level-item">5월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/01/"><span class="level-start"><span class="level-item">1월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">12월 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">11월 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">38</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="card widget" data-type="adsense"><div class="card-content"><div class="menu"><h3 class="menu-label">광고</h3><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2655870716902046" data-ad-slot="2764253071" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Note"><span class="level-left"><span class="level-item">1</span><span class="level-item">Note</span></span></a></li><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">2</span><span class="level-item">Author</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">3</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#Introduction"><span class="level-left"><span class="level-item">4</span><span class="level-item">Introduction</span></span></a></li><li><a class="level is-mobile" href="#Approach"><span class="level-left"><span class="level-item">5</span><span class="level-item">Approach</span></span></a><ul class="menu-list"><ul class="menu-list"><li><a class="level is-mobile" href="#Sampling-API-Calls"><span class="level-left"><span class="level-item">5.1.1</span><span class="level-item">Sampling API Calls</span></span></a></li><li><a class="level is-mobile" href="#Executing-API-Calls"><span class="level-left"><span class="level-item">5.1.2</span><span class="level-item">Executing API Calls</span></span></a></li><li><a class="level is-mobile" href="#Filtering-API-Calls"><span class="level-left"><span class="level-item">5.1.3</span><span class="level-item">Filtering API Calls</span></span></a></li><li><a class="level is-mobile" href="#Model-Finetuning"><span class="level-left"><span class="level-item">5.1.4</span><span class="level-item">Model Finetuning</span></span></a></li><li><a class="level is-mobile" href="#Inference"><span class="level-left"><span class="level-item">5.1.5</span><span class="level-item">Inference</span></span></a></li></ul></ul></li><li><a class="level is-mobile" href="#Tools"><span class="level-left"><span class="level-item">6</span><span class="level-item">Tools</span></span></a></li><li><a class="level is-mobile" href="#Experiments"><span class="level-left"><span class="level-item">7</span><span class="level-item">Experiments</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Experimental-Setup"><span class="level-left"><span class="level-item">7.1</span><span class="level-item">Experimental Setup</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Dataset-Generation"><span class="level-left"><span class="level-item">7.1.1</span><span class="level-item">Dataset Generation</span></span></a></li><li><a class="level is-mobile" href="#Model-Finetuning-1"><span class="level-left"><span class="level-item">7.1.2</span><span class="level-item">Model Finetuning</span></span></a></li><li><a class="level is-mobile" href="#Baseline-Models"><span class="level-left"><span class="level-item">7.1.3</span><span class="level-item">Baseline Models</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Downstream-Tasks"><span class="level-left"><span class="level-item">7.2</span><span class="level-item">Downstream Tasks</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#LAMA"><span class="level-left"><span class="level-item">7.2.1</span><span class="level-item">LAMA</span></span></a></li><li><a class="level is-mobile" href="#Math-Datasets"><span class="level-left"><span class="level-item">7.2.2</span><span class="level-item">Math Datasets</span></span></a></li><li><a class="level is-mobile" href="#Question-Answering"><span class="level-left"><span class="level-item">7.2.3</span><span class="level-item">Question Answering</span></span></a></li><li><a class="level is-mobile" href="#Multilingual-Question-Answering"><span class="level-left"><span class="level-item">7.2.4</span><span class="level-item">Multilingual Question Answering</span></span></a></li><li><a class="level is-mobile" href="#Temporal-Datasets"><span class="level-left"><span class="level-item">7.2.5</span><span class="level-item">Temporal Datasets</span></span></a></li><li><a class="level is-mobile" href="#Language-Modeling"><span class="level-left"><span class="level-item">7.2.6</span><span class="level-item">Language Modeling</span></span></a></li><li><a class="level is-mobile" href="#Scaling-Laws"><span class="level-left"><span class="level-item">7.2.7</span><span class="level-item">Scaling Laws</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#Analysis"><span class="level-left"><span class="level-item">8</span><span class="level-item">Analysis</span></span></a><ul class="menu-list"><ul class="menu-list"><li><a class="level is-mobile" href="#Deocidng-Strategy"><span class="level-left"><span class="level-item">8.1.1</span><span class="level-item">Deocidng Strategy</span></span></a></li><li><a class="level is-mobile" href="#Data-Quality"><span class="level-left"><span class="level-item">8.1.2</span><span class="level-item">Data Quality</span></span></a></li></ul></ul></li><li><a class="level is-mobile" href="#Limitations"><span class="level-left"><span class="level-item">9</span><span class="level-item">Limitations</span></span></a></li><li><a class="level is-mobile" href="#Conclusion"><span class="level-left"><span class="level-item">10</span><span class="level-item">Conclusion</span></span></a></li><li><a class="level is-mobile" href="#Appendix"><span class="level-left"><span class="level-item">11</span><span class="level-item">Appendix</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#B-Toolformer-Training"><span class="level-left"><span class="level-item">11.1</span><span class="level-item">B Toolformer Training</span></span></a></li><li><a class="level is-mobile" href="#C-Zero-Shot-Prompts"><span class="level-left"><span class="level-item">11.2</span><span class="level-item">C Zero-Shot Prompts</span></span></a></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-16T08:24:12.000Z">2023-02-16</time></p><p class="title"><a href="/Toolformer/">Toolformer: Language Models Can Teach Themselves to Use Tools</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-13T04:18:48.000Z">2023-02-13</time></p><p class="title"><a href="/SELF-INSTRUCT%20Aligning%20Language%20Model%20with%20Self%20Generated%20Instructions/">SELF-INSTRUCT Aligning Language Model with Self Generated Instructions</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-06T04:15:12.000Z">2023-02-06</time></p><p class="title"><a href="/(FLAN)%20Finetuned%20Language%20Models%20Are%20Zero-Shot%20Learners/">(FLAN) Finetuned Language Models Are Zero-Shot Learners</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-03T07:44:54.000Z">2023-02-03</time></p><p class="title"><a href="/(T0)%20Multitask%20Prompted%20Training%20Enables%20Zero-Shot%20Task%20Generalization/">(T0) Multitask Prompted Training Enables Zero-Shot Task Generalization</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-01-20T14:21:17.000Z">2023-01-20</time></p><p class="title"><a href="/InstructGPT/">(InstructGPT) Training language models to follow instructions with human feedback</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2023 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>
