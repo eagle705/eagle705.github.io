@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>pythia - Luke&#039;s Blog</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Luke&#039;s Blog"><meta name="msapplication-TileImage" content="/img/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Luke&#039;s Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Note 이후 연구와도 비교해보자 23&amp;#x2F;4&amp;#x2F;3 버전  Author Stella Biderman * 1 2 Hailey Schoelkopf * 1 3 Quentin Anthony 1 Herbie Bradley 1 4 Kyle O’Brien 1 Eric Hallahan 1 Mohammad Aflah Khan 5 Shivanshu Purohit"><meta property="og:type" content="blog"><meta property="og:title" content="pythia"><meta property="og:url" content="https://eagle705.github.io/pythia/"><meta property="og:site_name" content="Luke&#039;s Blog"><meta property="og:description" content="Note 이후 연구와도 비교해보자 23&amp;#x2F;4&amp;#x2F;3 버전  Author Stella Biderman * 1 2 Hailey Schoelkopf * 1 3 Quentin Anthony 1 Herbie Bradley 1 4 Kyle O’Brien 1 Eric Hallahan 1 Mohammad Aflah Khan 5 Shivanshu Purohit"><meta property="og:locale" content="ko_KR"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233770968-94671a3d-bef6-465c-bc9b-ab6695bc7dc1.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233773420-a58ddc90-5884-47c9-a1f2-aaa57c8a4ff5.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233842650-6f156581-0484-48dc-8dd8-e1a3e504ab3e.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233848068-1203fb0b-1378-47af-a94b-0f737873f806.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233844585-9f2f7501-763f-4792-9c38-483001bfd880.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233844274-519bb0fa-7cf9-4264-8868-0ce16bed128d.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233844303-b5e50607-1508-4cab-a804-bb07063f1478.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233847369-552bbed1-8858-4aab-978d-70e7220597e1.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233899043-612509c9-0b06-4f9f-93d0-17c6796b25f1.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233899251-1be3eb05-d1f1-4fdb-94f6-1bc9fdf7239d.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233899404-3f8e3684-0f62-49e5-a84a-4651d21bae23.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233849412-a05b3614-8364-464e-8d61-9842167af591.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233849606-f7ddf3e7-e6ee-43ab-abbf-f53983f41dbb.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233849623-17b137b2-0828-4d1a-96b5-1db1cb36294b.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233871020-59c462dc-dee9-49e4-ab48-bbe24c30365e.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233897925-f3a77443-2cb3-48f9-89fd-0cf1e7da301a.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233898389-d4490b85-9c01-4d65-bb4e-f9ba62128023.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233898116-4bbea2a1-c63e-4988-909e-e41fb26aed7c.png"><meta property="og:image" content="https://user-images.githubusercontent.com/7252598/233898956-c18a52a2-9aa0-444f-a0c4-da58b2fcb8f5.png"><meta property="article:published_time" content="2023-05-09T02:54:53.000Z"><meta property="article:modified_time" content="2023-05-09T02:55:23.060Z"><meta property="article:author" content="Joosung Yoon"><meta property="article:tag" content="nlp"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://user-images.githubusercontent.com/7252598/233770968-94671a3d-bef6-465c-bc9b-ab6695bc7dc1.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://eagle705.github.io/pythia/"},"headline":"pythia","image":["https://user-images.githubusercontent.com/7252598/233770968-94671a3d-bef6-465c-bc9b-ab6695bc7dc1.png","https://user-images.githubusercontent.com/7252598/233773420-a58ddc90-5884-47c9-a1f2-aaa57c8a4ff5.png","https://user-images.githubusercontent.com/7252598/233842650-6f156581-0484-48dc-8dd8-e1a3e504ab3e.png","https://user-images.githubusercontent.com/7252598/233848068-1203fb0b-1378-47af-a94b-0f737873f806.png","https://user-images.githubusercontent.com/7252598/233844585-9f2f7501-763f-4792-9c38-483001bfd880.png","https://user-images.githubusercontent.com/7252598/233844274-519bb0fa-7cf9-4264-8868-0ce16bed128d.png","https://user-images.githubusercontent.com/7252598/233844303-b5e50607-1508-4cab-a804-bb07063f1478.png","https://user-images.githubusercontent.com/7252598/233847369-552bbed1-8858-4aab-978d-70e7220597e1.png","https://user-images.githubusercontent.com/7252598/233899043-612509c9-0b06-4f9f-93d0-17c6796b25f1.png","https://user-images.githubusercontent.com/7252598/233899251-1be3eb05-d1f1-4fdb-94f6-1bc9fdf7239d.png","https://user-images.githubusercontent.com/7252598/233899404-3f8e3684-0f62-49e5-a84a-4651d21bae23.png","https://user-images.githubusercontent.com/7252598/233849412-a05b3614-8364-464e-8d61-9842167af591.png","https://user-images.githubusercontent.com/7252598/233849606-f7ddf3e7-e6ee-43ab-abbf-f53983f41dbb.png","https://user-images.githubusercontent.com/7252598/233849623-17b137b2-0828-4d1a-96b5-1db1cb36294b.png","https://user-images.githubusercontent.com/7252598/233871020-59c462dc-dee9-49e4-ab48-bbe24c30365e.png","https://user-images.githubusercontent.com/7252598/233897925-f3a77443-2cb3-48f9-89fd-0cf1e7da301a.png","https://user-images.githubusercontent.com/7252598/233898389-d4490b85-9c01-4d65-bb4e-f9ba62128023.png","https://user-images.githubusercontent.com/7252598/233898116-4bbea2a1-c63e-4988-909e-e41fb26aed7c.png","https://user-images.githubusercontent.com/7252598/233898956-c18a52a2-9aa0-444f-a0c4-da58b2fcb8f5.png"],"datePublished":"2023-05-09T02:54:53.000Z","dateModified":"2023-05-09T02:55:23.060Z","author":{"@type":"Person","name":"Joosung Yoon"},"publisher":{"@type":"Organization","name":"Luke's Blog","logo":{"@type":"ImageObject","url":"https://eagle705.github.io/img/eagle705-logo.png"}},"description":"Note 이후 연구와도 비교해보자 23&#x2F;4&#x2F;3 버전  Author Stella Biderman * 1 2 Hailey Schoelkopf * 1 3 Quentin Anthony 1 Herbie Bradley 1 4 Kyle O’Brien 1 Eric Hallahan 1 Mohammad Aflah Khan 5 Shivanshu Purohit"}</script><link rel="canonical" href="https://eagle705.github.io/pythia/"><link rel="icon" href="/img/favicon.ico"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><script src="https://www.googletagmanager.com/gtag/js?id=UA-110980734-1" async></script><script>window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', 'UA-110980734-1');</script><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><script data-ad-client="ca-pub-2655870716902046" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="카탈로그" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="검색" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-05-09T02:54:53.000Z" title="5/9/2023, 11:54:53 AM">2023-05-09</time>&nbsp;게시 됨</span><span class="level-item"><time dateTime="2023-05-09T02:55:23.060Z" title="5/9/2023, 11:55:23 AM">2023-05-09</time>&nbsp;업데이트 됨</span><span class="level-item">27분안에 읽기 (약 4106 단어)</span></div></div><h1 class="title is-3 is-size-4-mobile">pythia</h1><div class="content"><h1 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h1><ul>
+<li>이후 연구와도 비교해보자</li>
+<li>23&#x2F;4&#x2F;3 버전</li>
+</ul>
+<h1 id="Author"><a href="#Author" class="headerlink" title="Author"></a>Author</h1><ul>
+<li>Stella Biderman * 1 2 Hailey Schoelkopf * 1 3 Quentin Anthony 1 Herbie Bradley 1 4 Kyle O’Brien 1 Eric Hallahan 1 Mohammad Aflah Khan 5 Shivanshu Purohit 1 USVSN Sai Prashanth 1 Edward Raff 2 Aviya Skowron 1 Lintang Sutawika 1 6 Oskar van der Wal 7<ul>
+<li>EleutherAI</li>
+</ul>
+</li>
+</ul>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><ul>
+<li>Research Questions<ul>
+<li>How do large language models (LLMs) develop and evolve <strong>over the course of training</strong>? </li>
+<li>How do these patterns change <strong>as models scale</strong>?</li>
+</ul>
+</li>
+<li>introduce <strong>Pythia</strong>, a suite of 16 LLMs all trained on public data seen in the exact same order and ranging in size from <strong>70M to 12B parameters</strong></li>
+<li>provide public access to <strong>154 checkpoints for each one of the 16 models</strong></li>
+<li>present several case studies including <strong>novel results</strong> in memorization, term frequency effects on few-shot performance, and reducing gender bias</li>
+<li>Trained models, analysis code, training code, and training data can be found at <a target="_blank" rel="noopener" href="https://github.com/EleutherAI/pythia">https://github.com/EleutherAI/pythia</a></li>
+</ul>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><ul>
+<li>Critical to understanding the functioning of transformers is better understanding how these models behave along two axes: <strong>training and scaling</strong>. (트랜스포머의 기능을 이해하는 데 중요한 것은 이러한 모델이 훈련과 스케일링이라는 두 축을 따라 어떻게 작동하는지 더 잘 이해하는 것)<ul>
+<li>It is well established that there are regular and predictable patterns in the behavior of trained language models as they scale,  but prior work connecting these “Scaling Laws” to the learning dynamics of language models is minimal.<ul>
+<li>Scaling Laws에 따라 크기에 따른 모델의 예측가능한 패턴에 대해서는 연구 되었지만, 학습 자체에 대한 연구는 미미했다(?) -&gt; 잘모르겠네 이 부분은</li>
+</ul>
+</li>
+<li>non-public한 모델들이 많기 때문에 Pythia 같은 프로젝트를 해봄</li>
+</ul>
+</li>
+<li>The Pythia suite is the only publicly released suite of LLMs that satisfies three key properties:<ul>
+<li>Models span several orders of magnitude of model <strong>scale</strong>.</li>
+<li>All models were trained on the <strong>same data</strong> in the same order.</li>
+<li>The data and intermediate checkpoints are <strong>publicly available</strong> for study.</li>
+</ul>
+</li>
+<li>We train 8 model sizes each on both the Pile (Gao et al., 2020; Biderman et al., 2022) and the Pile after deduplication, providing 2 copies of the suite which can be compared.<ul>
+<li>디듑의 효과도 확인예정<br><img src="https://user-images.githubusercontent.com/7252598/233770968-94671a3d-bef6-465c-bc9b-ab6695bc7dc1.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+<h2 id="Mitigating-Gender-Bias"><a href="#Mitigating-Gender-Bias" class="headerlink" title="Mitigating Gender Bias"></a>Mitigating Gender Bias</h2><ul>
+<li>다양한 선행연구들<ul>
+<li>Some work has explored finetuning’s effects on bias in language models</li>
+<li>the relationship between the corpus statistics and the measured bias</li>
+</ul>
+</li>
+<li>researchers have generally lacked the tools to study the role of the training data on the learning dynamics of bias in large language models of different sizes.<ul>
+<li>연구자들은 학습데이터가 모델크기나 학습되는 과정에 끼치는 영향을 분석한 툴들이 많이 없다? 그러니까 Pythia 연구 봐라</li>
+</ul>
+</li>
+<li><strong>we analyze</strong> whether deliberately modifying <strong>the frequency of gendered terms</strong> in the pretraining data of a language model can have an impact on its downstream behavior and biases.<ul>
+<li>당연한 얘기 같기도..</li>
+</ul>
+</li>
+<li>We leverage the known pretraining data and public training codebase of our model suite, and counterfactually retrain models such that the last 7% and 21% of model training has a majority of pronouns modified such that their grammatical gender is feminine rather than masculine.<ul>
+<li>모델 훈련의 마지막 7%와 21%가 문법적 성별이 남성이 아닌 여성이 되도록 수정된 대명사를 갖도록 변경 후 재학습</li>
+</ul>
+</li>
+<li>We demonstrate that such interventions are successful at reducing bias measures on a targeted benchmark</li>
+</ul>
+<h2 id="Memorization-is-a-Poisson-Point-Process"><a href="#Memorization-is-a-Poisson-Point-Process" class="headerlink" title="Memorization is a Poisson Point Process"></a>Memorization is a Poisson Point Process</h2><ul>
+<li>Research Questions<ul>
+<li>does the location of a particular sequence in the training dataset influence the likelihood of it being memorized?<ul>
+<li>Leveraging Pythia’s reproducible dataloader setup we answer this question in the <strong>negative</strong>, and furthermore find that a poisson point process is a very good model for the occurrence of memorized sequences over the course of training.<ul>
+<li>학습셋 내에서 순서자체는 의미가 없다로 본다!<br><img src="https://user-images.githubusercontent.com/7252598/233773420-a58ddc90-5884-47c9-a1f2-aaa57c8a4ff5.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Emergence-of-the-Impact-of-Pretraining-Frequencies"><a href="#Emergence-of-the-Impact-of-Pretraining-Frequencies" class="headerlink" title="Emergence of the Impact of Pretraining Frequencies"></a>Emergence of the Impact of Pretraining Frequencies</h2><ul>
+<li>Recent work has identified the <strong>frequency of specific facts</strong> within a corpus as an important factor <strong>in how likely a model is capable of applying that fact</strong> in response to a natural language question</li>
+<li>Existing work has been heavily dependent on the handful of models trained on public data, such as GPT-J (Wang &amp; Komatsuzaki, 2021) and BLOOM (Scao et al., 2022), which <strong>lack frequent intermediate checkpoints</strong>, so none of these papers are able to look at the fine-grained evolution of this phenomenon <strong>over the course of training</strong>.<ul>
+<li>To address this gap in the literature, we examine <strong>how the role of pretraining term frequencies changes over the course of training</strong></li>
+<li>We find that <strong>significant phase change</strong> occurs <strong>after 65,000 training steps</strong> (<strong>45%</strong> through training): the models with 2.8 billion parameters or more start to exhibit a correlation between task accuracy and occurrence of task-relevant terms</li>
+</ul>
+</li>
+</ul>
+<h1 id="The-Pythia-Suite"><a href="#The-Pythia-Suite" class="headerlink" title="The Pythia Suite"></a>The Pythia Suite</h1><ul>
+<li>we prioritize consistency in model design and controlling for as much potential sources of variation as possible rather than trying to eek out the most performance from each model.<ul>
+<li>성능을 끌어올리는것보단 모델링 요소를 제어하면서 디자인</li>
+</ul>
+</li>
+<li>For example we use <code>the parallel attention and feedforward approach</code> for all models, as it is becoming widely used for the largest models, even though it is generally not recommended for models with less than 2.7B parameters<ul>
+<li>어텐션이랑 feedforward 동시에 계산하는 기법인데 이거 나중에 코드로 같이보면 좋을듯</li>
+</ul>
+</li>
+</ul>
+<h2 id="Requirements-for-a-Scientific-Suite-of-LLMs"><a href="#Requirements-for-a-Scientific-Suite-of-LLMs" class="headerlink" title="Requirements for a Scientific Suite of LLMs"></a>Requirements for a Scientific Suite of LLMs</h2><ul>
+<li>Pythia is envisioned as a suite for enabling and empowering scientific research on the capacities and limitations of large language models</li>
+<li>we found no existing suites of models which satisfied all the following conditions:<ul>
+<li>Public Access (Model, data)</li>
+<li>Training Provenance <ul>
+<li>Intermediate checkpoints are available for analysis, all models are trained with the same data ordering, and intermediate checkpoints can be linked with the exact data seen up to that checkpoint. Training procedure as well as model and training hyperparameters are well-documented.</li>
+</ul>
+</li>
+<li>Consistency Across Scale<ul>
+<li>Model scaling sequences should have self-consistent design decisions that reasonably adhere to common practice for training state-of-the-art large models</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/233842650-6f156581-0484-48dc-8dd8-e1a3e504ab3e.png" alt="image"></p>
+<h2 id="Training-Data"><a href="#Training-Data" class="headerlink" title="Training Data"></a>Training Data</h2><ul>
+<li>We train our models on the <strong>Pile (Gao et al., 2020; Bi- derman et al., 2022)</strong>, a curated collection of English language datasets for training large language models that is popular for training large autoregressive transformers.</li>
+<li>This dataset has three major benefits over its competitors: <ul>
+<li>first, it is <strong>freely and publicly</strong> available; </li>
+<li>second, it reports a <strong>higher downstream performance</strong> (Le Scao et al., 2022) than popular crawl-based datasets C4 (Raffel et al., 2020; Dodge et al., 2021) and OSCAR (Sua ́rez et al., 2019); and </li>
+<li>third, it has been <strong>widely used</strong> by state-of-the-art models including GPT-J-6B (Wang &amp; Komatsuzaki, 2021), GPT-NeoX-20B (Black et al., 2022), Jurassic-1 (Lieberet al., 2021)1, Megatron-Turing NLG 530B (Smith et al., 2022), OPT (Zhang et al., 2022), and WuDao (Tang, 2021).</li>
+</ul>
+</li>
+<li>We use the tokenizer developed by Black et al. (2022), which is a <strong>BPE tokenizer that is trained specifically on the Pile</strong>.</li>
+<li>다국어에 대해서 고려했다가 다음의 이유로 다국어를 사용하진 않았음<ul>
+<li>While we are confident that we are <strong>generally aware of the contents and quality of the Pile</strong>, we cannot say the same for multilingual datasets (Pile은 퀄리티 좋지만 다른 언어 코퍼스도 퀄리티 좋겠냐?! 확인 안된다!)<ul>
+<li>Existing massive multi- lingual datasets can be of <strong>dubious quality</strong></li>
+<li><a target="_blank" rel="noopener" href="https://openreview.net/forum?id=UoEw6KigkUn">ROOTS</a>라는 <a target="_blank" rel="noopener" href="https://huggingface.co/spaces/bigscience-data/roots-search">BOOLM이 쓴 corpus가 Pile style이라 후보</a>였지만 공개가 안되어서 사용안함</li>
+</ul>
+</li>
+<li>As this framework is intended to be used as a baseline for future research, we feel it is important to stay close to currently accepted common practices. (이 연구자체가 future research의 베이스라인 목적이라 단순하게 함)</li>
+<li>We do not have access to a multilingual evaluation framework that is anywhere near as comprehensive as Gao et al. (2021).<ul>
+<li>lm-evaluation-harness만큼 포괄적인 다국어 평가 프레임워크가 없다..?! 흠.. 여기에 언어 붙이면 안되나? 잘 이해가 안됨</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>We train <strong>2 copies</strong> of the Pythia suite using identical architectures. (그대로 학습 vs 디듑학습 비교예정)<ul>
+<li>Each suite contains 8 models spanning 8 different sizes. </li>
+<li>We train <code>one suite of 8 models on the Pile</code>, and <code>the other on a copy of the Pile after applying near-deduplication with MinHashLSH</code> and a <code>threshold of 0.87</code>, following the advice that LLMs trained on deduplicated data are better and memorize less of their data (Lee et al., 2021).<ul>
+<li>paper name: <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2107.06499">Deduplicating training data makes language models better (ACL 2022)</a></li>
+<li>After deduplication, the <code>deduplicated Pile is approximately 207B tokens in size</code>, compared to the <code>original Pile which contains 300B tokens</code>.<ul>
+<li>300B -&gt; 207B로 감소 (69%만 살아남음)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Architecture"><a href="#Architecture" class="headerlink" title="Architecture"></a>Architecture</h2><ul>
+<li>Our model architecture and hyperparameters largely follow Brown et al. (2020)(GPT-3 얘기하는 것), with a few notable deviations based on recent advances in best practices for large scale language modeling (GPT-3 스타이로 하되 몇가지만 바꿈)<ul>
+<li>Brown et al. (2020) describes using sparse and dense attention layers in alternation, while we follow all sub- sequent work and <strong>use fully dense layers for our models</strong></li>
+<li>We <strong>use Flash Attention (Dao et al., 2022) during training</strong> for improved device throughput.</li>
+<li>We use <strong>rotary embeddings</strong> introduced by Su et al. (2021) and now in widespread use (Black et al., 2022; Chowdhery et al., 2022; Zeng et al., 2022) as our positional embedding type of choice.<ul>
+<li><img src="https://user-images.githubusercontent.com/7252598/233848068-1203fb0b-1378-47af-a94b-0f737873f806.png" alt="image"></li>
+<li>그림 출처: <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2204.06745.pdf">Black et al. (2022)(GPT-NeoX-20B)</a><ul>
+<li>simply rotate the <strong>affine-transformed word embedding vector</strong> by amount of angle multiples of its<br>position index and thus interprets the intuition behind Rotary Position Embedding</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>We use the <strong>parallelized attention and feedforward technique</strong> and <strong>model initialization methods</strong> introduced by Wang &amp; Komatsuzaki (2021) and adopted by (Black et al., 2022; Chowdhery et al., 2022), because they improve training efficiency and do not harm performance.<ul>
+<li>이게 학습효율을 높인다고는 하는데, 자세히 한번 봐야할듯!</li>
+<li><img src="https://user-images.githubusercontent.com/7252598/233844585-9f2f7501-763f-4792-9c38-483001bfd880.png" alt="image"><ul>
+<li>출처: <a target="_blank" rel="noopener" href="https://www.cerebras.net/blog/how-to-harness-the-predictive-power-of-gpt-j">https://www.cerebras.net/blog/how-to-harness-the-predictive-power-of-gpt-j</a></li>
+</ul>
+</li>
+<li>gptj 코드라인: <a target="_blank" rel="noopener" href="https://github.com/huggingface/transformers/blob/d04ec99bec8a0b432fc03ed60cea9a1a20ebaf3c/src/transformers/models/gptj/modeling_gptj.py#L321">https://github.com/huggingface/transformers/blob/d04ec99bec8a0b432fc03ed60cea9a1a20ebaf3c/src/transformers/models/gptj/modeling_gptj.py#L321</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">GPTJBlock</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, config</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        inner_dim = config.n_inner <span class="keyword">if</span> config.n_inner <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">else</span> <span class="number">4</span> * config.n_embd</span><br><span class="line">        self.ln_1 = nn.LayerNorm(config.n_embd, eps=config.layer_norm_epsilon)</span><br><span class="line">        self.attn = GPTJAttention(config)</span><br><span class="line">        self.mlp = GPTJMLP(inner_dim, config)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params"></span></span><br><span class="line"><span class="params">        self,</span></span><br><span class="line"><span class="params">        hidden_states: <span class="type">Optional</span>[torch.FloatTensor],</span></span><br><span class="line"><span class="params">        layer_past: <span class="type">Optional</span>[<span class="type">Tuple</span>[torch.Tensor]] = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">        attention_mask: <span class="type">Optional</span>[torch.FloatTensor] = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">        position_ids: <span class="type">Optional</span>[torch.LongTensor] = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">        head_mask: <span class="type">Optional</span>[torch.FloatTensor] = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">        use_cache: <span class="type">Optional</span>[<span class="built_in">bool</span>] = <span class="literal">False</span>,</span></span><br><span class="line"><span class="params">        output_attentions: <span class="type">Optional</span>[<span class="built_in">bool</span>] = <span class="literal">False</span>,</span></span><br><span class="line"><span class="params">    </span>) -&gt; <span class="type">Union</span>[<span class="type">Tuple</span>[torch.Tensor], <span class="type">Optional</span>[<span class="type">Tuple</span>[torch.Tensor, <span class="type">Tuple</span>[torch.FloatTensor, ...]]]]:</span><br><span class="line">        residual = hidden_states</span><br><span class="line">        hidden_states = self.ln_1(hidden_states)</span><br><span class="line">        attn_outputs = self.attn(</span><br><span class="line">            hidden_states=hidden_states,</span><br><span class="line">            layer_past=layer_past,</span><br><span class="line">            attention_mask=attention_mask,</span><br><span class="line">            position_ids=position_ids,</span><br><span class="line">            head_mask=head_mask,</span><br><span class="line">            use_cache=use_cache,</span><br><span class="line">            output_attentions=output_attentions,</span><br><span class="line">        )</span><br><span class="line">        attn_output = attn_outputs[<span class="number">0</span>]  <span class="comment"># output_attn: a, present, (attentions)</span></span><br><span class="line">        outputs = attn_outputs[<span class="number">1</span>:]</span><br><span class="line"></span><br><span class="line">        feed_forward_hidden_states = self.mlp(hidden_states)</span><br><span class="line">        hidden_states = attn_output + feed_forward_hidden_states + residual <span class="comment"># 이 부분이 포인트</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> use_cache:</span><br><span class="line">            outputs = (hidden_states,) + outputs</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            outputs = (hidden_states,) + outputs[<span class="number">1</span>:]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> outputs  <span class="comment"># hidden_states, present, (attentions)</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>We use <strong>untied embedding &#x2F; unembedding matrices</strong>, as prior work has suggested that this makes interpretability research easier (Belrose et al., 2023).<ul>
+<li>언타잉했다고?! 이거 요즘 거의다 쓰는거같은데 선행연구에서 이게 interpretability에 좋다고했다는건가? 이해가 잘 안가네, 스탠다드한건 아닌거같은데<ul>
+<li>선행연구 논문 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2303.08112">Eliciting latent predictions from transformers with the tuned lens &#x2F; 2023</a>, <a target="_blank" rel="noopener" href="https://github.com/AlignmentResearch/tuned-lens">관련 깃헙 Tuned Lens</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Tuned Lens</th>
+<th>What is a Lens?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://user-images.githubusercontent.com/7252598/233844274-519bb0fa-7cf9-4264-8868-0ce16bed128d.png" alt="image"></td>
+<td><img src="https://user-images.githubusercontent.com/7252598/233844303-b5e50607-1508-4cab-a804-bb07063f1478.png" alt="image"></td>
+</tr>
+</tbody></table>
+<h2 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h2><ul>
+<li>We train our models using the open source library <strong>GPT- NeoX</strong> (Andonian et al., 2021) developed by EleutherAI<ul>
+<li>using <strong>Adam</strong> and leverage the <strong>Zero Redundancy Optimizer (ZeRO)</strong> to efficiently scale to multi-machine set-ups</li>
+<li>additionally leverage <strong>data parallelism</strong> (Goyal et al., 2017) and <strong>tensor parallelism</strong> (Shoeybi et al., 2019)</li>
+<li>use <strong>Flash Attention</strong> (Dao et al., 2022) for improved hardware throughput</li>
+</ul>
+</li>
+<li>The most notable divergence from standard training procedures is that we <strong>use a much larger batch size</strong> than what is standard for training small language models<ul>
+<li>using larger batch sizes is desirable, but that smaller LLMs require smaller batch sizes to avoid convergence issues.<ul>
+<li>큰 모델이면 배치사이즈 크면 좋다고</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Consequently, we use a batch size of <strong>1024</strong> samples with a <strong>sequence length of 2048</strong> (2,097,152 tokens) for all models</li>
+<li>A maximum batch size therefore directly implies a minimum wall-clock training time and maximum number of compute-saturated GPUs. By inflating batch sizes beyond previous standards, we achieve wall- clock speed-ups of factors as large as 10× compared with standard batch sizes on our smaller models (Table 6).<ul>
+<li><img src="https://user-images.githubusercontent.com/7252598/233847369-552bbed1-8858-4aab-978d-70e7220597e1.png" alt="image"></li>
+</ul>
+</li>
+<li>모델 저장 주기<ul>
+<li>We save model checkpoints at initialization and every 2,097,152,000 tokens (or <strong>1,000 iterations</strong>), resulting in <strong>144 checkpoints</strong> evenly spaced throughout training</li>
+<li>Additionally, we save log-spaced checkpoints early in training at iterations {<code>1, 2, 4, 8, 16, 32, 64, 128, 256, 512</code>} (This gives a total of 154 checkpoints per model)</li>
+</ul>
+</li>
+<li>We train all models for <code>299,892,736,000 ≈ 300B</code> <strong>tokens</strong><ul>
+<li>This equates to <strong>1 epoch on the original Pile</strong>, and ≈1.5 epochs on the deduplicated Pile, which is 207B tokens in size</li>
+</ul>
+</li>
+</ul>
+<h2 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h2><ul>
+<li>we find that Pythia and Pythia (Deduplicated) perform very similarly to OPT and BLOOM models on a variety of NLP benchmarks</li>
+<li>We use the Language Model Evaluation Harness (Gao et al., 2021) to run evaluations on eight common language modeling benchmarks: <ul>
+<li>OpenAI’s LAMBADA variant, </li>
+<li>PIQA, </li>
+<li>the Winograd Schema Challenge, </li>
+<li>Wino Grande, </li>
+<li>ARC (easy and challenge sets separately), </li>
+<li>SciQ, and </li>
+<li>LogiQA</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/233899043-612509c9-0b06-4f9f-93d0-17c6796b25f1.png" alt="image"></p>
+<h2 id="Novel-Observations-in-Evaluation"><a href="#Novel-Observations-in-Evaluation" class="headerlink" title="Novel Observations in Evaluation"></a>Novel Observations in Evaluation</h2><ul>
+<li>We find three interesting phenomena that run counter to the prevailing narratives in the literature<ul>
+<li>Firstly, we find that <strong>deduplication of our training data has no clear benefit</strong> on language modeling performance.<ul>
+<li>This is consistent with the results of <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2204.06745.pdf">Black et al. (2022)(GPT-NeoX-20B)</a>, but inconsistent with other papers.</li>
+<li>This may indicate that the upsampling of certain subsets of the Pile does not accord with conventional assumptions about duplicated data, or that the general tendency of deduplicated data to outperform non-deduplicated data is primarily a statement about the quality of the data used in other works<ul>
+<li>사용한 Pile 데이터가 보통 말하는 디듑해야되는 데이터랑은 안맞는거 아닌가 혹은 디듑이 결국 데이터 퀄리티 이슈는 아닌가라고 질문을 던짐</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Secondly, we find that we achieve (equi-token and equi-parameter) performance on-par with OPT despite the use of parallel attention + MLP sublayers at all model scales<ul>
+<li>parallel attention + MLP sublayers 써도성능 잘 나오더라! 하지만 6B 이하에서는 퍼포먼스가 감소함<ul>
+<li>Both Black et al. (2022) and Chowdhery et al. (2022) state that this architecture choice causes a per- formance regression at scales &lt; 6B parameters</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Thirdly, we find a minimal and inconsistent “curse of multilinguality” (Conneau et al., 2020; Pfeiffer et al., 2022) for BLOOM<ul>
+<li>BLOOM이 성능이 떨어지는 태스크도 있지만 아닌것도(WinoGrande, ARC-easy, ARC-challenge, SciQ, and LogiQA) 있기 때문에 다국어저주에 대해서 재검토해야된다고 주장</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/233899251-1be3eb05-d1f1-4fdb-94f6-1bc9fdf7239d.png" alt="image"><br><img src="https://user-images.githubusercontent.com/7252598/233899404-3f8e3684-0f62-49e5-a84a-4651d21bae23.png" alt="image"></p>
+<h2 id="Public-Release-and-Reproducibility"><a href="#Public-Release-and-Reproducibility" class="headerlink" title="Public Release and Reproducibility"></a>Public Release and Reproducibility</h2><ul>
+<li>we use the open source GPT-NeoX and DeepSpeed libraries for training</li>
+<li>For evaluating our models we use the Language Model Evaluation Harness</li>
+<li>We release all of our models and checkpoints to the public under the Apache 2.0 license via the HuggingFace Hub</li>
+<li>In addition to training our models on the public Pile dataset, we also provide a tool for downloading the pre-tokenized data files utilized by our dataloader in the GPT-NeoX library</li>
+</ul>
+<h1 id="Case-Studies"><a href="#Case-Studies" class="headerlink" title="Case Studies"></a>Case Studies</h1><h2 id="How-Does-Data-Bias-Influence-Learned-Behaviors"><a href="#How-Does-Data-Bias-Influence-Learned-Behaviors" class="headerlink" title="How Does Data Bias Influence Learned Behaviors?"></a>How Does Data Bias Influence Learned Behaviors?</h2><ul>
+<li>We seek to investigate a counterfactual claim—if we were to train our models on a corpus with different properties, how would these models’ properties change downstream?<ul>
+<li>To test the effects of corpus statistics on the biases learned by language models, we repeat segments of pretraining on specific models, with altered corpus statistics</li>
+<li>(중간꺼 떼서 단어표현 바꿔치기해서 학습 쭉 돌려봄) In particular, for the Pythia-70M-deduped, Pythia-400M-deduped, Pythia- 1.4B-deduped, and Pythia-6.9B-deduped models, we take a checkpoint and optimizer state <strong>21B tokens (7%)</strong> prior to the end of training, and resume training of the model such that it sees the exact same data until the end of training, but with morphologically masculine pronouns replaced by their feminine counterparts </li>
+<li>We also <strong>repeat this intervention for 63B tokens (21%</strong>) prior to the end of training on just the Pythia- 1.4B-deduped model. We then measure model performance on the <strong>WinoBias (Zhao et al., 2018)(coreference resolution benchmark)</strong> benchmark and the English subset of the <strong>multilingual CrowS-Pairs (Ne ́ve ́ol et al., 2022)(stereotype benchmark)</strong></li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>다운스트림성능유지</th>
+<th>스테레오타입 낮춤</th>
+<th>젠더바이어스 낮춤</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://user-images.githubusercontent.com/7252598/233849412-a05b3614-8364-464e-8d61-9842167af591.png" alt="image"></td>
+<td><img src="https://user-images.githubusercontent.com/7252598/233849606-f7ddf3e7-e6ee-43ab-abbf-f53983f41dbb.png" alt="image"></td>
+<td><img src="https://user-images.githubusercontent.com/7252598/233849623-17b137b2-0828-4d1a-96b5-1db1cb36294b.png" alt="image"></td>
+</tr>
+</tbody></table>
+<h2 id="Does-Training-Order-Influence-Memorization"><a href="#Does-Training-Order-Influence-Memorization" class="headerlink" title="Does Training Order Influence Memorization?"></a>Does Training Order Influence Memorization?</h2><ul>
+<li>In this experiment we test whether training order influences memorization.</li>
+<li>가정 (멘탈모델)<ul>
+<li>This mental model predicts that data encountered later in training will be memorized more, as the model has had less time to incorporate it more fully into its representation space. If true, this would potentially be highly useful for mitigating the memorization of sequences for which verbatim memorization would be undesirable, by intentionally modifying a model’s training data order prior to training.</li>
+</ul>
+</li>
+<li>To test our hypothesis, we measure the memorization of an <code>initial segment (first 64 tokens) of each sequence</code> in the training corpus.<ul>
+<li>선행연구중에 나온 memorization 정의 ( Carlini et al. (2021) )<ul>
+<li>In their context, a string is (k, l)-memorized if prompting the model with a string of length k from the training data induces the model to generate the next l tokens from the training data correctly.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>We choose <code>k = l = 32</code> largely arbitrarily, and note that doing all reasonable pairs of (k, l) would have a computational cost comparable to retraining all of our models from scratch</li>
+<li>To avoid potential covariate effects, we only use the first 64 tokens from each context seen during training.</li>
+<li>Surprisingly, we find that a Poisson model fits the data extremely well (Figure 3), indicating that training order has little impact on memorization.<ul>
+<li>This model implies that memorized sequences are not spaced more densely toward the beginning or end of training, and that between each checkpoint roughly the same number of memorized sequences can be found.</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://user-images.githubusercontent.com/7252598/233871020-59c462dc-dee9-49e4-ab48-bbe24c30365e.png" alt="image"></p>
+<ul>
+<li>The Poisson process here describes an event of the occurrence of a memorized sequence <strong>within a batch of training data</strong></li>
+<li>This finding is important for practitioners seeking to control which sequences are memorized by a model. It implies that one cannot simply place sequences that are undesir able to memorize at the beginning or end of training and successfully reduce the chance of memorization</li>
+</ul>
+<h2 id="Do-Pretraining-Term-Frequencies-Influence-Task-Performance-Throughout-Training"><a href="#Do-Pretraining-Term-Frequencies-Influence-Task-Performance-Throughout-Training" class="headerlink" title="Do Pretraining Term Frequencies Influence Task Performance Throughout Training?"></a>Do Pretraining Term Frequencies Influence Task Performance Throughout Training?</h2><ul>
+<li>By charting the performance of a <strong>arithmetic task</strong> given an <strong>input operand</strong> and the <strong>frequency</strong> at which it is found in the pretraining corpus, they concluded that accuracy tends to be higher for terms that are found more frequently compared to terms that are less frequent</li>
+<li>수학추론 제한범위 참고하면 좋을 예시 <ul>
+<li>Following Razeghi et al. (2022), the formulation of the arithmetic task consists of input operands x1 ∈ [0, 99] and x2 ∈ [1, 50] and an output y</li>
+</ul>
+</li>
+<li>We observe that for both arithmetic and QA experiments, model sizes affect the correlation between average performance and the term frequencies, indicating that this correlation is an emergent property in larger models<ul>
+<li>큰 모델일 수록 term frequencies가 영향을 주는듯 보였다?</li>
+<li>Smaller models(below 1B) rarely produce accurate results on the task despite being given up to 16 few-shot examples, as shown in Figure 4<br><img src="https://user-images.githubusercontent.com/7252598/233897925-f3a77443-2cb3-48f9-89fd-0cf1e7da301a.png" alt="image"></li>
+</ul>
+</li>
+<li>수학추론<ul>
+<li>모델 클수록 효과가 크고</li>
+<li>같은 모델 크기라도 스텝이 높으면 좋고</li>
+<li>같은 스텝이라도 term freq가 높으면 좋다</li>
+</ul>
+</li>
+<li>곱하기 같은 경우는 결과가 다음과 같음<ul>
+<li>For the multiplication arithmetic task, we also calculate the performance discrepancy between the top 10% most fre- quent input operands and the bottom 10% least frequent input operands also following Razeghi et al. (2022)<br><img src="https://user-images.githubusercontent.com/7252598/233898389-d4490b85-9c01-4d65-bb4e-f9ba62128023.png" alt="image"></li>
+</ul>
+</li>
+<li>Similar patterns can be seen in Figure 5 where performance increase as training progresses mainly happens for larger models only<br><img src="https://user-images.githubusercontent.com/7252598/233898116-4bbea2a1-c63e-4988-909e-e41fb26aed7c.png" alt="image"></li>
+</ul>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><ul>
+<li>We release Pythia, a suite of language models trained with consistent data ordering and model architecture across multiple orders of magnitude of scale</li>
+<li>experiments at unprecedented levels of detail for a public model suite by presenting novel analyses and results on gender debiasing, memorization, and term frequency effects</li>
+</ul>
+<h1 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a>Appendix</h1><ul>
+<li>Full Configuration Details<br><img src="https://user-images.githubusercontent.com/7252598/233898956-c18a52a2-9aa0-444f-a0c4-da58b2fcb8f5.png" alt="image"></li>
+</ul>
+</div><div class="article-licensing box"><div class="licensing-title"><p>pythia</p><p><a href="https://eagle705.github.io/pythia/">https://eagle705.github.io/pythia/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Joosung Yoon</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2023-05-09</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2023-05-09</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/nlp/">nlp</a></div><div class="sharethis-inline-share-buttons"></div><script src="https://platform-api.sharethis.com/js/sharethis.js#property=63297c6228f9450019a5f574&amp;product=sop" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/llama/"><span class="level-item">llama</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">댓글</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://eagle705.github.io/pythia/';
+            this.page.identifier = 'pythia/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'eagle705-github-io' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/eagle705-logo.png" alt="Joosung Yoon"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Joosung Yoon</p><p class="is-size-6 is-block">Machine Learning Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>There and Back Again</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">포스트</p><a href="/archives"><p class="title">54</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">카테고리</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">태그</p><a href="/tags"><p class="title">10</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/eagle705" target="_blank" rel="noopener">팔로우</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/eagle705"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com/hisdevelopers"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/JSYoon53859120"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="LinkedIn" href="https://www.linkedin.com/in/joosung-yoon/"><i class="fab fa-linkedin"></i></a></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">카테고리</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/ML/"><span class="level-start"><span class="level-item">ML</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/cslog/"><span class="level-start"><span class="level-item">cslog</span></span><span class="level-end"><span class="level-item tag">10</span></span></a></li><li><a class="level is-mobile" href="/categories/paper/"><span class="level-start"><span class="level-item">paper</span></span><span class="level-end"><span class="level-item tag">36</span></span></a></li><li><a class="level is-mobile" href="/categories/photo/"><span class="level-start"><span class="level-item">photo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">아카이브</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2023/05/"><span class="level-start"><span class="level-item">5월 2023</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2023/03/"><span class="level-start"><span class="level-item">3월 2023</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2023/02/"><span class="level-start"><span class="level-item">2월 2023</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile" href="/archives/2023/01/"><span class="level-start"><span class="level-item">1월 2023</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/12/"><span class="level-start"><span class="level-item">12월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/11/"><span class="level-start"><span class="level-item">11월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/10/"><span class="level-start"><span class="level-item">10월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/09/"><span class="level-start"><span class="level-item">9월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/08/"><span class="level-start"><span class="level-item">8월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">7월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/06/"><span class="level-start"><span class="level-item">6월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/05/"><span class="level-start"><span class="level-item">5월 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/01/"><span class="level-start"><span class="level-item">1월 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">12월 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">11월 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/10/"><span class="level-start"><span class="level-item">10월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/06/"><span class="level-start"><span class="level-item">6월 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/05/"><span class="level-start"><span class="level-item">5월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2020/02/"><span class="level-start"><span class="level-item">2월 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/12/"><span class="level-start"><span class="level-item">12월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/11/"><span class="level-start"><span class="level-item">11월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">10월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">9월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/08/"><span class="level-start"><span class="level-item">8월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">7월 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">5월 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">4월 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/11/"><span class="level-start"><span class="level-item">11월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/06/"><span class="level-start"><span class="level-item">6월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/05/"><span class="level-start"><span class="level-item">5월 2018</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2018/04/"><span class="level-start"><span class="level-item">4월 2018</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">태그</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/ML/"><span class="tag">ML</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/docker/"><span class="tag">docker</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/drone/"><span class="tag">drone</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/grpc/"><span class="tag">grpc</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/linux/"><span class="tag">linux</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp/"><span class="tag">nlp</span><span class="tag">42</span></a></div><div class="control"><a class="tags has-addons" href="/tags/nlp-kb/"><span class="tag">nlp, kb</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/search/"><span class="tag">search</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%EC%83%9D%EA%B0%81%EC%A0%95%EB%A6%AC/"><span class="tag">생각정리</span><span class="tag">1</span></a></div></div></div></div></div><div class="card widget" data-type="adsense"><div class="card-content"><div class="menu"><h3 class="menu-label">광고</h3><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2655870716902046" data-ad-slot="2764253071" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">카탈로그</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Note"><span class="level-left"><span class="level-item">1</span><span class="level-item">Note</span></span></a></li><li><a class="level is-mobile" href="#Author"><span class="level-left"><span class="level-item">2</span><span class="level-item">Author</span></span></a></li><li><a class="level is-mobile" href="#Abstract"><span class="level-left"><span class="level-item">3</span><span class="level-item">Abstract</span></span></a></li><li><a class="level is-mobile" href="#Introduction"><span class="level-left"><span class="level-item">4</span><span class="level-item">Introduction</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Mitigating-Gender-Bias"><span class="level-left"><span class="level-item">4.1</span><span class="level-item">Mitigating Gender Bias</span></span></a></li><li><a class="level is-mobile" href="#Memorization-is-a-Poisson-Point-Process"><span class="level-left"><span class="level-item">4.2</span><span class="level-item">Memorization is a Poisson Point Process</span></span></a></li><li><a class="level is-mobile" href="#Emergence-of-the-Impact-of-Pretraining-Frequencies"><span class="level-left"><span class="level-item">4.3</span><span class="level-item">Emergence of the Impact of Pretraining Frequencies</span></span></a></li></ul></li><li><a class="level is-mobile" href="#The-Pythia-Suite"><span class="level-left"><span class="level-item">5</span><span class="level-item">The Pythia Suite</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Requirements-for-a-Scientific-Suite-of-LLMs"><span class="level-left"><span class="level-item">5.1</span><span class="level-item">Requirements for a Scientific Suite of LLMs</span></span></a></li><li><a class="level is-mobile" href="#Training-Data"><span class="level-left"><span class="level-item">5.2</span><span class="level-item">Training Data</span></span></a></li><li><a class="level is-mobile" href="#Architecture"><span class="level-left"><span class="level-item">5.3</span><span class="level-item">Architecture</span></span></a></li><li><a class="level is-mobile" href="#Training"><span class="level-left"><span class="level-item">5.4</span><span class="level-item">Training</span></span></a></li><li><a class="level is-mobile" href="#Evaluation"><span class="level-left"><span class="level-item">5.5</span><span class="level-item">Evaluation</span></span></a></li><li><a class="level is-mobile" href="#Novel-Observations-in-Evaluation"><span class="level-left"><span class="level-item">5.6</span><span class="level-item">Novel Observations in Evaluation</span></span></a></li><li><a class="level is-mobile" href="#Public-Release-and-Reproducibility"><span class="level-left"><span class="level-item">5.7</span><span class="level-item">Public Release and Reproducibility</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Case-Studies"><span class="level-left"><span class="level-item">6</span><span class="level-item">Case Studies</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#How-Does-Data-Bias-Influence-Learned-Behaviors"><span class="level-left"><span class="level-item">6.1</span><span class="level-item">How Does Data Bias Influence Learned Behaviors?</span></span></a></li><li><a class="level is-mobile" href="#Does-Training-Order-Influence-Memorization"><span class="level-left"><span class="level-item">6.2</span><span class="level-item">Does Training Order Influence Memorization?</span></span></a></li><li><a class="level is-mobile" href="#Do-Pretraining-Term-Frequencies-Influence-Task-Performance-Throughout-Training"><span class="level-left"><span class="level-item">6.3</span><span class="level-item">Do Pretraining Term Frequencies Influence Task Performance Throughout Training?</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Conclusion"><span class="level-left"><span class="level-item">7</span><span class="level-item">Conclusion</span></span></a></li><li><a class="level is-mobile" href="#Appendix"><span class="level-left"><span class="level-item">8</span><span class="level-item">Appendix</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">최근 글</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-05-09T02:54:53.000Z">2023-05-09</time></p><p class="title"><a href="/pythia/">pythia</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-05-09T02:54:39.000Z">2023-05-09</time></p><p class="title"><a href="/llama/">llama</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-05-09T02:54:01.000Z">2023-05-09</time></p><p class="title"><a href="/ia3/">(IA3) Few-Shot Parameter-Efficient Fine-Tuning is Better and Cheaper than In-Context Learning</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-03-23T08:14:37.000Z">2023-03-23</time></p><p class="title"><a href="/Alpaca/">Alpaca (A Strong Instruction-Following Model)</a></p><p class="categories"><a href="/categories/paper/">paper</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-02-20T13:07:50.000Z">2023-02-20</time></p><p class="title"><a href="/SentencePiece%EB%A5%BC%20%ED%99%9C%EC%9A%A9%ED%95%9C%20%ED%9A%A8%EA%B3%BC%EC%A0%81%EC%9D%B8%20%ED%95%9C%EA%B5%AD%EC%96%B4%20%ED%86%A0%ED%81%AC%EB%82%98%EC%9D%B4%EC%A0%80%20%EB%A7%8C%EB%93%A4%EA%B8%B0/">SentencePiece를 활용한 효과적인 한국어 토크나이저 만들기</a></p><p class="categories"><a href="/categories/ML/">ML</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/eagle705-logo.png" alt="Luke&#039;s Blog" height="28"></a><p class="is-size-7"><span>&copy; 2023 Joosung Yoon</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("ko");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="맨 위로" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "이 웹 사이트는 귀하의 경험을 향상시키기 위해 Cookie를 사용합니다.",
+          dismiss: "무시",
+          allow: "허용",
+          deny: "거부",
+          link: "더 알아보기",
+          policy: "Cookie 정책",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="입력 하세요..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"입력 하세요...","untitled":"(제목 없음)","posts":"포스트","pages":"페이지","categories":"카테고리","tags":"태그"});
+        });</script></body></html>
